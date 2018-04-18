@@ -1,0 +1,27 @@
+# depslib dependency file v1.0
+1523685660 source:j:\1505038_compiler\main_1505038.cpp
+	<bits/stdc++.h>
+	"SymbolTable_1505038.h"
+
+1523684816 j:\1505038_compiler\symboltable_1505038.h
+	"ScopeTable_1505038.h"
+	"SymbolInfo_1505038.h"
+
+1523684816 j:\1505038_compiler\scopetable_1505038.h
+	"SymbolInfo_1505038.h"
+
+1523685017 j:\1505038_compiler\symbolinfo_1505038.h
+	<bits/stdc++.h>
+
+1523685017 source:j:\1505038_compiler\scopetable_1505038.cpp
+	"ScopeTable_1505038.h"
+	"SymbolInfo_1505038.h"
+	<bits/stdc++.h>
+
+1523685018 source:j:\1505038_compiler\symbolinfo_1505038.cpp
+	"SymbolInfo_1505038.h"
+	<bits/stdc++.h>
+
+1523685017 source:j:\1505038_compiler\symboltable_1505038.cpp
+	"SymbolTable_1505038.h"
+

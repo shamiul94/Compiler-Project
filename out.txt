@@ -1,0 +1,99 @@
+I foo FUNCTION
+
+   Inserted in ScopeTable # 1at position 1 , 0
+I i VAR
+
+   Inserted in ScopeTable # 1at position 3 , 0
+L foo
+
+   Found in ScopeTable # 1 at position 1 , 0
+L j
+
+   Not found
+I 5 NUMBER
+
+   Inserted in ScopeTable # 1at position 3 , 1
+P A
+ScopeTable # 1
+0 --> 
+1 --> < foo:FUNCTION >
+2 --> 
+3 --> < i:VAR > , < 5:NUMBER >
+4 --> 
+5 --> 
+6 --> 
+   Entry Not Found.
+   Found in ScopeTable# 1 at position 3,0
+   Deleted entry at 3 , 0 from current ScopeTable
+P A
+ScopeTable # 1
+0 --> 
+1 --> < foo:FUNCTION >
+2 --> 
+3 --> < 5:NUMBER >
+4 --> 
+5 --> 
+6 --> 
+I <= RELOP
+
+   Inserted in ScopeTable # 2at position 2 , 0
+I == RELOP
+
+   Inserted in ScopeTable # 2at position 1 , 0
+P A
+ScopeTable # 2
+0 --> 
+1 --> < ==:RELOP >
+2 --> < <=:RELOP >
+3 --> 
+4 --> 
+5 --> 
+6 --> 
+ScopeTable # 1
+0 --> 
+1 --> < foo:FUNCTION >
+2 --> 
+3 --> < 5:NUMBER >
+4 --> 
+5 --> 
+6 --> 
+I <= RELOP
+
+   <<=> already exists in current ScopeTable
+I foo FUNCTION
+
+   Inserted in ScopeTable # 2at position 1 , 1
+   Found in ScopeTable# 2 at position 1,0
+   Deleted entry at 1 , 0 from current ScopeTable
+P A
+ScopeTable # 2
+0 --> 
+1 --> < foo:FUNCTION >
+2 --> < <=:RELOP >
+3 --> 
+4 --> 
+5 --> 
+6 --> 
+ScopeTable # 1
+0 --> 
+1 --> < foo:FUNCTION >
+2 --> 
+3 --> < 5:NUMBER >
+4 --> 
+5 --> 
+6 --> 
+I t t
+
+   Inserted in ScopeTable # 1at position 5 , 0
+I k k
+
+   Inserted in ScopeTable # 1at position 1 , 1
+P A
+ScopeTable # 1
+0 --> 
+1 --> < foo:FUNCTION > , < k:k >
+2 --> 
+3 --> < 5:NUMBER >
+4 --> 
+5 --> < t:t >
+6 --> 
