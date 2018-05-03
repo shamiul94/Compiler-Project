@@ -1,0 +1,84 @@
+Line No 1: Token <IF> Lexeme if Found.
+Line No 2: Token <IF> Lexeme if Found.
+Line No 3: Token <ELSE> Lexeme else Found.
+Line No 4: Token <IF> Lexeme if Found.
+Line No 5: Token <CONST_INT , 123> Lexeme 123 Found.
+Line No 5: Token <CONST_INT , 34> Lexeme 34 Found.
+Line No 5: Token <CONST_INT , 54> Lexeme 54 Found.
+Line No 5: Token <CONST_INT , 56> Lexeme 56 Found.
+Line No 6: Token <DEFAULT> Lexeme default Found.
+Line No 7: Token <CONST_FLOAT , .123> Lexeme .123 Found.
+Line No 9: Token <CONST_CHAR , a> Lexeme 'a' Found.
+Line No 9: Token <CONST_CHAR , b> Lexeme 'b' Found.
+Line No 9: Token <CONST_CHAR , $> Lexeme '$' Found.
+Line No 9: Token <CONST_CHAR , "> Lexeme '"' Found.
+Line No 9: Token <CONST_CHAR , 
+> Lexeme '\n' Found.
+Line No 9: Token <CONST_CHAR , > Lexeme '\a' Found.
+Line No 9: Token <CONST_CHAR , \> Lexeme '\\' Found.
+Line No 9: Token <CONST_CHAR , "> Lexeme '\"' Found.
+Line No 9: Token <CONST_CHAR , "> Lexeme '"' Found.
+Line No 9: Token <CONST_CHAR , |> Lexeme '|' Found.
+Line No 10: Token <INCOP , ++> Lexeme ++ Found.
+Line No 10: Token <INCOP , --> Lexeme -- Found.
+Line No 10: Token <INCOP , --> Lexeme -- Found.
+Line No 10: Token <ADDOP , -> Lexeme - Found.
+Line No 10: Token <INCOP , ++> Lexeme ++ Found.
+Line No 10: Token <INCOP , ++> Lexeme ++ Found.
+Line No 10: Token <ADDOP , +> Lexeme + Found.
+Line No 11: Token <LOGICOP , &&> Lexeme && Found.
+Line No 11: Token <BITCOP , &> Lexeme & Found.
+Line No 11: Token <RELOP , ==> Lexeme == Found.
+Line No 11: Token <RELOP , ==> Lexeme == Found.
+Line No 11: Token <RELOP , ==> Lexeme == Found.
+Line No 11: Token <RELOP , !=> Lexeme != Found.
+Line No 11: Token <RELOP , ==> Lexeme == Found.
+Line No 11: Token <BITCOP , &> Lexeme & Found.
+Line No 11: Token <ASSIGNOP , => Lexeme = Found.
+Line No 11: Token <LOGICOP , ||> Lexeme || Found.
+Line No 11: Token <LOGICOP , ||> Lexeme || Found.
+Line No 11: Token <ADDOP , |> Lexeme | Found.
+Line No 11: Token <LOGICOP , ||> Lexeme || Found.
+Line No 11: Token <BITCOP , <<> Lexeme << Found.
+Line No 11: Token <BITCOP , <<> Lexeme << Found.
+Line No 11: Token <BITCOP , >>> Lexeme >> Found.
+Line No 11: Token <BITCOP , >>> Lexeme >> Found.
+Line No 11: Token <RELOP , >> Lexeme > Found.
+Line No 11: Token <RELOP , <> Lexeme < Found.
+Line No 11: Token <RELOP , >> Lexeme > Found.
+Line No 11: Token <RELOP , <> Lexeme < Found.
+Line No 11: Token <RELOP , >> Lexeme > Found.
+Line No 11: Token <BITCOP , <<> Lexeme << Found.
+Line No 11: Token <RELOP , <=> Lexeme <= Found.
+Line No 11: Token <RELOP , <=> Lexeme <= Found.
+Line No 11: Token <RELOP , !=> Lexeme != Found.
+Line No 11: Token <ASSIGNOP , => Lexeme = Found.
+Line No 11: Token <RELOP , <=> Lexeme <= Found.
+Line No 11: Token <RELOP , >=> Lexeme >= Found.
+Line No 11: Token <BITCOP , <<> Lexeme << Found.
+Line No 11: Token <ASSIGNOP , => Lexeme = Found.
+Line No 11: Token <RELOP , !=> Lexeme != Found.
+Line No 11: Token <BITCOP , ^> Lexeme ^ Found.
+Line No 11: Token <BITCOP , ^> Lexeme ^ Found.
+Line No 11: Token <BITCOP , ^> Lexeme ^ Found.
+Line No 11: Token <BITCOP , ^> Lexeme ^ Found.
+Line No 11: Token <BITCOP , ^> Lexeme ^ Found.
+Line No 13: Token <LTHIRD , [> Lexeme [ Found.
+Line No 13: Token <LCURL , {> Lexeme { Found.
+Line No 13: Token <LPAREN , (> Lexeme ( Found.
+Line No 13: Token <RTHIRD , ]> Lexeme ] Found.
+Line No 13: Token <RCURL , }> Lexeme } Found.
+Line No 13: Token <RPAREN , )> Lexeme ) Found.
+Line No 13: Token <SEMICOLON , ;> Lexeme ; Found.
+Line No 13: Token <COMMA , ,> Lexeme , Found.
+Line No 13: Token <COMMA , ,> Lexeme , Found.
+Line No 13: Token <COMMA , ,> Lexeme , Found.
+Line No 13: Token <SEMICOLON , ;> Lexeme ; Found.
+Line No 13: Token <SEMICOLON , ;> Lexeme ; Found.
+Line No 13: Token <RTHIRD , ]> Lexeme ] Found.
+Line No 13: Token <RTHIRD , ]> Lexeme ] Found.
+Line No 13: Token <LTHIRD , [> Lexeme [ Found.
+Line No 13: Token <LTHIRD , [> Lexeme [ Found.
+Line No 13: Token <RELOP , !=> Lexeme != Found.
+Line No 13: Token <RTHIRD , ]> Lexeme ] Found.
+Line No 13: Token <RTHIRD , ]> Lexeme ] Found.
