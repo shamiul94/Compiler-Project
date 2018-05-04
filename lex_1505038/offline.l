@@ -43,6 +43,8 @@ identifier [a-zA-Z_]([a-zA-Z0-9_]){0,30}
 
 stringPattern \"([^\"\n]*\\\n)*[^\"\n]*\"
 
+singleLineComment \\\\([^\n]*\\\n)*[^\n]*
+
 %%
 {newLine} {lineCount++;}
 
@@ -292,8 +294,18 @@ stringPattern \"([^\"\n]*\\\n)*[^\"\n]*\"
 }
 
 
+{stringPattern} {
+    fprintf(tokenout , "<STRING , %s> ", yytext);
+        fprintf(logout , "Line No %d: Token <STRING , %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
+}
 
- 
+
+{singleLineComment} {
+            fprintf(logout , "Line No %d: Token <SINGLE LINE COMMENT , %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
+}
+
+
+
 
 %%
 
