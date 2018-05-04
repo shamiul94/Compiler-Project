@@ -39,6 +39,10 @@ floatingPointLiteral ([0-9]*\.?[0-9]+|[0-9]+\.?[0-9]*)(E[+|-]?[0-9]+)?
 
 characterLiteral '.'|'\\[nt"afrbv0\\]'
 
+identifier [a-zA-Z_]([a-zA-Z0-9_]){0,30}
+
+stringPattern \"([^\"\n]*\\\n)*[^\"\n]*\"
+
 %%
 {newLine} {lineCount++;}
 
@@ -281,6 +285,15 @@ characterLiteral '.'|'\\[nt"afrbv0\\]'
 	fprintf(tokenout , "<SEMICOLON , %s> ", yytext);
     	fprintf(logout , "Line No %d: Token <SEMICOLON , %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
 } 
+
+{identifier} {
+    fprintf(tokenout , "<ID , %s> ", yytext);
+        fprintf(logout , "Line No %d: Token <ID , %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
+}
+
+
+
+ 
 
 %%
 
