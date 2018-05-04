@@ -45,7 +45,7 @@ stringPattern \"([^\"\n]*\\\n)*[^\"\n]*\"
 
 singleLineComment \\\\([^\n]*\\\n)*[^\n]*
 
-multiLineComment \/\*([^\n]*\n*)*\*\/
+multiLineComment \/\*([^*]|\*+[^\/*])*\*+\/
 
 %%
 {newLine} {lineCount++;}
@@ -306,6 +306,9 @@ multiLineComment \/\*([^\n]*\n*)*\*\/
             fprintf(logout , "Line No %d: Token <SINGLE LINE COMMENT , %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
 }
 
+{multiLineComment} {
+            fprintf(logout , "Line No %d: Token <MULTI LINE COMMENT , %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
+}
 
 
 
