@@ -45,6 +45,8 @@ stringPattern \"([^\"\n]*\\\n)*[^\"\n]*\"
 
 singleLineComment \\\\([^\n]*\\\n)*[^\n]*
 
+multiLineComment \/\*([^\n]*\n*)*\*\/
+
 %%
 {newLine} {lineCount++;}
 
