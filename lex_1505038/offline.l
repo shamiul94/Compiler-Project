@@ -53,6 +53,8 @@ tooManyDecimalError [0-9]*[.]([0-9]*[.]+[0-9]*)+
 
 illFormedError (({integerLiteral}|{floatingPointLiteral}|{tooManyDecimalError})[E]({floatingPointLiteral}|{tooManyDecimalError}))|({tooManyDecimalError}[E]{integerLiteral})
 
+invalidSuffix [0-9]([0-9]*[a-zA-Z_]+)+
+
 %%
 {newLine} {lineCount++;}
 
@@ -325,6 +327,11 @@ illFormedError (({integerLiteral}|{floatingPointLiteral}|{tooManyDecimalError})[
             fprintf(logout , "Line No %d: <ILL FORMED NUMBER ERROR , %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
 }
 
+
+{invalidSuffix} {
+            fprintf(logout , "Line No %d: <INVALID SUFFIX , %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
+
+}
 
 %%
 
