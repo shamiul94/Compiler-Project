@@ -1,4 +1,3 @@
-
 #include <bits/stdc++.h>
 
 #define ll long long
@@ -32,6 +31,7 @@ class scopeTable
 {
     symbolInfo j;
 public:
+    ll flag ;
     symbolInfo *Arr;
     scopeTable *parentScopeTable;
     ll id, N;
@@ -48,7 +48,7 @@ public:
 
     symbolInfo *lookUp(string varName);
 
-    void printScopeTable();
+    string printScopeTable();
 };
 
 
@@ -73,7 +73,7 @@ public:
 
     void printCurrentScopeTable();
 
-    void printAllScopeTable();
+    string printAllScopeTable();
 };
 
 
@@ -128,6 +128,7 @@ scopeTable::scopeTable(ll n)
     parentScopeTable = 0;
     N = n;
     id = 1;
+    flag = 0 ;
 }
 
 
@@ -163,8 +164,10 @@ bool scopeTable::insert(string varName, string varType)
     NewVar->i = positionInArray;
     NewVar->j = num;
     NewVar->tableId = id;
+    flag = 1 ;
 
     curr->next = NewVar;
+
 
     return true;
 }
@@ -215,11 +218,17 @@ bool scopeTable::Delete(string varName)
     return false;
 }
 
-void scopeTable::printScopeTable()
+string scopeTable::printScopeTable()
 {
+    string s = "";
+
     for (ll i = 0; i < N; i++)
     {
-        cout << i << " --> ";
+        char c = i + '0' ;
+        s = s + c ;
+//        cout << s << endl ;
+        s = s +" --> ";
+        //cout << i << " --> ";
 
         symbolInfo *curr = &Arr[i];
         while (curr != 0)
@@ -228,16 +237,23 @@ void scopeTable::printScopeTable()
 
             if (curr != 0)
             {
-                cout << "< " << curr->getSymbolName() << ':' << curr->getSymbolType() << " >";
+                s = s + "< ";
+                s = s + curr->getSymbolName() ;
+                s = s + ':' ;
+                s = s + curr->getSymbolType() ;
+                s = s + " >" ;
+                //cout << "< " << curr->getSymbolName() << ':' << curr->getSymbolType() << " >";
             }
             if (curr != 0 && curr->next != 0)
             {
-                cout << " , ";
+                s = s + " , " ;
+//                cout << " , ";
             }
         }
-        cout << endl;
+        s = s + '\n' ;
+        //cout << endl;
     }
-    return;
+    return s;
 }
 
 ll scopeTable::hash(string name)
@@ -274,6 +290,7 @@ symbolTable::symbolTable(ll n)
     scopeTable *tem;
     tem = new scopeTable(N);
     currentScopeTable = tem;
+//    cout << tem -> flag << endl ;
 }
 
 
@@ -332,19 +349,27 @@ void symbolTable::printCurrentScopeTable()
     return;
 }
 
-void symbolTable::printAllScopeTable()
+string symbolTable::printAllScopeTable()
 {
+    string s ;
     scopeTable *tem;
     tem = currentScopeTable;
 
     while (tem != 0)
     {
-        cout << "ScopeTable # " << tem->id << endl;
-        tem->printScopeTable();
-        tem = tem->parentScopeTable;
+        if(tem->flag == 1 )
+        {
+//            cout << tem -> flag << endl ;
+            s = s + "ScopeTable # " ;
+            char c = tem->id + '0' ;
+//            cout << c << endl ;
+            s = s + c + '\n' ;
+            //cout << "ScopeTable # " << tem->id << endl;
+            s = s + tem->printScopeTable();
+            s = s + '\n' ;
+            tem = tem->parentScopeTable;
+        }
     }
-    return;
+    return s ;
 }
-
-
 

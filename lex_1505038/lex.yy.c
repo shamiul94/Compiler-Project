@@ -666,6 +666,7 @@ char *yytext;
 FILE *logout;
 FILE *tokenout;
 int lineCount = 1 ; 
+symbolTable mySymbolTable(7) ; 
 
 char* upper(char* s)
 {
@@ -689,7 +690,7 @@ void outputIdentifier()
 }
 
 
-#line 693 "lex.yy.c"
+#line 694 "lex.yy.c"
 
 #define INITIAL 0
 #define cms 1
@@ -909,9 +910,9 @@ YY_DECL
 		}
 
 	{
-#line 74 "offline.l"
+#line 75 "offline.l"
 
-#line 915 "lex.yy.c"
+#line 916 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -971,149 +972,174 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 /* rule 1 can match eol */
 YY_RULE_SETUP
-#line 75 "offline.l"
+#line 76 "offline.l"
 {lineCount++;}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 77 "offline.l"
+#line 78 "offline.l"
 {}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 79 "offline.l"
+#line 80 "offline.l"
 {
 		outputIdentifier();
 	}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 83 "offline.l"
+#line 84 "offline.l"
 {
 		outputIdentifier();
 	}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 87 "offline.l"
+#line 88 "offline.l"
 {
 		outputIdentifier();
 	}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 91 "offline.l"
+#line 92 "offline.l"
 {
 		outputIdentifier();
 	}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 95 "offline.l"
+#line 96 "offline.l"
 {
 		outputIdentifier();
 	}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 99 "offline.l"
+#line 100 "offline.l"
 {
 		outputIdentifier();
 	}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 103 "offline.l"
+#line 104 "offline.l"
 {
 		outputIdentifier();
 	}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 107 "offline.l"
+#line 108 "offline.l"
 {
 		outputIdentifier();
 	}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 111 "offline.l"
+#line 112 "offline.l"
 {
 		outputIdentifier();
 	} 
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 115 "offline.l"
+#line 116 "offline.l"
 {
 		outputIdentifier();
 	}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 119 "offline.l"
+#line 120 "offline.l"
 {
 		outputIdentifier();		
 	}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 123 "offline.l"
+#line 124 "offline.l"
 {
 		outputIdentifier();
 	}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 127 "offline.l"
+#line 128 "offline.l"
 {
 		outputIdentifier();
 	}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 131 "offline.l"
+#line 132 "offline.l"
 {
 		outputIdentifier();
 	}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 135 "offline.l"
+#line 136 "offline.l"
 {
 		outputIdentifier();
 	}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 139 "offline.l"
+#line 140 "offline.l"
 {
 		outputIdentifier();	
 	  }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 144 "offline.l"
+#line 145 "offline.l"
 {
+
+    mySymbolTable.insert(yytext , "CONST_INT");
+
+    string s ; 
+    s = mySymbolTable.printAllScopeTable();
+    char ch[2000] ; 
+    for(int i = 0 ; i < s.size(); i++)
+    {
+        ch[i] = s[i] ; 
+    }
+
 			fprintf(tokenout , "<CONST_INT, %s> ", yytext);
 			fprintf(logout , "Line No. %d: Token <INT> Lexeme %s found\n\n", lineCount , yytext);
+            fprintf(logout , "\n%s\n", ch);
 }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 149 "offline.l"
+#line 162 "offline.l"
 {
+
+mySymbolTable.insert(yytext , "CONST_FLOAT");
+
+    string s ; 
+    s = mySymbolTable.printAllScopeTable();
+    char ch[2000] ; 
+    for(int i = 0 ; i < s.size(); i++)
+    {
+        ch[i] = s[i] ; 
+    }
+    
+
+
 		    fprintf(tokenout , "<CONST_FLOAT, %s> ", yytext);
 			fprintf(logout , "Line No %d: Token <CONST_FLOAT , %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
+            fprintf(logout , "\n%s\n", ch);
 }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 154 "offline.l"
+#line 181 "offline.l"
 {
 
 	char* c = new char[20];
-    char ch ;
 
     for(int i = 0 ; i < strlen(yytext); i++)
     {
@@ -1186,151 +1212,350 @@ YY_RULE_SETUP
         }
     }
 
+    mySymbolTable.insert(c , "CONST_CHAR");
+
+    string s ; 
+    s = mySymbolTable.printAllScopeTable();
+    char ch[2000] ; 
+    for(int i = 0 ; i < s.size(); i++)
+    {
+        ch[i] = s[i] ; 
+    }
+
+
+
 
 	fprintf(tokenout , "<CONST_CHAR, %s> ", c);
     fprintf(logout , "Line No. %d: Token <CONST_CHAR> Lexeme %s found\n\n" ,lineCount , yytext);
+    fprintf(logout , "\n%s\n", ch);
 }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 236 "offline.l"
+#line 275 "offline.l"
 {
+
+
 		fprintf(tokenout , "<ADDOP, %s> ", yytext);
     	fprintf(logout , "Line No %d: Token <ADDOP> Lexeme %s Found.\n\n" , lineCount  , yytext);
+
+        mySymbolTable.insert(yytext , "ADDOP");
+
+    string s ; 
+    s = mySymbolTable.printAllScopeTable();
+    char ch[2000] ; 
+    for(int i = 0 ; i < s.size(); i++)
+    {
+        ch[i] = s[i] ; 
+    }
+fprintf(logout , "\n%s\n", ch);
+
 	}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 241 "offline.l"
+#line 294 "offline.l"
 {
 		fprintf(tokenout , "<MULOP , %s> ", yytext);
     	fprintf(logout , "Line No %d: Token <MULOP> Lexeme %s Found.\n\n" , lineCount , yytext);
+
+        mySymbolTable.insert(yytext , "MULOP");
+
+    string s ; 
+    s = mySymbolTable.printAllScopeTable();
+    char ch[2000] ; 
+    for(int i = 0 ; i < s.size(); i++)
+    {
+        ch[i] = s[i] ; 
+    }
+fprintf(logout , "\n%s\n", ch);
 	  }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 246 "offline.l"
+#line 310 "offline.l"
 {
 	fprintf(tokenout , "<INCOP , %s> ", yytext);
     	fprintf(logout , "Line No %d: Token <INCOP> Lexeme %s Found.\n\n" , lineCount , yytext);
+        mySymbolTable.insert(yytext , "INCOP");
+
+    string s ; 
+    s = mySymbolTable.printAllScopeTable();
+    char ch[2000] ; 
+    for(int i = 0 ; i < s.size(); i++)
+    {
+        ch[i] = s[i] ; 
+    }
+fprintf(logout , "\n%s\n", ch);
 }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 251 "offline.l"
+#line 325 "offline.l"
 {
 	fprintf(tokenout , "<RELOP , %s> ", yytext);
     	fprintf(logout , "Line No %d: Token <RELOP> Lexeme %s Found.\n\n" , lineCount, yytext);
+
+        mySymbolTable.insert(yytext , "RELOP");
+
+    string s ; 
+    s = mySymbolTable.printAllScopeTable();
+    char ch[2000] ; 
+    for(int i = 0 ; i < s.size(); i++)
+    {
+        ch[i] = s[i] ; 
+    }
+fprintf(logout , "\n%s\n", ch);
 }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 256 "offline.l"
+#line 341 "offline.l"
 {
 	fprintf(tokenout , "<ASSIGNOP , %s> ", yytext);
     	fprintf(logout , "Line No %d: Token <ASSIGNOP> Lexeme %s Found.\n\n" , lineCount , yytext);
+        mySymbolTable.insert(yytext , "ASSIGNOP");
+
+    string s ; 
+    s = mySymbolTable.printAllScopeTable();
+    char ch[2000] ; 
+    for(int i = 0 ; i < s.size(); i++)
+    {
+        ch[i] = s[i] ; 
+    }
+fprintf(logout , "\n%s\n", ch);
 }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 261 "offline.l"
+#line 356 "offline.l"
 {
 	fprintf(tokenout , "<LOGICOP , %s> ", yytext);
     	fprintf(logout , "Line No %d: Token <LOGICOP> Lexeme %s Found.\n\n" , lineCount , yytext);
+        mySymbolTable.insert(yytext , "LOGICOP");
+
+    string s ; 
+    s = mySymbolTable.printAllScopeTable();
+    char ch[2000] ; 
+    for(int i = 0 ; i < s.size(); i++)
+    {
+        ch[i] = s[i] ; 
+    }
+fprintf(logout , "\n%s\n", ch);
 }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 266 "offline.l"
+#line 371 "offline.l"
 {
 	fprintf(tokenout , "<BITOP , %s> ", yytext);
     	fprintf(logout , "Line No %d: Token <BITCOP> Lexeme %s Found.\n\n" , lineCount  , yytext);
+        mySymbolTable.insert(yytext , "BITCOP");
+
+    string s ; 
+    s = mySymbolTable.printAllScopeTable();
+    char ch[2000] ; 
+    for(int i = 0 ; i < s.size(); i++)
+    {
+        ch[i] = s[i] ; 
+    }
+fprintf(logout , "\n%s\n", ch);
 }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 271 "offline.l"
+#line 386 "offline.l"
 {
 	fprintf(tokenout , "<BNOT , %s> ", yytext);
     	fprintf(logout , "Line No %d: Token <NOT> Lexeme %s Found.\n\n" , lineCount  , yytext);
+
+        mySymbolTable.insert(yytext , "NOT");
+
+    string s ; 
+    s = mySymbolTable.printAllScopeTable();
+    char ch[2000] ; 
+    for(int i = 0 ; i < s.size(); i++)
+    {
+        ch[i] = s[i] ; 
+    }
+fprintf(logout , "\n%s\n", ch);
 }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 276 "offline.l"
+#line 402 "offline.l"
 {
 	fprintf(tokenout , "<LPAREN , %s> ", yytext);
     	fprintf(logout , "Line No %d: Token <LPAREN> Lexeme %s Found.\n\n" , lineCount, yytext);
+
+        mySymbolTable.insert(yytext , "LPAREN");
+
+    string s ; 
+    s = mySymbolTable.printAllScopeTable();
+    char ch[2000] ; 
+    for(int i = 0 ; i < s.size(); i++)
+    {
+        ch[i] = s[i] ; 
+    }
+fprintf(logout , "\n%s\n", ch);
 }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 281 "offline.l"
+#line 418 "offline.l"
 {
 	fprintf(tokenout , "<RPAREN , %s> ", yytext);
     	fprintf(logout , "Line No %d: Token <RPAREN> Lexeme %s Found.\n\n" , lineCount , yytext);
+
+        mySymbolTable.insert(yytext , "RPAREN");
+
+    string s ; 
+    s = mySymbolTable.printAllScopeTable();
+    char ch[2000] ; 
+    for(int i = 0 ; i < s.size(); i++)
+    {
+        ch[i] = s[i] ; 
+    }
+fprintf(logout , "\n%s\n", ch);
 }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 287 "offline.l"
+#line 435 "offline.l"
 {
 	fprintf(tokenout , "<LCURL , %s> ", yytext);
     	fprintf(logout , "Line No %d: Token <LCURL> Lexeme %s Found.\n\n" , lineCount , yytext);
+
+        mySymbolTable.insert(yytext , "LCURL");
+
+    string s ; 
+    s = mySymbolTable.printAllScopeTable();
+    char ch[2000] ; 
+    for(int i = 0 ; i < s.size(); i++)
+    {
+        ch[i] = s[i] ; 
+    }
+fprintf(logout , "\n%s\n", ch);
 }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 292 "offline.l"
+#line 451 "offline.l"
 {
 	fprintf(tokenout , "<RCURL , %s> ", yytext);
     	fprintf(logout , "Line No %d: Token <RCURL> Lexeme %s Found.\n\n" , lineCount , yytext);
+
+        mySymbolTable.insert(yytext , "RCURL");
+
+    string s ; 
+    s = mySymbolTable.printAllScopeTable();
+    char ch[2000] ; 
+    for(int i = 0 ; i < s.size(); i++)
+    {
+        ch[i] = s[i] ; 
+    }
+fprintf(logout , "\n%s\n", ch);
 }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 297 "offline.l"
+#line 467 "offline.l"
 {
 	fprintf(tokenout , "<LTHIRD , %s> ", yytext);
     	fprintf(logout , "Line No %d: Token <LTHIRD> Lexeme %s Found.\n\n" , lineCount  , yytext);
+
+        mySymbolTable.insert(yytext , "LTHIRD");
+
+    string s ; 
+    s = mySymbolTable.printAllScopeTable();
+    char ch[2000] ; 
+    for(int i = 0 ; i < s.size(); i++)
+    {
+        ch[i] = s[i] ; 
+    }
+fprintf(logout , "\n%s\n", ch);
 }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 302 "offline.l"
+#line 483 "offline.l"
 {
 	fprintf(tokenout , "<RTHIRD , %s> ", yytext);
     	fprintf(logout , "Line No %d: Token <RTHIRD> Lexeme %s Found.\n\n" , lineCount , yytext);
+
+        mySymbolTable.insert(yytext , "RTHIRD");
+
+    string s ; 
+    s = mySymbolTable.printAllScopeTable();
+    char ch[2000] ; 
+    for(int i = 0 ; i < s.size(); i++)
+    {
+        ch[i] = s[i] ; 
+    }
+fprintf(logout , "\n%s\n", ch);
 }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 307 "offline.l"
+#line 499 "offline.l"
 {
 	fprintf(tokenout , "<COMMA , %s> ", yytext);
     	fprintf(logout , "Line No %d: Token <COMMA> Lexeme %s Found.\n\n" , lineCount , yytext);
+
+        mySymbolTable.insert(yytext , "COMMA");
+
+    string s ; 
+    s = mySymbolTable.printAllScopeTable();
+    char ch[2000] ; 
+    for(int i = 0 ; i < s.size(); i++)
+    {
+        ch[i] = s[i] ; 
+    }
+fprintf(logout , "\n%s\n", ch);
 }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 312 "offline.l"
+#line 515 "offline.l"
 {
 	fprintf(tokenout , "<SEMICOLON , %s> ", yytext);
     	fprintf(logout , "Line No %d: Token <SEMICOLON> Lexeme %s Found.\n\n" , lineCount  , yytext);
+
+        mySymbolTable.insert(yytext , "SEMICOLON");
+
+    string s ; 
+    s = mySymbolTable.printAllScopeTable();
+    char ch[2000] ; 
+    for(int i = 0 ; i < s.size(); i++)
+    {
+        ch[i] = s[i] ; 
+    }
+fprintf(logout , "\n%s\n", ch);
 } 
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 317 "offline.l"
+#line 531 "offline.l"
 {
+    mySymbolTable.insert(yytext , "ID");
+    string s ; 
+    s = mySymbolTable.printAllScopeTable();
+    char ch[2000] ; 
+    for(int i = 0 ; i < s.size(); i++)
+    {
+        ch[i] = s[i] ; 
+    }
+
+
     fprintf(tokenout , "<ID, %s> ", yytext);
     fprintf(logout , "Line No. %d: Token <ID> Lexeme %s found\n\n", lineCount , yytext);
+    fprintf(logout , "\n%s\n", ch);
 }
 	YY_BREAK
 case 39:
 /* rule 39 can match eol */
 YY_RULE_SETUP
-#line 323 "offline.l"
+#line 548 "offline.l"
 {
 
 
@@ -1421,7 +1646,7 @@ YY_RULE_SETUP
 case 40:
 /* rule 40 can match eol */
 YY_RULE_SETUP
-#line 411 "offline.l"
+#line 636 "offline.l"
 {
             fprintf(logout , "Line No %d:  <COMMENT> Lexeme %s Found.\n\n" , lineCount , yytext);
 }
@@ -1429,28 +1654,28 @@ YY_RULE_SETUP
 case 41:
 /* rule 41 can match eol */
 YY_RULE_SETUP
-#line 415 "offline.l"
+#line 640 "offline.l"
 {
             fprintf(logout , "Line No %d:  <COMMENT> Lexeme %s Found.\n\n" , lineCount , yytext);
 }
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 419 "offline.l"
+#line 644 "offline.l"
 {
     fprintf(logout , "Error at line %d: Too many decimal point %s\n\n", lineCount , yytext);
 }
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 423 "offline.l"
+#line 648 "offline.l"
 {
     fprintf(logout , "Error at line %d: Ill formed number %s\n\n", lineCount , yytext);
 }
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 428 "offline.l"
+#line 653 "offline.l"
 {
     fprintf(logout , "Error at line %d: Invalid prefix on ID or invalid suffix on Number %s\n\n",lineCount ,  yytext);
 
@@ -1459,7 +1684,7 @@ YY_RULE_SETUP
 case 45:
 /* rule 45 can match eol */
 YY_RULE_SETUP
-#line 434 "offline.l"
+#line 659 "offline.l"
 {
     fprintf(logout , "Error at line %d: Multi character constant error %s\n\n", lineCount  , yytext);
 
@@ -1467,7 +1692,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 439 "offline.l"
+#line 664 "offline.l"
 {
   fprintf(logout , "Error at line %d: Unterminated character %s\n\n", lineCount  , yytext);
 
@@ -1476,14 +1701,14 @@ YY_RULE_SETUP
 case 47:
 /* rule 47 can match eol */
 YY_RULE_SETUP
-#line 445 "offline.l"
+#line 670 "offline.l"
 {
     fprintf(logout , "Error at line %d: Unterminated character %s\n\n", lineCount  , yytext);
 }
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 450 "offline.l"
+#line 675 "offline.l"
 {
         fprintf(logout , "Error at line %d: Empty character constant error %s\n\n", lineCount  , yytext);
 
@@ -1492,7 +1717,7 @@ YY_RULE_SETUP
 case 49:
 /* rule 49 can match eol */
 YY_RULE_SETUP
-#line 455 "offline.l"
+#line 680 "offline.l"
 {
     fprintf(logout , "Error at line %d: Unterminated String %s\n\n", lineCount  , yytext);
 
@@ -1500,21 +1725,21 @@ YY_RULE_SETUP
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 462 "offline.l"
+#line 687 "offline.l"
 { 
   BEGIN(COMMENT_MULTI_LINE); 
 }
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 466 "offline.l"
+#line 691 "offline.l"
 { 
   BEGIN(INITIAL); 
 }
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 470 "offline.l"
+#line 695 "offline.l"
 { 
 
 } 
@@ -1522,13 +1747,13 @@ YY_RULE_SETUP
 case 53:
 /* rule 53 can match eol */
 YY_RULE_SETUP
-#line 474 "offline.l"
+#line 699 "offline.l"
 { 
 
 } 
 	YY_BREAK
 case YY_STATE_EOF(COMMENT_MULTI_LINE):
-#line 478 "offline.l"
+#line 703 "offline.l"
 {      
     fprintf(logout , "Error at line %d: Unterminated comment %s\n\n" , lineCount , yytext);
     yyterminate();
@@ -1536,7 +1761,7 @@ case YY_STATE_EOF(COMMENT_MULTI_LINE):
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 484 "offline.l"
+#line 709 "offline.l"
 {
      fprintf(logout , "Error at line %d: <Unrecognized Character Error> Lexeme %s Found.\n\n" , lineCount  , yytext);
 
@@ -1544,10 +1769,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
-#line 489 "offline.l"
+#line 714 "offline.l"
 ECHO;
 	YY_BREAK
-#line 1551 "lex.yy.c"
+#line 1776 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(cms):
 	yyterminate();
@@ -2549,7 +2774,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 489 "offline.l"
+#line 714 "offline.l"
 
 
 

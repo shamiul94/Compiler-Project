@@ -9,6 +9,7 @@
 FILE *logout;
 FILE *tokenout;
 int lineCount = 1 ; 
+symbolTable mySymbolTable(7) ; 
 
 char* upper(char* s)
 {
@@ -142,19 +143,44 @@ unfinishedString \"([^\\\"\n]|\\+([^\n\"]|\n))*
 
 
 {integerLiteral} {
+
+    mySymbolTable.insert(yytext , "CONST_INT");
+
+    string s ; 
+    s = mySymbolTable.printAllScopeTable();
+    char ch[2000] ; 
+    for(int i = 0 ; i < s.size(); i++)
+    {
+        ch[i] = s[i] ; 
+    }
+
 			fprintf(tokenout , "<CONST_INT, %s> ", yytext);
 			fprintf(logout , "Line No. %d: Token <INT> Lexeme %s found\n\n", lineCount , yytext);
+            fprintf(logout , "\n%s\n", ch);
 }
 
 {floatingPointLiteral} {
+
+mySymbolTable.insert(yytext , "CONST_FLOAT");
+
+    string s ; 
+    s = mySymbolTable.printAllScopeTable();
+    char ch[2000] ; 
+    for(int i = 0 ; i < s.size(); i++)
+    {
+        ch[i] = s[i] ; 
+    }
+    
+
+
 		    fprintf(tokenout , "<CONST_FLOAT, %s> ", yytext);
 			fprintf(logout , "Line No %d: Token <CONST_FLOAT , %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
+            fprintf(logout , "\n%s\n", ch);
 }
 
 {characterLiteral} {
 
 	char* c = new char[20];
-    char ch ;
 
     for(int i = 0 ; i < strlen(yytext); i++)
     {
@@ -227,96 +253,295 @@ unfinishedString \"([^\\\"\n]|\\+([^\n\"]|\n))*
         }
     }
 
+    mySymbolTable.insert(c , "CONST_CHAR");
+
+    string s ; 
+    s = mySymbolTable.printAllScopeTable();
+    char ch[2000] ; 
+    for(int i = 0 ; i < s.size(); i++)
+    {
+        ch[i] = s[i] ; 
+    }
+
+
+
 
 	fprintf(tokenout , "<CONST_CHAR, %s> ", c);
     fprintf(logout , "Line No. %d: Token <CONST_CHAR> Lexeme %s found\n\n" ,lineCount , yytext);
+    fprintf(logout , "\n%s\n", ch);
 }
 
 
 [+|-] {
+
+
 		fprintf(tokenout , "<ADDOP, %s> ", yytext);
     	fprintf(logout , "Line No %d: Token <ADDOP> Lexeme %s Found.\n\n" , lineCount  , yytext);
+
+        mySymbolTable.insert(yytext , "ADDOP");
+
+    string s ; 
+    s = mySymbolTable.printAllScopeTable();
+    char ch[2000] ; 
+    for(int i = 0 ; i < s.size(); i++)
+    {
+        ch[i] = s[i] ; 
+    }
+fprintf(logout , "\n%s\n", ch);
+
 	}
 
 [\*]|[/]|[%] {
 		fprintf(tokenout , "<MULOP , %s> ", yytext);
     	fprintf(logout , "Line No %d: Token <MULOP> Lexeme %s Found.\n\n" , lineCount , yytext);
+
+        mySymbolTable.insert(yytext , "MULOP");
+
+    string s ; 
+    s = mySymbolTable.printAllScopeTable();
+    char ch[2000] ; 
+    for(int i = 0 ; i < s.size(); i++)
+    {
+        ch[i] = s[i] ; 
+    }
+fprintf(logout , "\n%s\n", ch);
 	  }
 
 [\+]{2}|[-]{2} {
 	fprintf(tokenout , "<INCOP , %s> ", yytext);
     	fprintf(logout , "Line No %d: Token <INCOP> Lexeme %s Found.\n\n" , lineCount , yytext);
+        mySymbolTable.insert(yytext , "INCOP");
+
+    string s ; 
+    s = mySymbolTable.printAllScopeTable();
+    char ch[2000] ; 
+    for(int i = 0 ; i < s.size(); i++)
+    {
+        ch[i] = s[i] ; 
+    }
+fprintf(logout , "\n%s\n", ch);
 }
 
 (<)|(<=)|(>)|(>=)|(==)|(!=) {
 	fprintf(tokenout , "<RELOP , %s> ", yytext);
     	fprintf(logout , "Line No %d: Token <RELOP> Lexeme %s Found.\n\n" , lineCount, yytext);
+
+        mySymbolTable.insert(yytext , "RELOP");
+
+    string s ; 
+    s = mySymbolTable.printAllScopeTable();
+    char ch[2000] ; 
+    for(int i = 0 ; i < s.size(); i++)
+    {
+        ch[i] = s[i] ; 
+    }
+fprintf(logout , "\n%s\n", ch);
 }
 
 = {
 	fprintf(tokenout , "<ASSIGNOP , %s> ", yytext);
     	fprintf(logout , "Line No %d: Token <ASSIGNOP> Lexeme %s Found.\n\n" , lineCount , yytext);
+        mySymbolTable.insert(yytext , "ASSIGNOP");
+
+    string s ; 
+    s = mySymbolTable.printAllScopeTable();
+    char ch[2000] ; 
+    for(int i = 0 ; i < s.size(); i++)
+    {
+        ch[i] = s[i] ; 
+    }
+fprintf(logout , "\n%s\n", ch);
 }
 
 [&]{2}|[|]{2} {
 	fprintf(tokenout , "<LOGICOP , %s> ", yytext);
     	fprintf(logout , "Line No %d: Token <LOGICOP> Lexeme %s Found.\n\n" , lineCount , yytext);
+        mySymbolTable.insert(yytext , "LOGICOP");
+
+    string s ; 
+    s = mySymbolTable.printAllScopeTable();
+    char ch[2000] ; 
+    for(int i = 0 ; i < s.size(); i++)
+    {
+        ch[i] = s[i] ; 
+    }
+fprintf(logout , "\n%s\n", ch);
 }
 
 [&]|[\^]|(<<)|(>>)|[|] {
 	fprintf(tokenout , "<BITOP , %s> ", yytext);
     	fprintf(logout , "Line No %d: Token <BITCOP> Lexeme %s Found.\n\n" , lineCount  , yytext);
+        mySymbolTable.insert(yytext , "BITCOP");
+
+    string s ; 
+    s = mySymbolTable.printAllScopeTable();
+    char ch[2000] ; 
+    for(int i = 0 ; i < s.size(); i++)
+    {
+        ch[i] = s[i] ; 
+    }
+fprintf(logout , "\n%s\n", ch);
 }
 
 [\!] {
 	fprintf(tokenout , "<BNOT , %s> ", yytext);
     	fprintf(logout , "Line No %d: Token <NOT> Lexeme %s Found.\n\n" , lineCount  , yytext);
+
+        mySymbolTable.insert(yytext , "NOT");
+
+    string s ; 
+    s = mySymbolTable.printAllScopeTable();
+    char ch[2000] ; 
+    for(int i = 0 ; i < s.size(); i++)
+    {
+        ch[i] = s[i] ; 
+    }
+fprintf(logout , "\n%s\n", ch);
 }
 
 [(] {
 	fprintf(tokenout , "<LPAREN , %s> ", yytext);
     	fprintf(logout , "Line No %d: Token <LPAREN> Lexeme %s Found.\n\n" , lineCount, yytext);
+
+        mySymbolTable.insert(yytext , "LPAREN");
+
+    string s ; 
+    s = mySymbolTable.printAllScopeTable();
+    char ch[2000] ; 
+    for(int i = 0 ; i < s.size(); i++)
+    {
+        ch[i] = s[i] ; 
+    }
+fprintf(logout , "\n%s\n", ch);
 }
 
 [)] {
 	fprintf(tokenout , "<RPAREN , %s> ", yytext);
     	fprintf(logout , "Line No %d: Token <RPAREN> Lexeme %s Found.\n\n" , lineCount , yytext);
+
+        mySymbolTable.insert(yytext , "RPAREN");
+
+    string s ; 
+    s = mySymbolTable.printAllScopeTable();
+    char ch[2000] ; 
+    for(int i = 0 ; i < s.size(); i++)
+    {
+        ch[i] = s[i] ; 
+    }
+fprintf(logout , "\n%s\n", ch);
 }
 
 
 [\{] {
 	fprintf(tokenout , "<LCURL , %s> ", yytext);
     	fprintf(logout , "Line No %d: Token <LCURL> Lexeme %s Found.\n\n" , lineCount , yytext);
+
+        mySymbolTable.insert(yytext , "LCURL");
+
+    string s ; 
+    s = mySymbolTable.printAllScopeTable();
+    char ch[2000] ; 
+    for(int i = 0 ; i < s.size(); i++)
+    {
+        ch[i] = s[i] ; 
+    }
+fprintf(logout , "\n%s\n", ch);
 }
 
 [}] {
 	fprintf(tokenout , "<RCURL , %s> ", yytext);
     	fprintf(logout , "Line No %d: Token <RCURL> Lexeme %s Found.\n\n" , lineCount , yytext);
+
+        mySymbolTable.insert(yytext , "RCURL");
+
+    string s ; 
+    s = mySymbolTable.printAllScopeTable();
+    char ch[2000] ; 
+    for(int i = 0 ; i < s.size(); i++)
+    {
+        ch[i] = s[i] ; 
+    }
+fprintf(logout , "\n%s\n", ch);
 }
 
 [\[] {
 	fprintf(tokenout , "<LTHIRD , %s> ", yytext);
     	fprintf(logout , "Line No %d: Token <LTHIRD> Lexeme %s Found.\n\n" , lineCount  , yytext);
+
+        mySymbolTable.insert(yytext , "LTHIRD");
+
+    string s ; 
+    s = mySymbolTable.printAllScopeTable();
+    char ch[2000] ; 
+    for(int i = 0 ; i < s.size(); i++)
+    {
+        ch[i] = s[i] ; 
+    }
+fprintf(logout , "\n%s\n", ch);
 }
 
 []] {
 	fprintf(tokenout , "<RTHIRD , %s> ", yytext);
     	fprintf(logout , "Line No %d: Token <RTHIRD> Lexeme %s Found.\n\n" , lineCount , yytext);
+
+        mySymbolTable.insert(yytext , "RTHIRD");
+
+    string s ; 
+    s = mySymbolTable.printAllScopeTable();
+    char ch[2000] ; 
+    for(int i = 0 ; i < s.size(); i++)
+    {
+        ch[i] = s[i] ; 
+    }
+fprintf(logout , "\n%s\n", ch);
 }
 
 [,] {
 	fprintf(tokenout , "<COMMA , %s> ", yytext);
     	fprintf(logout , "Line No %d: Token <COMMA> Lexeme %s Found.\n\n" , lineCount , yytext);
+
+        mySymbolTable.insert(yytext , "COMMA");
+
+    string s ; 
+    s = mySymbolTable.printAllScopeTable();
+    char ch[2000] ; 
+    for(int i = 0 ; i < s.size(); i++)
+    {
+        ch[i] = s[i] ; 
+    }
+fprintf(logout , "\n%s\n", ch);
 }
 
 [;] {
 	fprintf(tokenout , "<SEMICOLON , %s> ", yytext);
     	fprintf(logout , "Line No %d: Token <SEMICOLON> Lexeme %s Found.\n\n" , lineCount  , yytext);
+
+        mySymbolTable.insert(yytext , "SEMICOLON");
+
+    string s ; 
+    s = mySymbolTable.printAllScopeTable();
+    char ch[2000] ; 
+    for(int i = 0 ; i < s.size(); i++)
+    {
+        ch[i] = s[i] ; 
+    }
+fprintf(logout , "\n%s\n", ch);
 } 
 
 {identifier} {
+    mySymbolTable.insert(yytext , "ID");
+    string s ; 
+    s = mySymbolTable.printAllScopeTable();
+    char ch[2000] ; 
+    for(int i = 0 ; i < s.size(); i++)
+    {
+        ch[i] = s[i] ; 
+    }
+
+
     fprintf(tokenout , "<ID, %s> ", yytext);
     fprintf(logout , "Line No. %d: Token <ID> Lexeme %s found\n\n", lineCount , yytext);
+    fprintf(logout , "\n%s\n", ch);
 }
 
 
