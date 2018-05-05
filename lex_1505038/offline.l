@@ -1,4 +1,6 @@
 %option noyywrap
+%x cms 
+%x COMMENT_MULTI_LINE
 
 %{
 #include<bits/stdc++.h>
@@ -39,7 +41,7 @@ floatingPointLiteral ([0-9]*\.?[0-9]+|[0-9]+\.?[0-9]*)(E[+|-]?[0-9]+)?
 
 characterLiteral '.'|'\\[nt"afrbv0\\]'
 
-identifier [a-zA-Z_]([a-zA-Z0-9_]){0,30}
+identifier [a-zA-Z_]([a-zA-Z0-9_])*
 
 stringPattern \"([^\\\"\n]|\\([^\n]|\n))*\"
 
@@ -54,6 +56,18 @@ tooManyDecimalError [0-9]*[.]([0-9]*[.]+[0-9]*)+
 illFormedError (({integerLiteral}|{floatingPointLiteral}|{tooManyDecimalError})[E]({floatingPointLiteral}|{tooManyDecimalError}))|({tooManyDecimalError}[E]{integerLiteral})
 
 invalidSuffix [0-9]([0-9]*[a-zA-Z_]+)+
+
+multiCharError \'(([^\n\\][^\n]+)|(\\[^ntbafrv0\\\"])|(\\[^\n\\]{2,})|((\\\\)+))\'
+
+unfinishedChar1 (\'[^\'\n \t]*)
+
+unfinishedChar2 \'([^\\']*(\\\\)*\\)+\'
+
+unfinishedString \"([^\\\"\n]|\\+([^\n\"]|\n))*
+
+
+
+
 
 %%
 {newLine} {lineCount++;}
@@ -319,17 +333,69 @@ invalidSuffix [0-9]([0-9]*[a-zA-Z_]+)+
 }
 
 {tooManyDecimalError} {
-            fprintf(logout , "Line No %d: <TOO MANY DECIMAL ERROR , %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
+            fprintf(logout , "Error at Line No %d: <TOO MANY DECIMAL ERROR , %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
 
 }
 
 {illFormedError} {
-            fprintf(logout , "Line No %d: <ILL FORMED NUMBER ERROR , %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
+            fprintf(logout , "Error at Line No %d: <ILL FORMED NUMBER ERROR , %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
 }
 
 
 {invalidSuffix} {
-            fprintf(logout , "Line No %d: <INVALID SUFFIX , %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
+            fprintf(logout , "Error at Line No %d: <INVALID SUFFIX , %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
+
+}
+
+
+{multiCharError} {
+     fprintf(logout , "Multi character constant error  at Line No %d: <Multi character constant error  , %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
+
+}
+
+{unfinishedChar1} {
+         fprintf(logout , "Error at Line No %d: <Unfinished Character Error , %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
+
+}
+
+{unfinishedChar2} {
+         fprintf(logout , "Error at Line No %d: <Unfinished Character Error, %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
+
+}
+
+{unfinishedString} {
+ fprintf(logout , "Error at Line No %d: <Unfinished String Error, %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
+
+}
+
+
+
+"/*" { 
+  BEGIN(COMMENT_MULTI_LINE); 
+}
+
+<COMMENT_MULTI_LINE>"*/" { 
+  printf("'%s': was a multi-line comment\n", yytext);
+  BEGIN(INITIAL); 
+}
+
+<COMMENT_MULTI_LINE>. { 
+
+} 
+
+<COMMENT_MULTI_LINE>\n { 
+
+} 
+
+<COMMENT_MULTI_LINE><<EOF>> {      
+    
+    fprintf(logout , "Error at Line No %d: <Unfinished Comment Error, %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
+    yyterminate();
+}
+
+
+. {
+     fprintf(logout , "Line No %d: <Unrecognized Character Error, %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
 
 }
 

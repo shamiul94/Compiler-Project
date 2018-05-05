@@ -1,2 +1,17 @@
-Line No 1: Token <ID , usfhdc> Lexeme usfhdc Found.
-Line No 2: Token <ID , hsbdfj> Lexeme hsbdfj Found.
+Error at Line No 1: <TOO MANY DECIMAL ERROR , 1.2.345> Lexeme 1.2.345 Found.
+Error at Line No 2: <ILL FORMED NUMBER ERROR , 1E10.7> Lexeme 1E10.7 Found.
+Error at Line No 3: <INVALID SUFFIX , 12abcd> Lexeme 12abcd Found.
+Multi character constant error  at Line No 4: <Multi character constant error  , 'ab'> Lexeme 'ab' Found.
+Error at Line No 5: <Unfinished Character Error , 'a> Lexeme 'a Found.
+Error at Line No 6: <Unfinished Character Error , '> Lexeme ' Found.
+Multi character constant error  at Line No 7: <Multi character constant error  , 'ab cd'> Lexeme 'ab cd' Found.
+Line No 8: Token <CONST_CHAR , > Lexeme '\' Found.
+Error at Line No 9: <Unfinished Character Error , '> Lexeme ' Found.
+Error at Line No 9: <Unfinished Character Error , '> Lexeme ' Found.
+Error at Line No 10: <Unfinished String Error, "abcd> Lexeme "abcd Found.
+Error at Line No 11: <Unfinished String Error, "abcd\
+efgh> Lexeme "abcd\
+efgh Found.
+Line No 12: Token <ID , ijk> Lexeme ijk Found.
+Error at Line No 12: <Unfinished String Error, "> Lexeme " Found.
+Error at Line No 13: <Unfinished Comment Error, > Lexeme  Found.
