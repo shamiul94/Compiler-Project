@@ -164,10 +164,9 @@ bool scopeTable::insert(string varName, string varType)
     NewVar->i = positionInArray;
     NewVar->j = num;
     NewVar->tableId = id;
-    flag = 1 ;
 
     curr->next = NewVar;
-
+    flag = 1 ;
 
     return true;
 }
@@ -224,9 +223,7 @@ string scopeTable::printScopeTable()
 
     for (ll i = 0; i < N; i++)
     {
-        char c = i + '0' ;
-        s = s + c ;
-//        cout << s << endl ;
+        s = s + (char)(i - '0');
         s = s +" --> ";
         //cout << i << " --> ";
 
@@ -247,7 +244,7 @@ string scopeTable::printScopeTable()
             if (curr != 0 && curr->next != 0)
             {
                 s = s + " , " ;
-//                cout << " , ";
+                cout << " , ";
             }
         }
         s = s + '\n' ;
@@ -290,7 +287,6 @@ symbolTable::symbolTable(ll n)
     scopeTable *tem;
     tem = new scopeTable(N);
     currentScopeTable = tem;
-//    cout << tem -> flag << endl ;
 }
 
 
@@ -357,13 +353,10 @@ string symbolTable::printAllScopeTable()
 
     while (tem != 0)
     {
-        if(tem->flag == 1 )
+        if(tem->flag == 1)
         {
-//            cout << tem -> flag << endl ;
             s = s + "ScopeTable # " ;
-            char c = tem->id + '0' ;
-//            cout << c << endl ;
-            s = s + c + '\n' ;
+            s = s + (char)(tem->id - '0');
             //cout << "ScopeTable # " << tem->id << endl;
             s = s + tem->printScopeTable();
             s = s + '\n' ;
