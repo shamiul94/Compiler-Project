@@ -313,7 +313,7 @@ tooManyDecimalError [0-9]*[.]([0-9]*[.]+[0-9]*)+
 }
 
 {tooManyDecimalError} {
-                fprintf(logout , "Line No %d: <TOO MANY DECIMAL ERROR , %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
+            fprintf(logout , "Line No %d: <TOO MANY DECIMAL ERROR , %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
 
 }
 
