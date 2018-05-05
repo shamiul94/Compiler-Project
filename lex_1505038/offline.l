@@ -28,7 +28,7 @@ char* upper(char* s)
 void outputIdentifier()
 {
 	fprintf(tokenout , "<%s> " , upper(yytext));
-	fprintf(logout , "Line No %d: Token <%s> Lexeme %s Found.\n" , lineCount , upper(yytext) , yytext);
+	fprintf(logout , "Line No %d: Token <%s> Lexeme %s Found.\n\n" , lineCount , upper(yytext) , yytext);
 }
 
 
@@ -39,7 +39,7 @@ newLine \n
 integerLiteral [0-9]+
 floatingPointLiteral ([0-9]*\.?[0-9]+|[0-9]+\.?[0-9]*)(E[+|-]?[0-9]+)?
 
-characterLiteral '.'|'\\[nt"afrbv0\\]'
+characterLiteral \'[^\\\'\r\n]\'|\'\\[nt\"\'afrbv0\\]\'
 
 identifier [a-zA-Z_]([a-zA-Z0-9_])*
 
@@ -57,11 +57,13 @@ illFormedError (({integerLiteral}|{floatingPointLiteral}|{tooManyDecimalError})[
 
 invalidSuffix [0-9]([0-9]*[a-zA-Z_]+)+
 
+emptyChar \'\'
+
 multiCharError \'(([^\n\\][^\n]+)|(\\[^ntbafrv0\\\"])|(\\[^\n\\]{2,})|((\\\\)+))\'
 
 unfinishedChar1 (\'[^\'\n \t]*)
 
-unfinishedChar2 \'([^\\']*(\\\\)*\\)+\'
+unfinishedChar2 (\'\\[^nfarbtv0\"\\\']?\')
 
 unfinishedString \"([^\\\"\n]|\\+([^\n\"]|\n))*
 
@@ -140,14 +142,14 @@ unfinishedString \"([^\\\"\n]|\\+([^\n\"]|\n))*
 
 
 {integerLiteral} {
-			fprintf(tokenout , "<CONST_INT , %s> ", yytext);
-			fprintf(logout , "Line No %d: Token <CONST_INT , %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
-	        }
+			fprintf(tokenout , "<CONST_INT, %s> ", yytext);
+			fprintf(logout , "Line No. %d: Token <INT> Lexeme %s found\n\n", lineCount , yytext);
+}
 
 {floatingPointLiteral} {
-		         fprintf(tokenout , "<CONST_FLOAT , %s> ", yytext);
+		    fprintf(tokenout , "<CONST_FLOAT, %s> ", yytext);
 			fprintf(logout , "Line No %d: Token <CONST_FLOAT , %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
-		     }
+}
 
 {characterLiteral} {
 
@@ -226,145 +228,232 @@ unfinishedString \"([^\\\"\n]|\\+([^\n\"]|\n))*
     }
 
 
-			fprintf(tokenout , "<CONST_CHAR , %s> ", c);
-            fprintf(logout , "Line No %d: Token <CONST_CHAR , %s> Lexeme %s Found.\n" , lineCount , c , yytext);
+	fprintf(tokenout , "<CONST_CHAR, %s> ", c);
+    fprintf(logout , "Line No. %d: Token <CONST_CHAR> Lexeme %s found\n\n" ,lineCount , yytext);
 }
 
 
 [+|-] {
-		fprintf(tokenout , "<ADDOP , %s> ", yytext);
-    	fprintf(logout , "Line No %d: Token <ADDOP , %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
+		fprintf(tokenout , "<ADDOP, %s> ", yytext);
+    	fprintf(logout , "Line No %d: Token <ADDOP> Lexeme %s Found.\n\n" , lineCount  , yytext);
 	}
 
 [\*]|[/]|[%] {
 		fprintf(tokenout , "<MULOP , %s> ", yytext);
-    	fprintf(logout , "Line No %d: Token <MULOP , %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
+    	fprintf(logout , "Line No %d: Token <MULOP> Lexeme %s Found.\n\n" , lineCount , yytext);
 	  }
 
 [\+]{2}|[-]{2} {
 	fprintf(tokenout , "<INCOP , %s> ", yytext);
-    	fprintf(logout , "Line No %d: Token <INCOP , %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
+    	fprintf(logout , "Line No %d: Token <INCOP> Lexeme %s Found.\n\n" , lineCount , yytext);
 }
 
 (<)|(<=)|(>)|(>=)|(==)|(!=) {
 	fprintf(tokenout , "<RELOP , %s> ", yytext);
-    	fprintf(logout , "Line No %d: Token <RELOP , %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
+    	fprintf(logout , "Line No %d: Token <RELOP> Lexeme %s Found.\n\n" , lineCount, yytext);
 }
 
 = {
 	fprintf(tokenout , "<ASSIGNOP , %s> ", yytext);
-    	fprintf(logout , "Line No %d: Token <ASSIGNOP , %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
+    	fprintf(logout , "Line No %d: Token <ASSIGNOP> Lexeme %s Found.\n\n" , lineCount , yytext);
 }
 
 [&]{2}|[|]{2} {
 	fprintf(tokenout , "<LOGICOP , %s> ", yytext);
-    	fprintf(logout , "Line No %d: Token <LOGICOP , %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
+    	fprintf(logout , "Line No %d: Token <LOGICOP> Lexeme %s Found.\n\n" , lineCount , yytext);
 }
 
 [&]|[\^]|(<<)|(>>)|[|] {
 	fprintf(tokenout , "<BITOP , %s> ", yytext);
-    	fprintf(logout , "Line No %d: Token <BITCOP , %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
+    	fprintf(logout , "Line No %d: Token <BITCOP> Lexeme %s Found.\n\n" , lineCount  , yytext);
 }
 
 [\!] {
 	fprintf(tokenout , "<BNOT , %s> ", yytext);
-    	fprintf(logout , "Line No %d: Token <NOT , %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
+    	fprintf(logout , "Line No %d: Token <NOT> Lexeme %s Found.\n\n" , lineCount  , yytext);
 }
 
 [(] {
 	fprintf(tokenout , "<LPAREN , %s> ", yytext);
-    	fprintf(logout , "Line No %d: Token <LPAREN , %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
+    	fprintf(logout , "Line No %d: Token <LPAREN> Lexeme %s Found.\n\n" , lineCount, yytext);
 }
 
 [)] {
 	fprintf(tokenout , "<RPAREN , %s> ", yytext);
-    	fprintf(logout , "Line No %d: Token <RPAREN , %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
+    	fprintf(logout , "Line No %d: Token <RPAREN> Lexeme %s Found.\n\n" , lineCount , yytext);
 }
 
 
 [\{] {
 	fprintf(tokenout , "<LCURL , %s> ", yytext);
-    	fprintf(logout , "Line No %d: Token <LCURL , %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
+    	fprintf(logout , "Line No %d: Token <LCURL> Lexeme %s Found.\n\n" , lineCount , yytext);
 }
 
 [}] {
 	fprintf(tokenout , "<RCURL , %s> ", yytext);
-    	fprintf(logout , "Line No %d: Token <RCURL , %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
+    	fprintf(logout , "Line No %d: Token <RCURL> Lexeme %s Found.\n\n" , lineCount , yytext);
 }
 
 [\[] {
 	fprintf(tokenout , "<LTHIRD , %s> ", yytext);
-    	fprintf(logout , "Line No %d: Token <LTHIRD , %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
+    	fprintf(logout , "Line No %d: Token <LTHIRD> Lexeme %s Found.\n\n" , lineCount  , yytext);
 }
 
 []] {
 	fprintf(tokenout , "<RTHIRD , %s> ", yytext);
-    	fprintf(logout , "Line No %d: Token <RTHIRD , %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
+    	fprintf(logout , "Line No %d: Token <RTHIRD> Lexeme %s Found.\n\n" , lineCount , yytext);
 }
 
 [,] {
 	fprintf(tokenout , "<COMMA , %s> ", yytext);
-    	fprintf(logout , "Line No %d: Token <COMMA , %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
+    	fprintf(logout , "Line No %d: Token <COMMA> Lexeme %s Found.\n\n" , lineCount , yytext);
 }
 
 [;] {
 	fprintf(tokenout , "<SEMICOLON , %s> ", yytext);
-    	fprintf(logout , "Line No %d: Token <SEMICOLON , %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
+    	fprintf(logout , "Line No %d: Token <SEMICOLON> Lexeme %s Found.\n\n" , lineCount  , yytext);
 } 
 
 {identifier} {
-    fprintf(tokenout , "<ID , %s> ", yytext);
-        fprintf(logout , "Line No %d: Token <ID , %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
+    fprintf(tokenout , "<ID, %s> ", yytext);
+    fprintf(logout , "Line No. %d: Token <ID> Lexeme %s found\n\n", lineCount , yytext);
 }
 
 
 {stringPattern} {
-    fprintf(tokenout , "<STRING , %s> ", yytext);
-        fprintf(logout , "Line No %d: Token <STRING , %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
+
+
+    string s = "";  
+
+    for(int i = 0 ; i < strlen(yytext); i++)
+    {
+        if(yytext[i] == '\\')
+        {
+                if(yytext[i+1] == 'n')
+                {
+                    s = s + '\n'; 
+                    i++;
+                }
+                else if(yytext[i+1] == 't')
+                {
+                    s = s + '\t'; 
+                    i++;
+                }
+                else if(yytext[i+1] == '\"')
+                {
+                    s = s + '\"'; 
+                    i++;
+
+                }
+                else if(yytext[i+1] =='a')
+                {
+                    s = s + '\a'; 
+                    i++;
+                }
+                else if(yytext[i+1] =='f')
+                {
+                    s = s + '\f'; 
+                    i++;
+                }
+                else if(yytext[i+1] =='r')
+                {
+                    s = s + '\r'; 
+                    i++;
+                }
+                else if(yytext[i+1] =='b')
+                {
+                    s = s + '\b'; 
+                    i++;
+                }
+                else if(yytext[i+1] =='v')
+                {
+                    s = s + '\v'; 
+                    i++;
+                }
+                else if(yytext[i+1] =='0')
+                {
+                    s = s + '\0'; 
+                    i++;
+                }
+                else if(yytext[i+1] =='\\')
+                {
+                    s = s + '\\'; 
+                    i++;
+                }
+                else if(yytext[i+1] =='\n')
+                { 
+                    i++;
+                }
+        }
+        else
+        {
+            if(yytext[i]!='\n')
+            {
+                s = s + yytext[i] ;\
+            }
+        }
+    }
+
+    int i = 0 ; 
+    char ch[1000] = {0}; 
+    for(i = 0 ; i < s.size(); i++)
+    {
+        ch[i] = s[i]; 
+    }
+    ch[i] = '\0' ; 
+
+
+    fprintf(tokenout , "<STRING , %s> ", ch);
+    fprintf(logout , "Line No %d: Token <STRING , %s> Lexeme %s Found.\n\n" , lineCount , ch , yytext);
 }
 
 
 {singleLineComment} {
-            fprintf(logout , "Line No %d:  <SINGLE LINE COMMENT , %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
+            fprintf(logout , "Line No %d:  <COMMENT> Lexeme %s Found.\n\n" , lineCount , yytext);
 }
 
 {multiLineComment} {
-            fprintf(logout , "Line No %d:  <MULTI LINE COMMENT , %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
+            fprintf(logout , "Line No %d:  <COMMENT> Lexeme %s Found.\n\n" , lineCount , yytext);
 }
 
 {tooManyDecimalError} {
-            fprintf(logout , "Error at Line No %d: <TOO MANY DECIMAL ERROR , %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
-
+    fprintf(logout , "Error at line %d: Too many decimal point %s\n\n", lineCount , yytext);
 }
 
 {illFormedError} {
-            fprintf(logout , "Error at Line No %d: <ILL FORMED NUMBER ERROR , %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
+    fprintf(logout , "Error at line %d: Ill formed number %s\n\n", lineCount , yytext);
 }
 
 
 {invalidSuffix} {
-            fprintf(logout , "Error at Line No %d: <INVALID SUFFIX , %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
+    fprintf(logout , "Error at line %d: Invalid prefix on ID or invalid suffix on Number %s\n\n",lineCount ,  yytext);
 
 }
 
 
 {multiCharError} {
-     fprintf(logout , "Multi character constant error  at Line No %d: <Multi character constant error  , %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
+    fprintf(logout , "Error at line %d: Multi character constant error %s\n\n", lineCount  , yytext);
 
 }
 
 {unfinishedChar1} {
-         fprintf(logout , "Error at Line No %d: <Unfinished Character Error , %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
+  fprintf(logout , "Error at line %d: Unterminated character %s\n\n", lineCount  , yytext);
 
 }
 
+
 {unfinishedChar2} {
-         fprintf(logout , "Error at Line No %d: <Unfinished Character Error, %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
+    fprintf(logout , "Error at line %d: Unterminated character %s\n\n", lineCount  , yytext);
+}
+
+
+{emptyChar} {
+        fprintf(logout , "Error at line %d: Empty character constant error %s\n\n", lineCount  , yytext);
 
 }
 
 {unfinishedString} {
- fprintf(logout , "Error at Line No %d: <Unfinished String Error, %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
+    fprintf(logout , "Error at line %d: Unterminated String %s\n\n", lineCount  , yytext);
 
 }
 
@@ -375,7 +464,6 @@ unfinishedString \"([^\\\"\n]|\\+([^\n\"]|\n))*
 }
 
 <COMMENT_MULTI_LINE>"*/" { 
-  printf("'%s': was a multi-line comment\n", yytext);
   BEGIN(INITIAL); 
 }
 
@@ -388,14 +476,13 @@ unfinishedString \"([^\\\"\n]|\\+([^\n\"]|\n))*
 } 
 
 <COMMENT_MULTI_LINE><<EOF>> {      
-    
-    fprintf(logout , "Error at Line No %d: <Unfinished Comment Error, %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
+    fprintf(logout , "Error at line %d: Unterminated comment %s\n\n" , lineCount , yytext);
     yyterminate();
 }
 
 
 . {
-     fprintf(logout , "Line No %d: <Unrecognized Character Error, %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
+     fprintf(logout , "Error at line %d: <Unrecognized Character Error> Lexeme %s Found.\n\n" , lineCount  , yytext);
 
 }
 

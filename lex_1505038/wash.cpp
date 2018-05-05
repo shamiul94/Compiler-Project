@@ -1,73 +1,74 @@
-char* c = new char[20];
+char* c = new char[2000];
+c[0] = '\n' ; 
+string s = "";  
     char ch ;
-
-    for(int i = 0 ; i < strlen(yytext); i++)
+"hkbdc\n \t \a .. \(\n)
+"
+    for(int i = 0 ; i < strlen(yytext)-1; i++)
     {
-        if(yytext[1] == '\\')
+        if(yytext[i] == '\\')
         {
-            if(yytext[2] == '\0')
+            if(yytext[i+1] == '\"')
             {
-                c[0] = yytext[1];
-                c[1] = '\0';
+
             }
             else
             {
-                if(yytext[2] == 'n')
+                if(yytext[i+1] == 'n')
                 {
-                    c[0] = '\n';
-                    c[1] = '\0';
+                    s = s + '\n'; 
+                    i++;
                 }
-                else if(yytext[2] == 't')
+                else if(yytext[i+1] == 't')
                 {
-                    c[0] = '\t';
-                    c[1] = '\0';
+                    s = s + '\t'; 
+                    i++;
                 }
-                else if(yytext[2] == '"')
+                else if(yytext[i+1] == '\"')
                 {
-                    c[0] = '\"';
-                    c[1] = '\0';
+                    s = s + '\"'; 
+                    i++;
 
                 }
-                else if(yytext[2] =='a')
+                else if(yytext[i+1] =='a')
                 {
-                    c[0] = '\a';
-                    c[1] = '\0';
+                    s = s + '\a'; 
+                    i++;
                 }
-                else if(yytext[2] =='f')
+                else if(yytext[i+1] =='f')
                 {
-                    c[0] = '\f';
-                    c[1] = '\0';
+                    s = s + '\f'; 
+                    i++;
                 }
-                else if(yytext[2] =='r')
+                else if(yytext[i+1] =='r')
                 {
-                    c[0] = '\r';
-                    c[1] = '\0';
+                    s = s + '\r'; 
+                    i++;
                 }
-                else if(yytext[2] =='b')
+                else if(yytext[i+1] =='b')
                 {
-                    c[0] = '\b';
-                    c[1] = '\0';
+                    s = s + '\b'; 
+                    i++;
                 }
-                else if(yytext[2] =='v')
+                else if(yytext[i+1] =='v')
                 {
-                    c[0] = '\v';
-                    c[1] = '\0';
+                    s = s + '\v'; 
+                    i++;
                 }
-                else if(yytext[2] =='0')
+                else if(yytext[i+1] =='0')
                 {
-                    c[0] = '\0';
-                    c[1] = '\0';
+                    s = s + '\0'; 
+                    i++;
                 }
-                else if(yytext[2] =='\\')
+                else if(yytext[i+1] =='\\')
                 {
-                    c[0] = '\\';
-                    c[1] = '\0';
+                    s = s + '\\'; 
+                    i++;
                 }
             }
         }
         else
         {
-            c[0] = yytext[1];
-            c[1] = '\0';
+            s = s + yytext[i] ;
         }
     }
