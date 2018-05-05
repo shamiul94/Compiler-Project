@@ -43,9 +43,11 @@ identifier [a-zA-Z_]([a-zA-Z0-9_]){0,30}
 
 stringPattern \"([^\"\n]*\\\n)*[^\"\n]*\"
 
-singleLineComment \\\\([^\n]*\\\n)*[^\n]*
+singleLineComment \/\/([^\n]*\\\n)*[^\n]*
 
 multiLineComment \/\*([^*]|\*+[^\/*])*\*+\/
+
+tooManyDecimalError [0-9]*[.]([0-9]*[.]+[0-9]*)+
 
 %%
 {newLine} {lineCount++;}
@@ -303,13 +305,17 @@ multiLineComment \/\*([^*]|\*+[^\/*])*\*+\/
 
 
 {singleLineComment} {
-            fprintf(logout , "Line No %d: Token <SINGLE LINE COMMENT , %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
+            fprintf(logout , "Line No %d:  <SINGLE LINE COMMENT , %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
 }
 
 {multiLineComment} {
-            fprintf(logout , "Line No %d: Token <MULTI LINE COMMENT , %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
+            fprintf(logout , "Line No %d:  <MULTI LINE COMMENT , %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
 }
 
+{tooManyDecimalError} {
+                fprintf(logout , "Line No %d: <TOO MANY DECIMAL ERROR , %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
+
+}
 
 
 %%
