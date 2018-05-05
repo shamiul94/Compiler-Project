@@ -41,13 +41,17 @@ characterLiteral '.'|'\\[nt"afrbv0\\]'
 
 identifier [a-zA-Z_]([a-zA-Z0-9_]){0,30}
 
-stringPattern \"([^\"\n]*\\\n)*[^\"\n]*\"
+stringPattern \"([^\"\\\n]|\\(.|\r?\n))*\"
+
+
 
 singleLineComment \/\/([^\n]*\\\n)*[^\n]*
 
 multiLineComment \/\*([^*]|\*+[^\/*])*\*+\/
 
 tooManyDecimalError [0-9]*[.]([0-9]*[.]+[0-9]*)+
+
+illFormedError (({integerLiteral}|{floatingPointLiteral}|{tooManyDecimalError})[E]({floatingPointLiteral}|{tooManyDecimalError}))|({tooManyDecimalError}[E]{integerLiteral})
 
 %%
 {newLine} {lineCount++;}
@@ -315,6 +319,10 @@ tooManyDecimalError [0-9]*[.]([0-9]*[.]+[0-9]*)+
 {tooManyDecimalError} {
             fprintf(logout , "Line No %d: <TOO MANY DECIMAL ERROR , %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
 
+}
+
+{illFormedError} {
+            fprintf(logout , "Line No %d: <ILL FORMED NUMBER ERROR , %s> Lexeme %s Found.\n" , lineCount , yytext , yytext);
 }
 
 

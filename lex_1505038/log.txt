@@ -1,2 +1,2 @@
-Line No 1: Token <CONST_FLOAT , 1.2> Lexeme 1.2 Found.
-Line No 1: Token <CONST_FLOAT , .345> Lexeme .345 Found.
+Line No 1: Token <ID , usfhdc> Lexeme usfhdc Found.
+Line No 2: Token <ID , hsbdfj> Lexeme hsbdfj Found.
