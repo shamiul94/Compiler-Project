@@ -1,0 +1,2 @@
+Error No: 0 at line no: 15 : ID "a" has already been declared before in this scope.
+

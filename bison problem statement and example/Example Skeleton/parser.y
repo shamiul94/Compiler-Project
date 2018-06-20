@@ -3,7 +3,7 @@
 #include<cstdlib>
 #include<cstring>
 #include<cmath>
-#include "symbol.h"
+#include "SymbolTable.h"
 #define YYSTYPE SymbolInfo*
 
 using namespace std;
@@ -12,7 +12,7 @@ int yyparse(void);
 int yylex(void);
 extern FILE *yyin;
 
-SymbolTable *table;
+SymbolTable *table = new SymbolTable(11);
 
 
 void yyerror(char *s)
@@ -23,21 +23,13 @@ void yyerror(char *s)
 
 %}
 
-%token IF ELSE FOR WHILE
-
-%left 
-%right
-
-%nonassoc 
+%token IF ELSE FOR WHILE ID LPAREN RPAREN DOUBLE CHAR MAIN
+%token LTHIRD CONST_INT RTHIRD VOID FLOAT INT LCURL RCURL COMMA SEMICOLON
+%token ADDOP RELOP LOGICOP NOT CONST_FLOAT INCOP DECOP ASSIGNOP MULOP PRINTLN RETURN
 
 
 %%
-
-start : program
-	{
-		//write your code in this block in all the similar blocks below
-	}
-	;
+start : program;
 
 program : program unit 
 	| unit
@@ -151,6 +143,7 @@ arguments : arguments COMMA logic_expression
 %%
 int main(int argc,char *argv[])
 {
+	FILE* fp  ; 
 
 	if((fp=fopen(argv[1],"r"))==NULL)
 	{
@@ -158,21 +151,21 @@ int main(int argc,char *argv[])
 		exit(1);
 	}
 
-	fp2= fopen(argv[2],"w");
-	fclose(fp2);
-	fp3= fopen(argv[3],"w");
-	fclose(fp3);
+	//fp2= fopen(argv[2],"w");
+	//fclose(fp2);
+	//fp3= fopen(argv[3],"w");
+	//fclose(fp3);
 	
-	fp2= fopen(argv[2],"a");
-	fp3= fopen(argv[3],"a");
+	//fp2= fopen(argv[2],"a");
+	//fp3= fopen(argv[3],"a");
 	
 
 	yyin=fp;
 	yyparse();
 	
 
-	fclose(fp2);
-	fclose(fp3);
+	//fclose(fp2);
+	//fclose(fp3);
 	
 	return 0;
 }

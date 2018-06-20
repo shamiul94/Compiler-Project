@@ -2,8 +2,9 @@
 #include<iostream>
 #include<stdlib.h>
 #include<string.h>
+
 #include "SymbolTable.h"
-#include "SymbolInfo.h"
+
 #include "y.tab.h"
 
 
@@ -112,7 +113,7 @@ MULOP [*/%]
 			}
 {id} 		{	 
 				
-				SymbolInfo *s= table->lookup(yytext);
+				SymbolInfo *s= table->lookUp(yytext);
 				if(s==NULL)
 				{					
 					s= new SymbolInfo(yytext, (char *)"ID");
