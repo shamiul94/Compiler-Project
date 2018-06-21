@@ -1,15 +1,18 @@
 %{
-#include<bits/stdc++.h>
-#include<cstdlib>
-#include<cstring>
-#include<cmath>
+#include <bits/stdc++.h>
+#include <cstdlib>
+#include <cstring>
+#include <cmath>
 #include "SymbolTable.h"
+#include "Functions.h"
 
 using namespace std;
 
 int yyparse(void);
 int yylex(void);
+
 extern FILE *yyin;
+extern int lineCount;
 
 string varType; 
 
@@ -21,39 +24,10 @@ int errorNo =  -1 , totalArgsNo = 0 , typeAndIDArgsNo = 0;
 
 vector<SymbolInfo*> Params ; 
 
-extern int lineCount; 
-
-int stoi(std::string s) //The conversion function
-{
-    return atoi(s.c_str());
-}
-
-float stof(string s) //The conversion function
-{
-    return atof(s.c_str());
-}
-
-
-
-void yyerror(const char *s)
-{
-	//write your code
-}
-
-
-void initializeParam()
-{
-	Params.clear(); 
-	totalArgsNo = 0 ; 
-	typeAndIDArgsNo = 0 ;
-}
-
-
 %}
 %union{
 	SymbolInfo *s; 
 }
-
 
 %token IF ELSE FOR WHILE DO BREAK INT CHAR FLOAT DOUBLE VOID RETURN SWITCH CASE DEFAULT CONTINUE INCOP DECOP ASSIGNOP BITOP NOT LPAREN RPAREN LCURL RCURL LTHIRD RTHIRD COMMA SEMICOLON PRINTLN COMMENT ERROR
 
@@ -658,45 +632,411 @@ logic_expression : rel_expression{
 			
 rel_expression	: simple_expression{
 		plogout << "At line no: " << lineCount << " : " << "rel_expression	: simple_expression" << endl << endl ;
+
+		$$ = $1 ; 
+
 		}
 		| simple_expression RELOP simple_expression	{
 		plogout << "At line no: " << lineCount << " : " << "rel_expression	: simple_expression RELOP simple_expression" << endl << endl ;
+
+
+		
+		
 		}
 		;
 				
 simple_expression : term{
 		plogout << "At line no: " << lineCount << " : " << "simple_expression : term" << endl << endl ;
+
+
+		$$ = $1 ; 
+
 		}
-		  | simple_expression ADDOP term{
+		  | simple_expression ADDOP term {
 		plogout << "At line no: " << lineCount << " : " << "simple_expression : simple_expression ADDOP term" << endl << endl ;
+
+
+			if($2 -> getSymbolName() == "+")
+			{
+			    if($1 -> getIdType() == "VAR" && $3 -> getIdType() == "VAR")
+			    {
+			        if($1 -> getVarType() == "INT" && $3 -> getVarType() == "INT")
+			        {
+			            $$ = VVIIA($1, $3);
+			        }
+			        else if($1 -> getVarType() == "INT" && $3 -> getVarType() == "FLOAT")
+			        {
+			            $$ = VVIFA($1, $3);
+			        }
+			        else if($1 -> getVarType() == "FLOAT" && $3 -> getVarType() == "INT")
+			        {
+			            $$ = VVFIA($1, $3);
+			        }
+			        else if($1 -> getVarType() == "FLOAT" && $3 -> getVarType() == "FLOAT")
+			        {
+			            $$ = VVFFA($1, $3);
+			        }
+
+			    }
+			    else if($1 -> getIdType() == "VAR" && $3 -> getIdType() == "ARR")
+			    {
+			        if($1 -> getVarType() == "INT" && $3 -> getVarType() == "INT")
+			        {
+			            $$ = VAIIA($1, $3);
+			        }
+			        else if($1 -> getVarType() == "INT" && $3 -> getVarType() == "FLOAT")
+			        {
+			            $$ = VAIFA($1, $3);
+			        }
+			        else if($1 -> getVarType() == "FLOAT" && $3 -> getVarType() == "INT")
+			        {
+			            $$ = VAFIA($1, $3);
+			        }
+			        else if($1 -> getVarType() == "FLOAT" && $3 -> getVarType() == "FLOAT")
+			        {
+			            $$ = VAFFA($1, $3);
+			        }
+			    }
+			    else if($1 -> getIdType() == "ARR" && $3 -> getIdType() == "VAR")
+			    {
+			        if($1 -> getVarType() == "INT" && $3 -> getVarType() == "INT")
+			        {
+			            $$ = AVIIA($1, $3);
+			        }
+			        else if($1 -> getVarType() == "INT" && $3 -> getVarType() == "FLOAT")
+			        {
+			            $$ = AVIFA($1, $3);
+			        }
+			        else if($1 -> getVarType() == "FLOAT" && $3 -> getVarType() == "INT")
+			        {
+			            $$ = AVFIA($1, $3);
+			        }
+			        else if($1 -> getVarType() == "FLOAT" && $3 -> getVarType() == "FLOAT")
+			        {
+			            $$ = AVFFA($1, $3);
+			        }
+			    }
+			    else if($1 -> getIdType() == "ARR" && $3 -> getIdType() == "ARR")
+			    {
+			        if($1 -> getVarType() == "INT" && $3 -> getVarType() == "INT")
+			        {
+			            $$ = AAIIA($1, $3);
+			        }
+			        else if($1 -> getVarType() == "INT" && $3 -> getVarType() == "FLOAT")
+			        {
+			            $$ = AAIFA($1, $3);
+			        }
+			        else if($1 -> getVarType() == "FLOAT" && $3 -> getVarType() == "INT")
+			        {
+			            $$ = AAFIA($1, $3);
+			        }
+			        else if($1 -> getVarType() == "FLOAT" && $3 -> getVarType() == "FLOAT")
+			        {
+			            $$ = AAFFA($1, $3);
+			        }
+			    }
+			}
+			else if($2 -> getSymbolName() == "-")
+			{
+			    if($1 -> getIdType() == "VAR" && $3 -> getIdType() == "VAR")
+			    {
+			        if($1 -> getVarType() == "INT" && $3 -> getVarType() == "INT")
+			        {
+			            $$ = VVIIMIN($1, $3);
+			        }
+			        else if($1 -> getVarType() == "INT" && $3 -> getVarType() == "FLOAT")
+			        {
+			            $$ = VVIFMIN($1, $3);
+			        }
+			        else if($1 -> getVarType() == "FLOAT" && $3 -> getVarType() == "INT")
+			        {
+			            $$ = VVFIMIN($1, $3);
+			        }
+			        else if($1 -> getVarType() == "FLOAT" && $3 -> getVarType() == "FLOAT")
+			        {
+			            $$ = VVFFMIN($1, $3);
+			        }
+
+			    }
+			    else if($1 -> getIdType() == "VAR" && $3 -> getIdType() == "ARR")
+			    {
+			        if($1 -> getVarType() == "INT" && $3 -> getVarType() == "INT")
+			        {
+			            $$ = VAIIMIN($1, $3);
+			        }
+			        else if($1 -> getVarType() == "INT" && $3 -> getVarType() == "FLOAT")
+			        {
+			            $$ = VAIFMIN($1, $3);
+			        }
+			        else if($1 -> getVarType() == "FLOAT" && $3 -> getVarType() == "INT")
+			        {
+			            $$ = VAFIMIN($1, $3);
+			        }
+			        else if($1 -> getVarType() == "FLOAT" && $3 -> getVarType() == "FLOAT")
+			        {
+			            $$ = VAFFMIN($1, $3);
+			        }
+			    }
+			    else if($1 -> getIdType() == "ARR" && $3 -> getIdType() == "VAR")
+			    {
+			        if($1 -> getVarType() == "INT" && $3 -> getVarType() == "INT")
+			        {
+			            $$ = AVIIMIN($1, $3);
+			        }
+			        else if($1 -> getVarType() == "INT" && $3 -> getVarType() == "FLOAT")
+			        {
+			            $$ = AVIFMIN($1, $3);
+			        }
+			        else if($1 -> getVarType() == "FLOAT" && $3 -> getVarType() == "INT")
+			        {
+			            $$ = AVFIMIN($1, $3);
+			        }
+			        else if($1 -> getVarType() == "FLOAT" && $3 -> getVarType() == "FLOAT")
+			        {
+			            $$ = AVFFMIN($1, $3);
+			        }
+			    }
+			    else if($1 -> getIdType() == "ARR" && $3 -> getIdType() == "ARR")
+			    {
+			        if($1 -> getVarType() == "INT" && $3 -> getVarType() == "INT")
+			        {
+			            $$ = AAIIMIN($1, $3);
+			        }
+			        else if($1 -> getVarType() == "INT" && $3 -> getVarType() == "FLOAT")
+			        {
+			            $$ = AAIFMIN($1, $3);
+			        }
+			        else if($1 -> getVarType() == "FLOAT" && $3 -> getVarType() == "INT")
+			        {
+			            $$ = AAFIMIN($1, $3);
+			        }
+			        else if($1 -> getVarType() == "FLOAT" && $3 -> getVarType() == "FLOAT")
+			        {
+			            $$ = AAFFMIN($1, $3);
+			        }
+			    }
+			}
 		}
-		  ;
+		;
 					
 term :	unary_expression{
 		plogout << "At line no: " << lineCount << " : " << "term :	unary_expression" << endl << endl ;
 		$$ = $1 ; 
 
 		}
-     |  term MULOP unary_expression{
+     |  term MULOP unary_expression {
 		plogout << "At line no: " << lineCount << " : " << "term :	term MULOP unary_expression" << endl << endl ;
 
 
 		if($2 -> getSymbolName() == "*")
 		{
-			
+			if($1 -> getIdType() == "VAR" && $3 -> getIdType() == "VAR")
+			{
+				if($1 -> getVarType() == "INT" && $3 -> getVarType() == "INT")
+				{
+					$$ = VVIIM($1 , $3);
+				}
+				else if($1 -> getVarType() == "INT" && $3 -> getVarType() == "FLOAT")
+				{
+					$$ = VVIFM($1 , $3);
+				}
+				else if($1 -> getVarType() == "FLOAT" && $3 -> getVarType() == "INT")
+				{
+					$$ = VVFIM($1 , $3);
+				}
+				else if($1 -> getVarType() == "FLOAT" && $3 -> getVarType() == "FLOAT")
+				{
+					$$ = VVFFM($1 , $3); 
+				}
+
+			}
+			else if($1 -> getIdType() == "VAR" && $3 -> getIdType() == "ARR")
+			{
+				if($1 -> getVarType() == "INT" && $3 -> getVarType() == "INT")
+				{
+					$$ = VAIIM($1 , $3);
+				}
+				else if($1 -> getVarType() == "INT" && $3 -> getVarType() == "FLOAT")
+				{
+					$$ = VAIFM($1 , $3);
+				}
+				else if($1 -> getVarType() == "FLOAT" && $3 -> getVarType() == "INT")
+				{
+					$$ = VAFIM($1 , $3);
+				}
+				else if($1 -> getVarType() == "FLOAT" && $3 -> getVarType() == "FLOAT")
+				{
+					$$ = VAFFM($1 , $3);
+				}
+			}
+			else if($1 -> getIdType() == "ARR" && $3 -> getIdType() == "VAR")
+			{
+				if($1 -> getVarType() == "INT" && $3 -> getVarType() == "INT")
+				{
+					$$ = AVIIM($1 , $3);
+				}
+				else if($1 -> getVarType() == "INT" && $3 -> getVarType() == "FLOAT")
+				{
+					$$ = AVIFM($1 , $3);
+				}
+				else if($1 -> getVarType() == "FLOAT" && $3 -> getVarType() == "INT")
+				{
+					$$ = AVFIM($1 , $3);
+				}
+				else if($1 -> getVarType() == "FLOAT" && $3 -> getVarType() == "FLOAT")
+				{
+					$$ = AVFFM($1 , $3);
+				}
+			}
+			else if($1 -> getIdType() == "ARR" && $3 -> getIdType() == "ARR")
+			{
+				if($1 -> getVarType() == "INT" && $3 -> getVarType() == "INT")
+				{
+					$$ = AAIIM($1 , $3); 
+				}
+				else if($1 -> getVarType() == "INT" && $3 -> getVarType() == "FLOAT")
+				{
+					$$ = AAIFM($1 , $3);
+				}
+				else if($1 -> getVarType() == "FLOAT" && $3 -> getVarType() == "INT")
+				{
+					$$ = AAFIM($1 , $3); 
+				}
+				else if($1 -> getVarType() == "FLOAT" && $3 -> getVarType() == "FLOAT")
+				{
+					$$ = AAFFM($1 , $3);
+				}
+			}
 		}
 		else if($2 -> getSymbolName() == "/")
 		{
+		    if($1 -> getIdType() == "VAR" && $3 -> getIdType() == "VAR")
+		    {
+		        if($1 -> getVarType() == "INT" && $3 -> getVarType() == "INT")
+		        {
+		            $$ = VVIID($1 , $3);
+		        }
+		        else if($1 -> getVarType() == "INT" && $3 -> getVarType() == "FLOAT")
+		        {
+		            $$ = VVIFD($1 , $3);
+		        }
+		        else if($1 -> getVarType() == "FLOAT" && $3 -> getVarType() == "INT")
+		        {
+		            $$ = VVFID($1 , $3);
+		        }
+		        else if($1 -> getVarType() == "FLOAT" && $3 -> getVarType() == "FLOAT")
+		        {
+		            $$ = VVFFD($1 , $3);
+		        }
 
+		    }
+		    else if($1 -> getIdType() == "VAR" && $3 -> getIdType() == "ARR")
+		    {
+		        if($1 -> getVarType() == "INT" && $3 -> getVarType() == "INT")
+		        {
+		           $$ = VAIID($1 , $3);
+		        }
+		        else if($1 -> getVarType() == "INT" && $3 -> getVarType() == "FLOAT")
+		        {
+		            $$ = VAIFD($1 , $3);
+		        }
+		        else if($1 -> getVarType() == "FLOAT" && $3 -> getVarType() == "INT")
+		        {
+		            $$ = VAFID($1 , $3);
+		        }
+		        else if($1 -> getVarType() == "FLOAT" && $3 -> getVarType() == "FLOAT")
+		        {
+		            $$ = VAFFD($1 , $3);
+		        }
+		    }
+		    else if($1 -> getIdType() == "ARR" && $3 -> getIdType() == "VAR")
+		    {
+		        if($1 -> getVarType() == "INT" && $3 -> getVarType() == "INT")
+		        {
+		            $$ = AVIID($1 , $3);
+		        }
+		        else if($1 -> getVarType() == "INT" && $3 -> getVarType() == "FLOAT")
+		        {
+		        	$$ = AVIFD($1 , $3);
+		        }
+		        else if($1 -> getVarType() == "FLOAT" && $3 -> getVarType() == "INT")
+		        {
+		        	$$ = AVFID($1 , $3);
+		        }
+		        else if($1 -> getVarType() == "FLOAT" && $3 -> getVarType() == "FLOAT")
+		        {
+		        	$$ = AVFFD($1 , $3);
+		        }
+		    }
+		    else if($1 -> getIdType() == "ARR" && $3 -> getIdType() == "ARR")
+		    {
+		        if($1 -> getVarType() == "INT" && $3 -> getVarType() == "INT")
+		        {
+		        	$$ = AAIID($1 , $3);
+		        }
+		        else if($1 -> getVarType() == "INT" && $3 -> getVarType() == "FLOAT")
+		        {
+		        	$$ = AAIFD($1 , $3);
+		        }
+		        else if($1 -> getVarType() == "FLOAT" && $3 -> getVarType() == "INT")
+		        {
+		        	$$ = AAFID($1 , $3);
+		        }
+		        else if($1 -> getVarType() == "FLOAT" && $3 -> getVarType() == "FLOAT")
+		        {
+		        	$$ = AAFFD($1 , $3);
+		        }
+		    }
 		}
+
 		else if($2 -> getSymbolName() == "%")
 		{
-			
+			if($1 -> getIdType() == "VAR" && $3 -> getIdType() == "VAR")
+		    {
+		        if($1 -> getVarType() == "INT" && $3 -> getVarType() == "INT")
+		        {
+		        	$$ = VVIIMOD($1 , $3);
+		        }
+		        else 
+		        {
+		        	modNotBothIntError();
+		        }
+		    }
+		    else if($1 -> getIdType() == "VAR" && $3 -> getIdType() == "ARR")
+		    {
+		        if($1 -> getVarType() == "INT" && $3 -> getVarType() == "INT")
+		        {
+		        	$$ = VAIIMOD($1 , $3);
+		        }
+		        else 
+		        {
+		        	modNotBothIntError();
+		        }
+		    }
+		    else if($1 -> getIdType() == "ARR" && $3 -> getIdType() == "VAR")
+		    {
+		        if($1 -> getVarType() == "INT" && $3 -> getVarType() == "INT")
+		        {
+		        	$$ = AVIIMOD($1 , $3);
+		        }
+		        else 
+		        {
+		        	modNotBothIntError();
+		        } 
+		    }
+		    else if($1 -> getIdType() == "ARR" && $3 -> getIdType() == "ARR")
+		    {
+		        if($1 -> getVarType() == "INT" && $3 -> getVarType() == "INT")
+		        {
+		        	$$ = AAIIMOD($1 , $3);
+		        }
+		        else 
+		        {
+		        	modNotBothIntError();
+		        } 
+		    }
 		}
-
-
-
-		}
+	}
      ;
 
 unary_expression : ADDOP unary_expression {
