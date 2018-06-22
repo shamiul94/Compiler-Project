@@ -839,7 +839,7 @@ logic_expression : rel_expression{
 			if($1 -> getVarType() == "CHAR" || $1 -> getVarType() == "CHAR")
 			{
 				errorNo++;
-				perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : Char Variable \"" << "can't be operand of " << $2 -> getSymbolName() << " operator."  << endl << endl ;
+				perrout  << "Error No: " << errorNo << " at line no: " << lineCount << " : Char Variable \"" << "can't be operand of " << $2 -> getSymbolName() << " operator."  << endl << endl ;
 			}
 
 			else if($2 -> getSymbolName() == "&&")
