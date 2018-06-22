@@ -891,3 +891,98 @@ SymbolInfo* AAFFMIN(SymbolInfo* tem1, SymbolInfo* tem3)
     return tem ;
 }
 
+
+/*********************** greater equal ********************/ 
+
+/*
+1 --- >= 
+2 --- > 
+3 --- <= 
+4 --- < 
+*/
+
+SymbolInfo* relationOperator(SymbolInfo* tem1 , SymbolInfo* tem3, int op)
+{
+	SymbolInfo* tem = new SymbolInfo("" , "ID");
+				tem -> setVarType("INT");
+				tem -> setIdType("VAR");
+
+				if(tem1 -> getVarType() == "INT")
+				{
+					if(tem3 -> getVarType() == "INT")
+					{
+						if(op==1)tem -> intVarValue = (tem1 -> intVarValue >= tem3 -> intVarValue);
+						else if(op == 2) tem -> intVarValue = (tem1 -> intVarValue > tem3 -> intVarValue);
+						else if(op == 3) tem -> intVarValue = (tem1 -> intVarValue <= tem3 -> intVarValue);
+						else if(op == 4) tem -> intVarValue = (tem1 -> intVarValue < tem3 -> intVarValue);
+					}
+					else if(tem3 -> getVarType() == "FLOAT")
+					{
+						if(op==1)tem -> intVarValue = (tem1 -> intVarValue >= tem3 -> floatVarValue);
+						else if(op == 2)tem -> intVarValue = (tem1 -> intVarValue > tem3 -> floatVarValue);
+						else if(op == 3)tem -> intVarValue = (tem1 -> intVarValue <= tem3 -> floatVarValue);
+						else if(op == 4)tem -> intVarValue = (tem1 -> intVarValue < tem3 -> floatVarValue);
+					}
+					else if(tem3 -> getVarType() == "CHAR")
+					{
+						if(op==1)tem -> intVarValue = (tem1 -> intVarValue >= tem3 -> charVarValue);
+						else if(op == 2)tem -> intVarValue = (tem1 -> intVarValue > tem3 -> charVarValue);
+						else if(op == 3)tem -> intVarValue = (tem1 -> intVarValue <= tem3 -> charVarValue);
+						else if(op == 4)tem -> intVarValue = (tem1 -> intVarValue < tem3 -> charVarValue);
+					}
+				}
+				else if(tem1 -> getVarType() == "FLOAT")
+				{
+					if(tem3 -> getVarType() == "INT")
+					{
+						if(op==1)tem -> intVarValue = (tem1 -> floatVarValue >= tem3 -> intVarValue);
+						else if(op == 2)tem -> intVarValue = (tem1 -> floatVarValue > tem3 -> intVarValue);
+						else if(op == 3)tem -> intVarValue = (tem1 -> floatVarValue <= tem3 -> intVarValue);
+						else if(op == 4)tem -> intVarValue = (tem1 -> floatVarValue < tem3 -> intVarValue);
+					}
+					else if(tem3 -> getVarType() == "FLOAT")
+					{
+						if(op==1)tem -> intVarValue = (tem1 -> floatVarValue >= tem3 -> floatVarValue);
+						else if(op == 2)tem -> intVarValue = (tem1 -> floatVarValue > tem3 -> floatVarValue);
+						else if(op == 3)tem -> intVarValue = (tem1 -> floatVarValue <= tem3 -> floatVarValue);
+						else if(op == 4)tem -> intVarValue = (tem1 -> floatVarValue < tem3 -> floatVarValue);
+					}
+					else if(tem3 -> getVarType() == "CHAR")
+					{
+						if(op==1)tem -> intVarValue = (tem1 -> floatVarValue >= tem3 -> charVarValue);
+						else if(op == 2)tem -> intVarValue = (tem1 -> floatVarValue > tem3 -> charVarValue);
+						else if(op == 3)tem -> intVarValue = (tem1 -> floatVarValue <= tem3 -> charVarValue);
+						else if(op == 4)tem -> intVarValue = (tem1 -> floatVarValue < tem3 -> charVarValue);
+					}
+				}
+				else if(tem1 -> getVarType() == "CHAR")
+				{
+					if(tem3 -> getVarType() == "INT")
+					{
+						if(op==1)tem -> intVarValue = (tem1 -> charVarValue >= tem3 -> intVarValue);
+						else if(op == 2)tem -> intVarValue = (tem1 -> charVarValue > tem3 -> intVarValue);
+						else if(op == 3)tem -> intVarValue = (tem1 -> charVarValue <= tem3 -> intVarValue);
+						else if(op == 4)tem -> intVarValue = (tem1 -> charVarValue < tem3 -> intVarValue);
+					}
+					else if(tem3 -> getVarType() == "FLOAT")
+					{
+						if(op==1)tem -> intVarValue = (tem1 -> charVarValue >= tem3 -> floatVarValue);
+						else if(op == 2)tem -> intVarValue = (tem1 -> charVarValue > tem3 -> floatVarValue);
+						else if(op == 3)tem -> intVarValue = (tem1 -> charVarValue <= tem3 -> floatVarValue);
+						else if(op == 4)tem -> intVarValue = (tem1 -> charVarValue < tem3 -> floatVarValue);
+					}
+					else if(tem3 -> getVarType() == "CHAR")
+					{
+						if(op==1)tem -> intVarValue = (tem1 -> charVarValue >= tem3 -> charVarValue);
+						else if(op == 2)tem -> intVarValue = (tem1 -> charVarValue > tem3 -> charVarValue);
+						else if(op == 3)tem -> intVarValue = (tem1 -> charVarValue <= tem3 -> charVarValue);
+						else if(op == 4)tem -> intVarValue = (tem1 -> charVarValue < tem3 -> charVarValue);
+					}
+
+				}
+
+				return tem ; 
+}
+
+
+

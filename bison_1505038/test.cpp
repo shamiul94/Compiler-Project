@@ -20,7 +20,7 @@ SymbolTable *myTable = new SymbolTable(11);
 
 ofstream plogout, perrout ; 
 
-int errorNo =  -1 , totalArgsNo = 0 , typeAndIDArgsNo = 0; 
+int warningNo = -1 ,  errorNo =  -1 , totalArgsNo = 0 , typeAndIDArgsNo = 0; 
 
 vector<SymbolInfo*> Params ; 
 
@@ -616,17 +616,218 @@ variable : ID {
 	 
 expression : logic_expression{
 		plogout << "At line no: " << lineCount << " : " << "expression : logic_expression" << endl << endl ;
+
+		$$ = $1 ; 
+
 		}
 	   | variable ASSIGNOP logic_expression {
 		plogout << "At line no: " << lineCount << " : " << "expression : variable ASSIGNOP logic_expression" << endl << endl ;
-		}	
+
+			
+
+			if($1 -> getIdType() == "VAR")
+			{
+				if($3 -> getIdType() == "VAR")
+				{
+					if($1 -> getVarType() == "INT" && $3 -> getVarType() == "INT")
+					{
+						$1 -> intVarValue = $3 -> intVarValue ; 
+						$$ = $1 ; 
+					}
+					else if($1 -> getVarType() == "INT" && $3 -> getVarType() == "FLOAT")
+					{
+						warningNo++;
+						perrout << "Warning No: " << warningNo << " at line no: " << lineCount << " : " << " Float value is assigned to Int value (Type casting)." << endl << endl ; 
+						$1 -> intVarValue = $3 -> floatVarValue ; 
+						$$ = $1 ; 
+					}
+					else if($1 -> getVarType() == "FLOAT" && $3 -> getVarType() == "INT")
+					{
+						warningNo++;
+						perrout << "Warning No: " << warningNo << " at line no: " << lineCount << " : " << " Int value is assigned to Float value (Type casting)." << endl << endl ; 
+						$1 -> floatVarValue = $3 -> intVarValue ; 
+						$$ = $1 ; 
+					}
+					else if($1 -> getVarType() == "FLOAT" && $3 -> getVarType() == "FLOAT")
+					{
+						$1 -> floatVarValue = $3 -> floatVarValue ; 
+						$$ = $1 ; 
+					}
+				}
+				else if($3 -> getIdType() == "ARR")
+				{
+					if($1 -> getVarType() == "INT" && $3 -> getVarType() == "INT")
+					{
+						$1 -> intVarValue = $3 -> intArray[$3 -> currentArrayIndex] ;
+						$$ = $1 ; 
+					}
+					else if($1 -> getVarType() == "INT" && $3 -> getVarType() == "FLOAT")
+					{
+						warningNo++;
+						perrout << "Warning No: " << warningNo << " at line no: " << lineCount << " : " << " Float value is assigned to Int value (Type casting)." << endl << endl ; 
+						
+						$1 -> intVarValue = (int) $3 -> floatArray[$3 -> currentArrayIndex];
+
+						$$ = $1 ; 
+					}
+					else if($1 -> getVarType() == "FLOAT" && $3 -> getVarType() == "INT")
+					{
+						warningNo++;
+						perrout << "Warning No: " << warningNo << " at line no: " << lineCount << " : " << " Int value is assigned to Float value (Type casting)." << endl << endl ; 
+						
+						$1 -> floatVarValue = (float) $3 -> intArray[$3 -> currentArrayIndex];
+
+						$$ = $1 ; 
+					}
+					else if($1 -> getVarType() == "FLOAT" && $3 -> getVarType() == "FLOAT")
+					{
+						$1 -> floatVarValue = $3 -> floatArray[$3 -> currentArrayIndex] ; 
+
+						$$ = $1 ; 
+					}
+				}
+			}
+			else if($1 -> getIdType() == "ARR")
+			{
+				if($3 -> getIdType() == "VAR")
+				{
+					if($1 -> getVarType() == "INT" && $3 -> getVarType() == "INT")
+					{
+						$1 -> intArray[$1 -> currentArrayIndex] = $3 -> intVarValue ; 
+						$$ = $1 ; 
+					}
+					else if($1 -> getVarType() == "INT" && $3 -> getVarType() == "FLOAT")
+					{
+						warningNo++;
+						perrout << "Warning No: " << warningNo << " at line no: " << lineCount << " : " << " Float value is assigned to Int value (Type casting)." << endl << endl ; 
+						
+						$1 -> intArray[$1 -> currentArrayIndex] = $3 -> floatVarValue ; 
+
+						$$ = $1 ; 
+					}
+					else if($1 -> getVarType() == "FLOAT" && $3 -> getVarType() == "INT")
+					{
+						warningNo++;
+						perrout << "Warning No: " << warningNo << " at line no: " << lineCount << " : " << " Int value is assigned to Float value (Type casting)." << endl << endl ; 
+
+						$1 -> floatArray[$1 -> currentArrayIndex] = $3 -> intVarValue ; 
+
+						$$ = $1 ; 
+					}
+					else if($1 -> getVarType() == "FLOAT" && $3 -> getVarType() == "FLOAT")
+					{
+						$1 -> floatArray[$1 -> currentArrayIndex] = $3 -> floatVarValue ; 
+						$$ = $1 ; 
+					}
+				}
+				else if($3 -> getIdType() == "ARR")
+				{
+					if($1 -> getVarType() == "INT" && $3 -> getVarType() == "INT")
+					{
+						$1 -> intArray[$1 -> currentArrayIndex] = $3 -> intArray[$3 -> currentArrayIndex] ;
+						$$ = $1 ; 
+					}
+					else if($1 -> getVarType() == "INT" && $3 -> getVarType() == "FLOAT")
+					{
+						warningNo++;
+						perrout << "Warning No: " << warningNo << " at line no: " << lineCount << " : " << " Float value is assigned to Int value (Type casting)." << endl << endl ; 
+						
+						$1 -> intArray[$1 -> currentArrayIndex] = (int) $3 -> floatArray[$3 -> currentArrayIndex];
+
+						$$ = $1 ; 
+					}
+					else if($1 -> getVarType() == "FLOAT" && $3 -> getVarType() == "INT")
+					{
+						warningNo++;
+						perrout << "Warning No: " << warningNo << " at line no: " << lineCount << " : " << " Int value is assigned to Float value (Type casting)." << endl << endl ; 
+						
+						$1 -> floatArray[$1 -> currentArrayIndex] = (float) $3 -> intArray[$3 -> currentArrayIndex];
+
+						$$ = $1 ; 
+					}
+					else if($1 -> getVarType() == "FLOAT" && $3 -> getVarType() == "FLOAT")
+					{
+						$1 -> floatArray[$1 -> currentArrayIndex] = $3 -> floatArray[$3 -> currentArrayIndex] ; 
+
+						$$ = $1 ; 
+					}
+				}
+			}
+		}
 	   ;
 			
 logic_expression : rel_expression{
 		plogout << "At line no: " << lineCount << " : " << "logic_expression : rel_expression" << endl << endl ;
+
+		$$ = $1 ; 
+
 		}
 		 | rel_expression LOGICOP rel_expression {
 		plogout << "At line no: " << lineCount << " : " << "logic_expression : rel_expression LOGICOP rel_expression" << endl << endl ;
+
+			SymbolInfo* tem = new SymbolInfo("","ID");
+			tem -> setVarType("INT");
+			tem -> setIdType("VAR");
+
+
+			if($1 -> getVarType() == "CHAR" || $1 -> getVarType() == "CHAR")
+			{
+				errorNo++;
+				perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : Char Variable \"" << "can't be operand of " << $2 -> getSymbolName() << " operator."  << endl << endl ;
+			}
+
+			else if($2 -> getSymbolName() == "&&")
+			{
+				if($1 -> getVarType() == "INT")
+				{
+					if($3 -> getVarType() == "INT")
+					{
+						tem -> intVarValue = ($1 -> intVarValue && $3 -> intVarValue);
+					}
+					else if($3 -> getVarType() == "FLOAT")
+					{
+						tem -> intVarValue = ($1 -> intVarValue && $3 -> floatVarValue);
+					}
+				}
+				else if($1 -> getVarType() == "FLOAT")
+				{
+					if($3 -> getVarType() == "INT")
+					{
+						tem -> intVarValue = ($1 -> floatVarValue && $3 -> intVarValue);
+					}
+					else if($3 -> getVarType() == "FLOAT")
+					{
+						tem -> intVarValue = ($1 -> floatVarValue && $3 -> floatVarValue);
+					}
+				}
+			}
+			else if($2 -> getSymbolName() == "||")
+			{
+				if($1 -> getVarType() == "INT")
+				{
+					if($3 -> getVarType() == "INT")
+					{
+						tem -> intVarValue = ($1 -> intVarValue || $3 -> intVarValue);
+					}
+					else if($3 -> getVarType() == "FLOAT")
+					{
+						tem -> intVarValue = ($1 -> intVarValue || $3 -> floatVarValue);
+					}
+				}
+				else if($1 -> getVarType() == "FLOAT")
+				{
+					if($3 -> getVarType() == "INT")
+					{
+						tem -> intVarValue = ($1 -> floatVarValue || $3 -> intVarValue);
+					}
+					else if($3 -> getVarType() == "FLOAT")
+					{
+						tem -> intVarValue = ($1 -> floatVarValue || $3 -> floatVarValue);
+					}
+				}
+			}
+
+			$$ = tem ;
 		}	
 		 ;
 			
@@ -639,11 +840,78 @@ rel_expression	: simple_expression{
 		| simple_expression RELOP simple_expression	{
 		plogout << "At line no: " << lineCount << " : " << "rel_expression	: simple_expression RELOP simple_expression" << endl << endl ;
 
-
-		
-		
-		}
-		;
+			if($2 -> getSymbolName() == "==")
+			{
+				if($1 -> getVarType() != $3 -> getVarType())
+				{
+					errorNo++;
+					perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : " << "Type mismatch on both side of == operator." << endl << endl ;
+				}
+				else 
+				{
+					if($1 -> getVarType() == "INT" && $3 -> getVarType() == "INT")
+					{
+						SymbolInfo* tem = new SymbolInfo("IIEQUAL","ID");
+						tem -> setVarType("INT");
+						tem -> setIdType("VAR");
+						tem -> intVarValue = (int) ($1 -> intVarValue == $3 -> intVarValue);
+						$$ = tem ; 
+					}
+					if($1 -> getVarType() == "FLOAT" && $3 -> getVarType() == "FLOAT")
+					{
+						SymbolInfo* tem = new SymbolInfo("FFEQUAL","ID");
+						tem -> setVarType("INT");
+						tem -> setIdType("VAR");
+						tem -> intVarValue = (int) ($1 -> floatVarValue == $3 -> floatVarValue);
+						$$ = tem ; 
+					}
+				}
+			}
+			else if($2 -> getSymbolName() == "!=")
+			{
+				if($1 -> getVarType() != $3 -> getVarType())
+				{
+					errorNo++;
+					perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : " << "Type mismatch on both side of != operator." << endl << endl ;
+				}
+				else 
+				{
+					if($1 -> getVarType() == "INT" && $3 -> getVarType() == "INT")
+					{
+						SymbolInfo* tem = new SymbolInfo("IINotEQUAL","ID");
+						tem -> setVarType("INT");
+						tem -> setIdType("VAR");
+						tem -> intVarValue = (int) ($1 -> intVarValue != $3 -> intVarValue);
+						$$ = tem ; 
+					}
+					if($1 -> getVarType() == "FLOAT" && $3 -> getVarType() == "FLOAT")
+					{
+						SymbolInfo* tem = new SymbolInfo("FFNotEQUAL","ID");
+						tem -> setVarType("INT");
+						tem -> setIdType("VAR");
+						tem -> intVarValue = (int) ($1 -> floatVarValue != $3 -> floatVarValue);
+						$$ = tem ; 
+					}
+				}
+			}
+			else if($2 -> getSymbolName() == ">=")
+			{
+				$$ = relationOperator($1 , $2, 1) ; 
+			}
+			else if($2 -> getSymbolName() == ">")
+			{
+				$$ = relationOperator($1 , $2, 2) ; 
+			}
+			else if($2 -> getSymbolName() == "<=")
+			{
+				$$ = relationOperator($1 , $2, 3) ; 
+			}
+			else if($2 -> getSymbolName() == "<")
+			{
+				$$ = relationOperator($1 , $2, 4) ; 
+			}
+	}
+	;
 				
 simple_expression : term{
 		plogout << "At line no: " << lineCount << " : " << "simple_expression : term" << endl << endl ;
