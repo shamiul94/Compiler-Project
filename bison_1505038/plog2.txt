@@ -26,9 +26,12 @@ At line no: 23 : statement : RETURN expression SEMICOLON
 
 At line no: 23 : statements : statement
 
-At line no: 24 : compound_statement : LCURL statements RCURL
+< a:ID >< y:ID >< x:ID >< foo:ID >< var:ID >< a:ID >< main:ID >< z:ID >At line no: 24 : compound_statement : LCURL statements RCURL
 
+Scope exited
 At line no: 24 : func_definition : type_specifier ID LPAREN parameter_list RPAREN compound_statement
+
+func
 
 At line no: 24 : unit : func_definition
 
@@ -75,6 +78,8 @@ At line no: 27 : statements : statements statement
 
 At line no: 28 : factor	: CONST_FLOAT 
 
+2.5
+
 At line no: 28 : punary_expression : NOT unary_expression
 
 At line no: 28 : term :	unary_expression
@@ -89,7 +94,11 @@ At line no: 28 : expression : logic_expression
 
 At line no: 28 : variable : ID LTHIRD expression RTHIRD
 
+a
+
 At line no: 28 : factor	: CONST_INT 
+
+1
 
 At line no: 28 : punary_expression : NOT unary_expression
 
@@ -115,6 +124,8 @@ i
 
 At line no: 29 : factor	: CONST_FLOAT 
 
+2.3
+
 At line no: 29 : punary_expression : NOT unary_expression
 
 At line no: 29 : term :	unary_expression
@@ -139,11 +150,15 @@ j
 
 At line no: 30 : factor	: CONST_INT 
 
+2
+
 At line no: 30 : punary_expression : NOT unary_expression
 
 At line no: 30 : term :	unary_expression
 
 At line no: 30 : factor	: CONST_FLOAT 
+
+3.7
 
 At line no: 30 : punary_expression : NOT unary_expression
 
@@ -168,6 +183,8 @@ At line no: 31 : variable : ID
 a
 
 At line no: 31 : factor	: CONST_INT 
+
+4
 
 At line no: 31 : punary_expression : NOT unary_expression
 
@@ -209,6 +226,8 @@ At line no: 32 : argument_list : arguments
 
 At line no: 32 : factor	: ID LPAREN argument_list RPAREN  
 
+func
+
 At line no: 32 : punary_expression : NOT unary_expression
 
 At line no: 32 : term :	unary_expression
@@ -233,6 +252,8 @@ b
 
 At line no: 33 : factor	: CONST_INT 
 
+8
+
 At line no: 33 : punary_expression : NOT unary_expression
 
 At line no: 33 : term :	unary_expression
@@ -253,6 +274,8 @@ At line no: 33 : statements : statements statement
 
 At line no: 34 : factor	: CONST_INT 
 
+0
+
 At line no: 34 : punary_expression : NOT unary_expression
 
 At line no: 34 : term :	unary_expression
@@ -269,9 +292,12 @@ At line no: 34 : statement : RETURN expression SEMICOLON
 
 At line no: 34 : statements : statements statement
 
-At line no: 35 : compound_statement : LCURL statements RCURL
+< j:ID >< i:ID >< c:ID >< a:ID >< y:ID >< x:ID >< foo:ID >< var:ID >< a:ID >< main:ID >< z:ID >< func:ID >At line no: 35 : compound_statement : LCURL statements RCURL
 
+Scope exited
 At line no: 35 : func_definition : type_specifier ID LPAREN RPAREN compound_statement
+
+main
 
 At line no: 35 : unit : func_definition
 

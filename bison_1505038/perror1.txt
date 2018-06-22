@@ -1,2 +1,30 @@
-Error No: 0 at line no: 15 : ID "a" has already been declared before in this scope.
+Error No: 1 at line no: 8 :  Argument number mismatch between Function definition and declaration of function loo.
+
+Error No: 2 at line no: 12 : ID "foo" has already been declared before in this scope.
+
+ScopeTable # 1
+0 --> < y,ID,INT,VAR, >
+1 --> < x,ID,INT,VAR, >
+2 --> < loo,ID,,FUNC,INT >
+3 --> < foo,ID,,FUNC,VOID >
+4 --> 
+5 --> 
+6 --> 
+7 --> 
+8 --> < a,ID,FLOAT,VAR, >
+9 --> 
+10 --> < z,ID,INT,VAR, >
+Error No: 3 at line no: 15 : Variable "b" was not declared before.
+
+Error No: 4 at line no: 21 :  Argument number mismatch between Function definition and declaration of function foo.
+
+Error No: 5 at line no: 25 : i was declared before as VAR. So, it can not be used as an array now.
+
+Error No: 6 at line no: 26 : Size of Array a is 2, so index 5 can not be accessed.
+
+Error No: 7 at line no: 29 Array index must be an integer.
+
+Warning No: 1 at line no: 30 :  Float value is assigned to Int value (Type casting).
+
+Error No: 8 at line no: 31 Both operand of % operation must be Integers.
 

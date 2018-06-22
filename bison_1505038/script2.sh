@@ -24,4 +24,4 @@ g++ -o a.out s.o y.o l.o -lfl -ly	#compiles the scanner and parser to create out
 chmod +x ./a.out
 
 echo '5'
-./a.out	in1.c in2.c	# you will need to provide proper input files with ./a.out command as instructed in assignment specification
+./a.out	in2.c	# you will need to provide proper input files with ./a.out command as instructed in assignment specification

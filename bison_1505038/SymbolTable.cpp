@@ -6,6 +6,7 @@ SymbolInfo::SymbolInfo()
     SymbolType = "";
     next = 0;
     isFuncDefined = false ; 
+    funcDeclared = false ; 
 }
 
 void SymbolInfo:: setIsFuncDefined()
@@ -22,7 +23,8 @@ bool SymbolInfo::checkIfFuncDefined()
 
 SymbolInfo::SymbolInfo(string type)
 {
-    SymbolType = type; 
+    SymbolName = type; 
+    funcDeclared = false ; 
     isFuncDefined = false ;
 }
 
@@ -32,6 +34,7 @@ SymbolInfo::SymbolInfo(string name, string type)
     SymbolType = type;
     next = 0;
     isFuncDefined = false ;
+    funcDeclared = false ; 
 }
 
 void SymbolInfo::setVarType(string s)
@@ -198,6 +201,7 @@ SymbolInfo* scopeTable::insert(string varName, string varType)
 
     curr->next = NewVar;
 
+    //cout << "Mara  " << curr -> next -> getIdType() << endl ; 
     return NewVar;
 }
 
@@ -216,6 +220,7 @@ SymbolInfo *scopeTable::lookUp(string varName, string varType)
         {
             if (curr->getSymbolName() == varName && curr -> getSymbolType() == varType)
             {
+                //cout << curr -> getIdType() << " " << curr -> getSymbolName() << endl ; 
                 return curr;
             }
         }
@@ -253,7 +258,7 @@ void scopeTable::printScopeTable(ofstream& fileOut)
 {
     for (ll i = 0; i < N; i++)
     {
-        cout << i << " --> ";
+        fileOut << i << " --> ";
 
         SymbolInfo *curr = &Arr[i];
         while (curr != 0)
@@ -262,14 +267,14 @@ void scopeTable::printScopeTable(ofstream& fileOut)
 
             if (curr != 0)
             {
-                fileOut << "< " << curr->getSymbolName() << ':' << curr->getSymbolType() << " >";
+                fileOut << "< " << curr->getSymbolName() << "," << curr->getSymbolType() << "," << curr -> getVarType() << "," << curr -> getIdType() << "," << curr -> getFuncReturnType() << " >";
             }
             if (curr != 0 && curr->next != 0)
             {
-                cout << " , ";
+                fileOut << " , ";
             }
         }
-        cout << endl;
+        fileOut << endl;
     }
     return;
 }
@@ -379,7 +384,7 @@ SymbolInfo* SymbolTable::lookUpInCurr(string varName , string varType)
 
 void SymbolTable::printCurrentScopeTable(ofstream& fileOut)
 {
-    cout << "ScopeTable # " << currentScopeTable->id << endl;
+    fileOut << "ScopeTable # " << currentScopeTable->id << endl;
     currentScopeTable->printScopeTable(fileOut);
     return;
 }
@@ -391,7 +396,7 @@ void SymbolTable::printAllScopeTable(ofstream& fileOut)
 
     while (tem != 0)
     {
-        cout << "ScopeTable # " << tem->id << endl;
+        fileOut << "ScopeTable # " << tem->id << endl;
         tem->printScopeTable(fileOut);
         tem = tem->parentScopeTable;
     }

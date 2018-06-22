@@ -20,9 +20,15 @@ SymbolTable *myTable = new SymbolTable(11);
 
 ofstream plogout, perrout ; 
 
-int warningNo = -1 ,  errorNo =  -1 , totalArgsNo = 0 , typeAndIDArgsNo = 0; 
+int warningNo = 0 ,  errorNo =  0 , totalArgsNo = 0 , typeAndIDArgsNo = 0; 
 
 vector<SymbolInfo*> Params ; 
+
+void yyerror(const char *s)
+{
+	//write your code
+}
+
 
 %}
 %union{
@@ -68,55 +74,54 @@ unit : var_declaration
      ;
      
 func_declaration : type_specifier ID LPAREN parameter_list RPAREN SEMICOLON {
-		plogout << "At line no: " << lineCount << " : " << "func_declaration : type_specifier ID LPAREN parameter_list RPAREN SEMICOLON" << endl << endl ;
+			plogout << "At line no: " << lineCount << " : " << "func_declaration : type_specifier ID LPAREN parameter_list RPAREN SEMICOLON" << endl << endl ;
 
-		plogout << $1 -> getSymbolType() << endl<< $2 -> getSymbolName() << endl << endl ; 
+			plogout << $1 -> getSymbolType() << endl<< $2 -> getSymbolName() << endl << endl ; 
 
-		SymbolInfo* tem = myTable -> lookUpInCurr($2 -> getSymbolName(), "ID");
+			SymbolInfo* tem = myTable -> lookUpInCurr($2 -> getSymbolName(), "ID");
 
-		if(tem == 0)
-		{
-			SymbolInfo* func = new SymbolInfo($2 -> getSymbolName(), "ID");
-			func = myTable -> insert(func); 
+			if(tem == 0)
+			{
+				SymbolInfo* func = new SymbolInfo($2 -> getSymbolName(), "ID");
+				func = myTable -> insert(func); 
 
-			func -> setIdType("FUNC");
-			func -> setFuncReturnType(varType);
-			func -> setParamNo(totalArgsNo);
-			func -> setParamList(Params);
-			initializeParam();
-		}
-		else 
-		{
-			errorNo++;
-			perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : ID \"" << $2 -> getSymbolName() << "\" has already been declared before in this scope." << endl << endl ; 
-		}
-
-
+				func -> setIdType("FUNC");
+				func -> setFuncReturnType(varType);
+				func -> setParamNo(totalArgsNo);
+				func -> setParamList(Params);
+				func -> funcDeclared = true ;
+				initializeParam();
+			}
+			else 
+			{
+				errorNo++;
+				perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : ID \"" << $2 -> getSymbolName() << "\" has already been declared before in this scope." << endl << endl ; 
+				myTable -> printAllScopeTable(perrout);
+			}
 		}
 		| type_specifier ID LPAREN RPAREN SEMICOLON {
-		plogout << "At line no: " << lineCount << " : " << "func_declaration : type_specifier ID LPAREN RPAREN SEMICOLON" << endl << endl ;
+			plogout << "At line no: " << lineCount << " : " << "func_declaration : type_specifier ID LPAREN RPAREN SEMICOLON" << endl << endl ;
 
-		plogout << $1 -> getSymbolName() << endl<< $2 -> getSymbolName() << endl << endl ; 
+			plogout << $1 -> getSymbolName() << endl<< $2 -> getSymbolName() << endl << endl ; 
 
-		SymbolInfo* tem = myTable -> lookUpInCurr($2 -> getSymbolName(), "ID");
+			SymbolInfo* tem = myTable -> lookUpInCurr($2 -> getSymbolName(), "ID");
 
-		if(tem == 0)
-		{
-			SymbolInfo* func = new SymbolInfo($2 -> getSymbolName(), "ID");
-			func = myTable -> insert(func); 
-			func -> setIdType("FUNC");
-			func -> setFuncReturnType(varType);
-			func -> setParamNo(0);
-			func -> setParamList(Params);
-			
-			initializeParam();
- 
-		}
-		else 
-		{
-			errorNo++;
-			perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : ID \"" << $2 -> getSymbolName() << "\" has already been declared before in this scope." << endl << endl ; 
-		}
+			if(tem == 0)
+			{
+				SymbolInfo* func = new SymbolInfo($2 -> getSymbolName(), "ID");
+				func = myTable -> insert(func); 
+				func -> setIdType("FUNC");
+				func -> setFuncReturnType(varType);
+				func -> setParamNo(0);
+				func -> funcDeclared = true ;
+				initializeParam();
+			}
+			else 
+			{
+				errorNo++;
+				perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : ID \"" << $2 -> getSymbolName() << "\" has already been declared before in this scope." << endl << endl ;
+				myTable -> printAllScopeTable(perrout); 
+			}
 		}
 		;
 		 
@@ -127,6 +132,12 @@ func_definition : type_specifier ID LPAREN parameter_list RPAREN compound_statem
 
 		SymbolInfo* tem = myTable -> lookUpInCurr($2 -> getSymbolName(), "ID");
 
+		//cout << typeAndIDArgsNo << " " << totalArgsNo << endl ; 
+
+		if(tem != 0)
+		{
+			cout << tem -> getSymbolName() << " " << tem -> getParamNo() << " " << typeAndIDArgsNo << endl ; 
+		}
 
 
 		if(totalArgsNo != typeAndIDArgsNo)
@@ -136,18 +147,23 @@ func_definition : type_specifier ID LPAREN parameter_list RPAREN compound_statem
 
 			initializeParam(); 
 		}
-		
-
-		if(tem == 0)
+		else if(tem == 0)
 		{
 			SymbolInfo* func = new SymbolInfo($2 -> getSymbolName(), "ID");
 			func = myTable -> insert(func);
 			func -> setIdType("FUNC");
-			func -> setFuncReturnType(varType);
+			//cout << $1 -> getSymbolName() << endl ;
+			func -> setFuncReturnType($1 -> getSymbolName());
 			func -> setParamNo(totalArgsNo);
 			func -> setParamList(Params);
 			func -> setIsFuncDefined();
 
+			initializeParam(); 
+		}
+		else if(tem -> funcDeclared == true && tem -> getParamNo() != typeAndIDArgsNo)
+		{
+			errorNo++;
+			perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : " << " Argument number mismatch between Function definition and declaration of function "<< $2->getSymbolName() << "." << endl << endl;
 			initializeParam(); 
 		}
 		else 
@@ -155,7 +171,7 @@ func_definition : type_specifier ID LPAREN parameter_list RPAREN compound_statem
 			if(tem -> checkIfFuncDefined() == true)
 			{
 				errorNo++;
-				perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : Function" << $2->getSymbolName() <<  " has been already defined."<<  << endl << endl;
+				perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : Function" << $2->getSymbolName() <<  " has been already defined." << endl << endl;
 
 				initializeParam();
 			}
@@ -165,14 +181,14 @@ func_definition : type_specifier ID LPAREN parameter_list RPAREN compound_statem
 				if(tem -> getIdType() != "FUNC")
 				{
 					errorNo++;
-					perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : " << $2->getSymbolName() <<  " has been already declared as Variable or Array."<<  << endl << endl; 
+					perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : " << $2->getSymbolName() <<  " has been declared as."<< $2 -> getIdType() << " so, can not be defined as function now." << endl << endl; 
 
 					initializeParam();
 				}
-				else if(tem -> getFuncReturnType() != varType)
+				else if(tem -> getFuncReturnType() != $1 -> getSymbolName())
 				{
 					errorNo++;
-					perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : Return Type of Function " << $2->getSymbolName() <<  " doesn't match."<<  << endl << endl; 
+					perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : Return Type of Function " << $2->getSymbolName() <<  " doesn't match."  << endl << endl; 
 					initializeParam();
 				}
 				else if(tem -> getParamNo() != totalArgsNo)
@@ -184,15 +200,27 @@ func_definition : type_specifier ID LPAREN parameter_list RPAREN compound_statem
 				}
 				else if(tem -> paramList.size() == Params.size())
 				{
+					bool err = false ; 
+
 					for(int i = 0 ; i < tem -> paramList.size(); i++)
 					{
 						if(Params[i] -> getVarType() != tem -> paramList[i] -> getVarType());
 						{
 							errorNo++;
 							perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : " << " Parameter mismatch for Function "<< $2->getSymbolName() << " because " <<  tem -> paramList[i] -> getVarType() << "doesn't match with " << Params[i] -> getVarType() << endl << endl;
+							err = true ; 
 
 							initializeParam();
 						}
+					}
+					if(err == false)
+					{
+						tem -> setIdType("FUNC");
+						tem -> setFuncReturnType($1 -> getSymbolName());
+						tem -> setParamNo(totalArgsNo);
+						tem -> setParamList(Params);
+						tem -> setIsFuncDefined();
+						initializeParam(); 
 					}
 				}
 			}
@@ -207,27 +235,25 @@ func_definition : type_specifier ID LPAREN parameter_list RPAREN compound_statem
 
 		SymbolInfo* tem = myTable -> lookUpInCurr($2 -> getSymbolName(), "ID");
 
+		//cout << tem -> getParamNo() << " " << totalArgsNo << endl ; 
 
 		if(tem == 0)
 		{
 			SymbolInfo* func = new SymbolInfo($2 -> getSymbolName(), "ID");
 			func = myTable -> insert(func);
 			func -> setIdType("FUNC");
-			func -> setFuncReturnType(varType);
+			func -> setFuncReturnType($1 -> getSymbolName());
 			func -> setParamNo(0);
-			func -> setParamList.clear();
 			func -> setIsFuncDefined();
 
 			initializeParam(); 
-
-			
 		}
 		else 
 		{
 			if(tem -> checkIfFuncDefined() == true)
 			{
 				errorNo++;
-				perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : Function" << $2->getSymbolName() <<  " has been already defined."<<  << endl << endl;
+				perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : Function" << $2->getSymbolName() <<  " has been already defined."  << endl << endl;
 
 				initializeParam();
 			}
@@ -237,14 +263,14 @@ func_definition : type_specifier ID LPAREN parameter_list RPAREN compound_statem
 				if(tem -> getIdType() != "FUNC")
 				{
 					errorNo++;
-					perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : " << $2->getSymbolName() <<  " has been already declared as Variable or Array."<<  << endl << endl; 
+					perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : " << $2->getSymbolName() <<  " has been already declared as Variable or Array."  << endl << endl; 
 
 					initializeParam();
 				}
-				else if(tem -> getFuncReturnType() != varType)
+				else if(tem -> getFuncReturnType() != $1 -> getSymbolName())
 				{
 					errorNo++;
-					perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : Return Type of Function " << $2->getSymbolName() <<  " doesn't match."<<  << endl << endl; 
+					perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : Return Type of Function " << $2->getSymbolName() <<  " doesn't match."  << endl << endl; 
 					initializeParam();
 				}
 				else if(tem -> getParamNo() != totalArgsNo)
@@ -263,86 +289,86 @@ func_definition : type_specifier ID LPAREN parameter_list RPAREN compound_statem
 
 parameter_list  : parameter_list COMMA type_specifier ID {
 
-		plogout << "At line no: " << lineCount << " : " << "parameter_list  : parameter_list COMMA type_specifier ID" << endl << endl ;
+			plogout << "At line no: " << lineCount << " : " << "parameter_list  : parameter_list COMMA type_specifier ID" << endl << endl ;
 
-		plogout << $4 -> getSymbolName() << endl << endl ; 
+			plogout << $3 -> getSymbolName() << endl << endl ; 
 
-		totalArgsNo++;
-		typeAndIDArgsNo++;
+			totalArgsNo++;
+			typeAndIDArgsNo++;
 
 
-		SymbolInfo* tem = new SymbolInfo($4 -> getSymbolName(), "ID");
-		tem -> setIdType("VAR");
+			SymbolInfo* tem = new SymbolInfo($4 -> getSymbolName(), "ID");
+			tem -> setIdType("VAR");
 
-		tem -> setVarType(varType);
- 		Params.push_back(tem);
-
+			tem -> setVarType($3 -> getSymbolName());
+	 		Params.push_back(tem);
 
 		}
 		| parameter_list COMMA type_specifier {
 
 			totalArgsNo++;
 
-		plogout << "At line no: " << lineCount << " : " << "parameter_list  : parameter_list COMMA type_specifier" << endl << endl ;
+			plogout << "At line no: " << lineCount << " : " << "parameter_list  : parameter_list COMMA type_specifier" << endl << endl ;
 
-		
+			SymbolInfo* tem = new SymbolInfo("#", "ID");
+			tem -> setIdType("VAR");
+			tem -> setVarType($3 -> getSymbolName());
 
-		SymbolInfo* tem = new SymbolInfo("#", "ID");
-		tem -> setIdType("VAR");
-		tem -> setVarType(varType);
-
-		Params.push_back(tem);
+			Params.push_back(tem);
 
 		}
  		| type_specifier ID {
-		plogout << "At line no: " << lineCount << " : " << "parameter_list  : type_specifier ID" << endl << endl ;
+			plogout << "At line no: " << lineCount << " : " << "parameter_list  : type_specifier ID" << endl << endl ;
 
-		totalArgsNo++;
-		typeAndIDArgsNo++;
+			totalArgsNo++;
+			typeAndIDArgsNo++;
 
 
-		SymbolInfo* tem = new SymbolInfo($2 -> getSymbolName(), "ID");
-		tem -> setVarType(varType);
-		tem -> setIdType("VAR");
-		Params.push_back(tem);
+			SymbolInfo* tem = new SymbolInfo($2 -> getSymbolName(), "ID");
+			tem -> setVarType($1 -> getSymbolName());
+			tem -> setIdType("VAR");
+			Params.push_back(tem);
 
 		}
 		| type_specifier {
-		plogout << "At line no: " << lineCount << " : " << "parameter_list  : type_specifier" << endl << endl ;
+			plogout << "At line no: " << lineCount << " : " << "parameter_list  : type_specifier" << endl << endl ;
 
-		totalArgsNo++;
+			totalArgsNo++;
 
-		SymbolInfo* tem = new SymbolInfo("#", "ID");
-		tem -> setIdType("VAR");
-		tem -> setVarType(varType);
+			SymbolInfo* tem = new SymbolInfo("#", "ID");
+			tem -> setIdType("VAR");
+			tem -> setVarType($1 -> getSymbolName());
 
-		Params.push_back(tem);
+			Params.push_back(tem);
 		}
  		;
 
  		
 compound_statement : LCURL {
 
-		myTable.enterScope(); 
+		myTable -> enterScope(); 
 		for(int i = 0 ; i < Params.size(); i++)
 		{
-			if(Params[i].getSymbolName() != '#')
+			if(Params[i] -> getSymbolName() != "#")
 			{
-				myTable.insert(Params[i]); 
+				SymbolInfo* t = myTable -> insert(Params[i]); 
+				t -> setIdType(Params[i] -> getIdType());
+				t -> setVarType(Params[i] -> getVarType());
 			}
 		}
-		Params.clear();
+		//initializeParam();
 
 		} statements {
 
-				myTable.printAllScopeTable(plogout);
+				myTable -> printAllScopeTable(plogout);
 
 		} RCURL {
 
 			plogout << "At line no: " << lineCount << " : " << "compound_statement : LCURL statements RCURL" << endl << endl ;
 
-			myTable.exitScope();
+			myTable -> exitScope();
 			plogout << "Scope exited" << endl ; 
+			//initializeParam();
 
 		}
  		    | LCURL RCURL{
@@ -352,6 +378,11 @@ compound_statement : LCURL {
  		    
 var_declaration : type_specifier declaration_list SEMICOLON{
 		plogout << "At line no: " << lineCount << " : " << "var_declaration : type_specifier declaration_list SEMICOLON" << endl << endl ;
+		}
+		|type_specifier declaration_list error
+		{
+			errorNo++;
+			perrout << "Error No: " << errorNo << " at line no: " << lineCount << " ; missing." << endl << endl ; 
 		}
  		;
  		 
@@ -399,6 +430,7 @@ declaration_list : declaration_list COMMA ID{
 		    if(tem == 0)
 		    {
 		    	SymbolInfo* t = new SymbolInfo($3 -> getSymbolName(), "ID");
+		    	
 		    	t = myTable -> insert(t);
 		    	t -> setVarType(varType);
 		    	t -> setIdType("VAR");
@@ -410,6 +442,8 @@ declaration_list : declaration_list COMMA ID{
 		    }
 
 		}
+
+		myTable -> printAllScopeTable(plogout);
 
 		}
  		  | declaration_list COMMA ID LTHIRD CONST_INT RTHIRD{
@@ -430,7 +464,7 @@ declaration_list : declaration_list COMMA ID{
 		    {
 		    	int arraySize = stoi($5 -> getSymbolName());
 
-				SymbolInfo* t = new SymbolInfo($3 -> getSymbolName(), $3 -> getSymbolType());
+				SymbolInfo* t = new SymbolInfo($3 -> getSymbolName(), "ID");
 
 		    	t = myTable -> insert(t);
 		    	t -> setArraySize(arraySize); 
@@ -448,7 +482,7 @@ declaration_list : declaration_list COMMA ID{
 
 
 		}
- 		  | ID{
+ 		  | ID {
 		plogout << "At line no: " << lineCount << " : " << "declaration_list : ID" << endl << endl ;
 
 		plogout << $1 -> getSymbolName() << endl << endl ; 
@@ -547,24 +581,40 @@ statement : var_declaration{
 	  | PRINTLN LPAREN ID RPAREN SEMICOLON{
 		plogout << "At line no: " << lineCount << " : " << "statement : PRINTLN LPAREN ID RPAREN SEMICOLON" << endl << endl ;
 		}
+	  | PRINTLN LPAREN ID RPAREN error
+		{
+			errorNo++;
+			perrout << "Error No: " << errorNo << " at line no: " << lineCount << " ; missing." << endl << endl ;
+		}
 	  | RETURN expression SEMICOLON{
-		plogout << "At line no: " << lineCount << " : " << "statement : RETURN expression SEMICOLON" << endl << endl ;
+			plogout << "At line no: " << lineCount << " : " << "statement : RETURN expression SEMICOLON" << endl << endl ;
+		}
+	  | RETURN expression error
+		{
+			errorNo++;
+			perrout << "Error No: " << errorNo << " at line no: " << lineCount << " ; missing." << endl << endl ;
 		}
 	  ;
 	  
-expression_statement 	: SEMICOLON {
+expression_statement: SEMICOLON {
 		plogout << "At line no: " << lineCount << " : " << "expression_statement 	: SEMICOLON" << endl << endl ;
 		}		
 			| expression SEMICOLON {
-		plogout << "At line no: " << lineCount << " : " << "expression_statement 	: Sexpression SEMICOLON" << endl << endl ;
+		plogout << "At line no: " << lineCount << " : " << "expression_statement 	: expression SEMICOLON" << endl << endl ;
 		}
-			;
+		|expression error
+		{
+			errorNo++;
+			perrout << "Error No: " << errorNo << " at line no: " << lineCount << " ; missing." << endl << endl ;
+		}
+		;
 	  
-variable : ID {
+variable: ID {
 			plogout << "At line no: " << lineCount << " : " << "variable : ID" << endl << endl ;
 
 			plogout << $1 -> getSymbolName() << endl << endl ; 
-			SymbolInfo* tem = myTable.lookUp($1 -> getSymbolName(), "ID"); 
+
+			SymbolInfo* tem = myTable -> lookUp($1 -> getSymbolName(), "ID"); 
 			
 
 			if(tem == 0)
@@ -574,10 +624,12 @@ variable : ID {
 			}
 			else
 			{
-				if(tem -> getVarType() != "VAR")
+				if(tem -> getIdType() != "VAR")
 				{
+					
+					//myTable -> printAllScopeTable(perrout) ; 
 					errorNo++;
-					perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : " << $1 -> getSymbolName() << "was declared before as" << tem -> getVarType() << ". So, it can not be used as a variable now." << endl << endl ;
+					perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : " << $1 -> getSymbolName() << " was declared before as " <<  tem -> getIdType() << ". So, it can not be used as a variable now." << endl << endl ;
 				}
 				else
 				{
@@ -593,23 +645,37 @@ variable : ID {
 
 		SymbolInfo* tem = myTable -> lookUp($1 -> getSymbolName() , "ID");
 
-		if(tem == 0)
+		if($3 -> getVarType() == "FLOAT")
+		{
+			errorNo++;
+			perrout << "Error No: " << errorNo << " at line no: " << lineCount << " Array index must be an integer." << endl << endl ;
+		}
+		else if(tem == 0)
 		{
 			errorNo++;
 			perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : Variable \"" << $1 -> getSymbolName() << "\" was not declared before." << endl << endl ;
 		}
 		else 
 		{
-			if(tem -> getVarType() != "ARR")
+			if(tem -> getIdType() != "ARR")
 			{
-				errorNo++;
-				perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : " << $1 -> getSymbolName() << "was declared before as" << tem -> getVarType() << ". So, it can not be used as an array now." << endl << endl ;
+				errorNo++; 
+				perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : " << $1 -> getSymbolName() << " was declared before as " << tem -> getIdType() << ". So, it can not be used as an array now." << endl << endl ;
 			}
 			else
 			{
-				
+				if(tem -> arraySize <= $3 -> intVarValue)
+				{
+					errorNo++;
+					perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : Size of Array " << $1 -> getSymbolName() << " is " << tem -> arraySize << ", so index " << $3 -> intVarValue << " can not be accessed." << endl << endl ;
+				}
+				else 
+				{
+					tem -> currentArrayIndex = $3 -> intVarValue ; 
+				}
 			}
 		}
+		$$ = tem ; 
 
 	}
 	 ;
@@ -1336,11 +1402,11 @@ unary_expression : ADDOP unary_expression {
 				{
 					tem -> intArray[tem -> currentArrayIndex] = tem -> intArray[tem -> currentArrayIndex] * (-1) ;  
 				}
-				else if(getVarType() == "FLOAT")
+				else if(tem -> getVarType() == "FLOAT")
 				{
 					tem -> floatArray[tem -> currentArrayIndex] = tem -> floatArray[tem -> currentArrayIndex] * (-1.0) ; 
 				}
-				else if(getVarType() == "CHAR")
+				else if(tem -> getVarType() == "CHAR")
 				{
 					errorNo++;
 					perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : Can not put " << $1 -> getSymbolName() <<  "operator before Char Array element. \"" << $2 -> getSymbolName() << endl << endl ;
@@ -1371,11 +1437,11 @@ unary_expression : ADDOP unary_expression {
 				{
 					tem -> intArray[tem -> currentArrayIndex] = tem -> intArray[tem -> currentArrayIndex] * (1) ;  
 				}
-				else if(getVarType() == "FLOAT")
+				else if(tem -> getVarType() == "FLOAT")
 				{
 					tem -> floatArray[tem -> currentArrayIndex] = tem -> floatArray[tem -> currentArrayIndex] * (1.0) ; 
 				}
-				else if(getVarType() == "CHAR")
+				else if(tem -> getVarType() == "CHAR")
 				{
 					errorNo++;
 					perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : Can not put " << $1 -> getSymbolName() <<  "operator before Char Array element. \"" << $2 -> getSymbolName() << endl << endl ;
@@ -1412,13 +1478,13 @@ unary_expression : ADDOP unary_expression {
 				{
 					tem -> intArray[tem -> currentArrayIndex] = !tem -> intArray[tem -> currentArrayIndex]  ;  
 				}
-				else if(getVarType() == "FLOAT")
+				else if(tem -> getVarType() == "FLOAT")
 				{
 					tem -> floatArray[tem -> currentArrayIndex] = !tem -> floatArray[tem -> currentArrayIndex] ; 
 				}
-				else if(getVarType() == "CHAR")
+				else if(tem -> getVarType() == "CHAR")
 				{
-					tem -> cahrArray[tem -> currentArrayIndex] = !tem -> charArray[tem -> currentArrayIndex] ; 
+					tem -> charArray[tem -> currentArrayIndex] = !tem -> charArray[tem -> currentArrayIndex] ; 
 				}
 			}
 		
@@ -1426,7 +1492,7 @@ unary_expression : ADDOP unary_expression {
 
 		}
 		 | factor {
-		plogout << "At line no: " << lineCount << " : " << "punary_expression : NOT unary_expression" << endl << endl ;
+		plogout << "At line no: " << lineCount << " : " << "unary_expression : NOT unary_expression" << endl << endl ;
 
 		$$ = $1 ; 
 		}
@@ -1440,8 +1506,10 @@ factor	: variable{
 		plogout << "At line no: " << lineCount << " : " << "factor	: ID LPAREN argument_list RPAREN  " << endl << endl ;
 
 		plogout << $1 -> getSymbolName() << endl << endl ; 
+		//myTable -> printAllScopeTable(perrout) ; 
 
-		SymbolInfo* tem = myTable.lookUp($1 -> getSymbolName(), "ID");
+		SymbolInfo* tem = myTable -> lookUp($1 -> getSymbolName(), "ID");
+		//cout << tem -> getSymbolName() << " " <<  tem -> getFuncReturnType() << endl ; 
 
 		if(tem == 0)
 		{
@@ -1459,8 +1527,9 @@ factor	: variable{
 			{
 				if(tem -> getFuncReturnType() == "VOID")
 				{
+					//cout << "RUMMAN" << endl ; 
 					errorNo++;
-					perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : Return type of function \"" << $1 -> getSymbolName() << " is void." << endl << endl ;
+					perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : Return type of function \"" << $1 -> getSymbolName() << "\" is void. So, it can not be called to return a value." << endl << endl ;
 				}
 				else 
 				{
@@ -1545,11 +1614,11 @@ factor	: variable{
 			{
 				tem -> intArray[tem -> currentArrayIndex] = tem -> intArray[tem -> currentArrayIndex] + 1 ;  
 			}
-			else if(getVarType() == "FLOAT")
+			else if(tem -> getVarType() == "FLOAT")
 			{
 				tem -> floatArray[tem -> currentArrayIndex] = tem -> floatArray[tem -> currentArrayIndex] + 1.0 ; 
 			}
-			else if(getVarType() == "CHAR")
+			else if(tem -> getVarType() == "CHAR")
 			{
 				tem -> charArray[tem -> currentArrayIndex] = tem -> charArray[tem -> currentArrayIndex] + 1 ; 
 			}
@@ -1585,11 +1654,11 @@ factor	: variable{
 			{
 				tem -> intArray[tem -> currentArrayIndex] = tem -> intArray[tem -> currentArrayIndex] - 1 ;  
 			}
-			else if(getVarType() == "FLOAT")
+			else if(tem -> getVarType() == "FLOAT")
 			{
 				tem -> floatArray[tem -> currentArrayIndex] = tem -> floatArray[tem -> currentArrayIndex] - 1.0 ; 
 			}
-			else if(getVarType() == "CHAR")
+			else if(tem -> getVarType() == "CHAR")
 			{
 				tem -> charArray[tem -> currentArrayIndex] = tem -> charArray[tem -> currentArrayIndex] - 1 ; 
 			}
@@ -1602,8 +1671,8 @@ factor	: variable{
 argument_list : arguments{
 		plogout << "At line no: " << lineCount << " : " << "argument_list : arguments" << endl << endl ;
 		}
-			  |
-			  ;
+		|{initializeParam();}
+		;
 	
 arguments : arguments COMMA logic_expression{
 		plogout << "At line no: " << lineCount << " : " << "arguments : arguments COMMA logic_expression " << endl << endl ;
@@ -1627,21 +1696,6 @@ int main(int argc,char *argv[])
 
 	plogout.open("plog1.txt");
 	perrout.open("perror1.txt");
-
-	yyin=fp;
-	yyparse();
-
-	plogout.close();
-	perrout.close();
-
-	if((fp=fopen(argv[2],"r"))==NULL)
-	{
-		printf("Cannot Open Input File No. 2.\n");
-		exit(1);
-	}
-
-	plogout.open("plog2.txt");
-	perrout.open("perror2.txt");
 
 	yyin=fp;
 	yyparse();

@@ -64,17 +64,20 @@
 /* Copy the first part of user declarations.  */
 #line 1 "Parser.y" /* yacc.c:339  */
 
-#include<bits/stdc++.h>
-#include<cstdlib>
-#include<cstring>
-#include<cmath>
+#include <bits/stdc++.h>
+#include <cstdlib>
+#include <cstring>
+#include <cmath>
 #include "SymbolTable.h"
+#include "Functions.h"
 
 using namespace std;
 
 int yyparse(void);
 int yylex(void);
+
 extern FILE *yyin;
+extern int lineCount;
 
 string varType; 
 
@@ -82,17 +85,9 @@ SymbolTable *myTable = new SymbolTable(11);
 
 ofstream plogout, perrout ; 
 
-int errorNo =  -1 , argsNo = 0 ; 
+int warningNo = 0 ,  errorNo =  0 , totalArgsNo = 0 , typeAndIDArgsNo = 0; 
 
-vector<param> Params ; 
-
-extern int lineCount; 
-
-int stoi(std::string s) //The conversion function
-{
-    return atoi(s.c_str());
-}
-
+vector<SymbolInfo*> Params ; 
 
 void yyerror(const char *s)
 {
@@ -101,7 +96,7 @@ void yyerror(const char *s)
 
 
 
-#line 105 "y.tab.c" /* yacc.c:339  */
+#line 100 "y.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -229,11 +224,11 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 39 "Parser.y" /* yacc.c:355  */
+#line 34 "Parser.y" /* yacc.c:355  */
 
 	SymbolInfo *s; 
 
-#line 237 "y.tab.c" /* yacc.c:355  */
+#line 232 "y.tab.c" /* yacc.c:355  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -250,7 +245,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 254 "y.tab.c" /* yacc.c:358  */
+#line 249 "y.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -492,16 +487,16 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  11
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   170
+#define YYLAST   137
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  45
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  24
+#define YYNNTS  26
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  64
+#define YYNRULES  70
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  118
+#define YYNSTATES  124
 
 /* YYTRANSLATE[YYX] -- Symbol number corresponding to YYX as returned
    by yylex, with out-of-bounds checking.  */
@@ -551,13 +546,14 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,    55,    55,    60,    64,    70,    74,    77,    82,   109,
-     114,   117,   123,   133,   141,   144,   150,   153,   158,   163,
-     171,   179,   189,   220,   257,   287,   325,   328,   333,   336,
-     339,   342,   345,   348,   351,   354,   357,   362,   365,   370,
-     378,   383,   386,   391,   394,   399,   402,   407,   410,   415,
-     418,   423,   426,   429,   434,   437,   440,   443,   446,   449,
-     452,   457,   460,   463,   466
+       0,    49,    49,    54,    58,    64,    68,    71,    76,   102,
+     128,   231,   290,   307,   320,   333,   347,   361,   347,   374,
+     379,   382,   389,   397,   405,   415,   449,   485,   515,   552,
+     555,   560,   563,   566,   569,   572,   575,   578,   581,   584,
+     589,   592,   599,   602,   605,   612,   641,   683,   689,   825,
+     831,   900,   906,   982,   989,  1156,  1161,  1376,  1455,  1494,
+    1501,  1505,  1556,  1562,  1575,  1588,  1629,  1671,  1674,  1677,
+    1680
 };
 #endif
 
@@ -574,7 +570,7 @@ static const char *const yytname[] =
   "CONST_STRING", "CONST_FLOAT", "CONST_CHAR", "ADDOP", "MULOP", "LOGICOP",
   "RELOP", "LOWER_THAN_ELSE", "$accept", "start", "program", "unit",
   "func_declaration", "func_definition", "parameter_list",
-  "compound_statement", "var_declaration", "type_specifier",
+  "compound_statement", "$@1", "$@2", "var_declaration", "type_specifier",
   "declaration_list", "statements", "statement", "expression_statement",
   "variable", "expression", "logic_expression", "rel_expression",
   "simple_expression", "term", "unary_expression", "factor",
@@ -595,10 +591,10 @@ static const yytype_uint16 yytoknum[] =
 };
 # endif
 
-#define YYPACT_NINF -67
+#define YYPACT_NINF -71
 
 #define yypact_value_is_default(Yystate) \
-  (!!((Yystate) == (-67)))
+  (!!((Yystate) == (-71)))
 
 #define YYTABLE_NINF -1
 
@@ -607,20 +603,21 @@ static const yytype_uint16 yytoknum[] =
 
   /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
      STATE-NUM.  */
-static const yytype_int16 yypact[] =
+static const yytype_int8 yypact[] =
 {
-      40,   -67,   -67,   -67,    34,    40,   -67,   -67,   -67,   -67,
-      21,   -67,   -67,    26,    37,    15,    23,    29,   -67,   -12,
-     -10,    42,    60,    67,    52,   -67,   -67,     6,    40,   -67,
-     -67,    62,    72,    76,    79,   130,   130,   130,   -67,   -67,
-      80,    46,   -67,   -67,   130,   -67,   -67,    70,    88,   -67,
-     -67,    61,    75,   -67,    65,    -1,    68,   -67,   -67,   -67,
-     -67,    73,    81,   130,   -13,   130,    82,    66,   -67,    91,
-      83,   130,   130,   -67,    89,   -67,   -67,   -67,   -67,   130,
-     -67,   130,   130,   130,   130,   -67,   -67,    96,   -13,    97,
-     -67,   -67,   100,   -67,   106,   102,   105,   -67,   -67,    68,
-      99,   -67,   124,   130,   124,   109,   -67,   130,   -67,   132,
-     116,   -67,   -67,   -67,   124,   124,   -67,   -67
+      92,   -71,   -71,   -71,    36,    92,   -71,   -71,   -71,   -71,
+     -27,   -71,   -71,    49,    19,     5,   -26,   -71,    25,   -71,
+      -7,    -4,    27,    42,    44,    47,   -71,   -71,     8,    92,
+     -71,   -71,    43,   -71,    52,   -71,   -71,    45,    56,    62,
+      73,    78,    76,    76,    76,   -71,    80,    67,   -71,   -71,
+      76,   -71,   -71,    74,    52,   -71,   -71,    87,     2,   -71,
+      68,   -15,    72,   -71,   -71,   -71,   -71,    76,    58,    76,
+      10,    33,   -71,    90,    82,    76,    76,   -71,    91,    93,
+     -71,   -71,   -71,    76,   -71,   -71,    76,    76,    76,    76,
+      96,    58,    97,   -71,   -71,   -71,    98,   -71,    99,    88,
+     100,   -71,   -71,   -71,    72,    85,   -71,    52,    76,    52,
+      16,   -71,    76,   -71,   122,   102,   -71,   -71,   -71,   -71,
+      52,    52,   -71,   -71
 };
 
   /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -628,34 +625,35 @@ static const yytype_int16 yypact[] =
      means the default is an error.  */
 static const yytype_uint8 yydefact[] =
 {
-       0,    19,    20,    21,     0,     2,     4,     6,     7,     5,
-       0,     1,     3,    24,     0,     0,     0,     0,    18,     0,
-       0,    15,     0,    22,     0,     9,    11,     0,     0,    14,
-      25,     0,     0,     0,     0,     0,     0,     0,    17,    37,
-       0,    39,    57,    58,     0,    30,    28,     0,     0,    26,
-      29,    54,     0,    41,    43,    45,    47,    49,    53,     8,
-      10,    13,     0,     0,     0,     0,     0,    54,    52,     0,
-       0,    62,     0,    51,    24,    16,    27,    59,    60,     0,
-      38,     0,     0,     0,     0,    12,    23,     0,     0,     0,
-      36,    56,     0,    64,     0,    61,     0,    42,    44,    48,
-      46,    50,     0,     0,     0,     0,    55,     0,    40,    32,
-       0,    34,    35,    63,     0,     0,    33,    31
+       0,    22,    23,    24,     0,     2,     4,     6,     7,     5,
+       0,     1,     3,    27,     0,     0,     0,    21,     0,    20,
+       0,     0,    15,     0,    25,    16,     9,    11,     0,     0,
+      14,    28,     0,    19,     0,     8,    10,    13,     0,     0,
+       0,     0,     0,     0,     0,    42,     0,    45,    63,    64,
+       0,    33,    31,     0,    17,    29,    32,    60,     0,    47,
+      49,    51,    53,    55,    59,    12,    26,     0,     0,     0,
+       0,    60,    58,     0,     0,    68,     0,    57,    27,     0,
+      30,    65,    66,     0,    44,    43,     0,     0,     0,     0,
+       0,     0,     0,    41,    40,    62,     0,    70,     0,    67,
+       0,    18,    48,    50,    54,    52,    56,     0,     0,     0,
+       0,    61,     0,    46,    35,     0,    37,    39,    38,    69,
+       0,     0,    36,    34
 };
 
   /* YYPGOTO[NTERM-NUM].  */
-static const yytype_int16 yypgoto[] =
+static const yytype_int8 yypgoto[] =
 {
-     -67,   -67,   -67,   137,   -67,   -67,   -67,    17,    16,     2,
-     -67,   -67,   -42,   -55,   -36,   -34,   -66,    63,    69,    64,
-     -32,   -67,   -67,   -67
+     -71,   -71,   -71,   123,   -71,   -71,   -71,    -5,   -71,   -71,
+      59,    22,   -71,   -71,   -53,   -56,   -43,   -38,   -70,    46,
+      48,    50,   -41,   -71,   -71,   -71
 };
 
   /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-      -1,     4,     5,     6,     7,     8,    20,    45,    46,    47,
-      14,    48,    49,    50,    51,    52,    53,    54,    55,    56,
-      57,    58,    94,    95
+      -1,     4,     5,     6,     7,     8,    21,    51,    34,    79,
+      52,    53,    14,    54,    55,    56,    57,    58,    59,    60,
+      61,    62,    63,    64,    98,    99
 };
 
   /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -663,88 +661,83 @@ static const yytype_int8 yydefgoto[] =
      number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_uint8 yytable[] =
 {
-      67,    66,    10,    69,    68,    93,    76,    10,    67,    88,
-      36,    37,    73,    97,    24,    27,     9,    21,    39,    25,
-      28,     9,    41,    42,     1,    43,     2,    44,     3,    87,
-      61,    89,    24,   103,    11,    67,    26,    59,    96,    82,
-      19,   113,    83,    67,    60,    67,    67,    67,    67,     1,
-      15,     2,   101,     3,    16,    32,    13,    33,    34,    22,
-     109,     1,   111,     2,    23,     3,    35,    17,    18,   110,
-      71,    67,   116,   117,    72,    36,    37,    29,    24,    38,
-      77,    78,    79,    39,    40,    77,    78,    41,    42,    30,
-      43,    32,    44,    33,    34,    31,    63,     1,    62,     2,
-      64,     3,    35,    65,    70,    74,    80,    81,    85,    84,
-      86,    36,    37,    90,    24,    75,    91,    16,    92,    39,
-      40,   102,   104,    41,    42,   105,    43,    32,    44,    33,
-      34,   106,   107,     1,   108,     2,   114,     3,    35,    82,
-     112,   115,    12,     0,    98,     0,    99,    36,    37,     0,
-      24,     0,   100,    36,    37,    39,    40,     0,     0,    41,
-      42,     0,    43,     0,    44,    41,    42,     0,    43,     0,
-      44
+      71,    80,    72,    84,    70,    97,    73,    71,    13,    77,
+      23,    93,    91,   102,     1,    27,     2,   117,     3,    25,
+      17,    28,    10,    36,    26,    87,    29,    10,    88,    90,
+      20,    92,    71,    85,    25,   108,    11,    22,   100,    35,
+      71,    94,   119,    71,    71,    71,    71,   118,   106,    18,
+      19,    37,    81,    82,   114,    39,   116,    40,    41,     9,
+      24,     1,    30,     2,     9,     3,    42,   122,   123,    71,
+     115,    31,    32,    15,    33,    43,    44,    16,    25,    38,
+      65,    43,    44,    45,    46,    66,    67,    47,    48,    45,
+      49,    75,    50,    47,    48,    76,    49,    68,    50,    43,
+      44,     1,    69,     2,    74,     3,    81,    82,    83,    78,
+      86,    47,    48,    89,    49,    95,    50,    96,   112,    16,
+     101,   107,   109,   110,   111,    87,   120,   121,    12,   113,
+       0,     0,   103,     0,     0,     0,   105,   104
 };
 
 static const yytype_int8 yycheck[] =
 {
-      36,    35,     0,    37,    36,    71,    48,     5,    44,    64,
-      23,    24,    44,    79,    26,    25,     0,    15,    31,    31,
-      30,     5,    35,    36,     9,    38,    11,    40,    13,    63,
-      28,    65,    26,    88,     0,    71,    19,    31,    72,    40,
-      25,   107,    43,    79,    27,    81,    82,    83,    84,     9,
-      24,    11,    84,    13,    28,     3,    35,     5,     6,    36,
-     102,     9,   104,    11,    35,    13,    14,    30,    31,   103,
-      24,   107,   114,   115,    28,    23,    24,    35,    26,    27,
-      19,    20,    21,    31,    32,    19,    20,    35,    36,    29,
-      38,     3,    40,     5,     6,    28,    24,     9,    36,    11,
-      24,    13,    14,    24,    24,    35,    31,    42,    35,    41,
-      29,    23,    24,    31,    26,    27,    25,    28,    35,    31,
-      32,    25,    25,    35,    36,    25,    38,     3,    40,     5,
-       6,    25,    30,     9,    29,    11,     4,    13,    14,    40,
-      31,    25,     5,    -1,    81,    -1,    82,    23,    24,    -1,
-      26,    -1,    83,    23,    24,    31,    32,    -1,    -1,    35,
-      36,    -1,    38,    -1,    40,    35,    36,    -1,    38,    -1,
-      40
+      43,    54,    43,     1,    42,    75,    44,    50,    35,    50,
+      36,     1,    68,    83,     9,    20,    11,     1,    13,    26,
+       1,    25,     0,    28,    31,    40,    30,     5,    43,    67,
+      25,    69,    75,    31,    26,    91,     0,    15,    76,    31,
+      83,    31,   112,    86,    87,    88,    89,    31,    89,    30,
+      31,    29,    19,    20,   107,     3,   109,     5,     6,     0,
+      35,     9,    35,    11,     5,    13,    14,   120,   121,   112,
+     108,    29,    28,    24,    27,    23,    24,    28,    26,    36,
+      35,    23,    24,    31,    32,    29,    24,    35,    36,    31,
+      38,    24,    40,    35,    36,    28,    38,    24,    40,    23,
+      24,     9,    24,    11,    24,    13,    19,    20,    21,    35,
+      42,    35,    36,    41,    38,    25,    40,    35,    30,    28,
+      27,    25,    25,    25,    25,    40,     4,    25,     5,    29,
+      -1,    -1,    86,    -1,    -1,    -1,    88,    87
 };
 
   /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
      symbol of state STATE-NUM.  */
 static const yytype_uint8 yystos[] =
 {
-       0,     9,    11,    13,    46,    47,    48,    49,    50,    53,
-      54,     0,    48,    35,    55,    24,    28,    30,    31,    25,
-      51,    54,    36,    35,    26,    31,    52,    25,    30,    35,
-      29,    28,     3,     5,     6,    14,    23,    24,    27,    31,
-      32,    35,    36,    38,    40,    52,    53,    54,    56,    57,
-      58,    59,    60,    61,    62,    63,    64,    65,    66,    31,
-      52,    54,    36,    24,    24,    24,    60,    59,    65,    60,
-      24,    24,    28,    65,    35,    27,    57,    19,    20,    21,
-      31,    42,    40,    43,    41,    35,    29,    60,    58,    60,
-      31,    25,    35,    61,    67,    68,    60,    61,    62,    64,
-      63,    65,    25,    58,    25,    25,    25,    30,    29,    57,
-      60,    57,    31,    61,     4,    25,    57,    57
+       0,     9,    11,    13,    46,    47,    48,    49,    50,    55,
+      56,     0,    48,    35,    57,    24,    28,     1,    30,    31,
+      25,    51,    56,    36,    35,    26,    31,    52,    25,    30,
+      35,    29,    28,    27,    53,    31,    52,    56,    36,     3,
+       5,     6,    14,    23,    24,    31,    32,    35,    36,    38,
+      40,    52,    55,    56,    58,    59,    60,    61,    62,    63,
+      64,    65,    66,    67,    68,    35,    29,    24,    24,    24,
+      62,    61,    67,    62,    24,    24,    28,    67,    35,    54,
+      59,    19,    20,    21,     1,    31,    42,    40,    43,    41,
+      62,    60,    62,     1,    31,    25,    35,    63,    69,    70,
+      62,    27,    63,    64,    66,    65,    67,    25,    60,    25,
+      25,    25,    30,    29,    59,    62,    59,     1,    31,    63,
+       4,    25,    59,    59
 };
 
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_uint8 yyr1[] =
 {
        0,    45,    46,    47,    47,    48,    48,    48,    49,    49,
-      50,    50,    51,    51,    51,    51,    52,    52,    53,    54,
-      54,    54,    55,    55,    55,    55,    56,    56,    57,    57,
-      57,    57,    57,    57,    57,    57,    57,    58,    58,    59,
-      59,    60,    60,    61,    61,    62,    62,    63,    63,    64,
-      64,    65,    65,    65,    66,    66,    66,    66,    66,    66,
-      66,    67,    67,    68,    68
+      50,    50,    51,    51,    51,    51,    53,    54,    52,    52,
+      55,    55,    56,    56,    56,    57,    57,    57,    57,    58,
+      58,    59,    59,    59,    59,    59,    59,    59,    59,    59,
+      59,    59,    60,    60,    60,    61,    61,    62,    62,    63,
+      63,    64,    64,    65,    65,    66,    66,    67,    67,    67,
+      68,    68,    68,    68,    68,    68,    68,    69,    69,    70,
+      70
 };
 
   /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
 static const yytype_uint8 yyr2[] =
 {
        0,     2,     1,     2,     1,     1,     1,     1,     6,     5,
-       6,     5,     4,     3,     2,     1,     3,     2,     3,     1,
-       1,     1,     3,     6,     1,     4,     1,     2,     1,     1,
-       1,     7,     5,     7,     5,     5,     3,     1,     2,     1,
-       4,     1,     3,     1,     3,     1,     3,     1,     3,     1,
-       3,     2,     2,     1,     1,     4,     3,     1,     1,     2,
-       2,     1,     0,     3,     1
+       6,     5,     4,     3,     2,     1,     0,     0,     5,     2,
+       3,     3,     1,     1,     1,     3,     6,     1,     4,     1,
+       2,     1,     1,     1,     7,     5,     7,     5,     5,     5,
+       3,     3,     1,     2,     2,     1,     4,     1,     3,     1,
+       3,     1,     3,     1,     3,     1,     3,     2,     2,     1,
+       1,     4,     3,     1,     1,     2,     2,     1,     0,     3,
+       1
 };
 
 
@@ -1421,179 +1414,427 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 56 "Parser.y" /* yacc.c:1646  */
+#line 50 "Parser.y" /* yacc.c:1646  */
     {
 			plogout << "At line no: " << lineCount << " : " << "start : program" << endl << endl ; 
 		}
-#line 1429 "y.tab.c" /* yacc.c:1646  */
+#line 1422 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 3:
-#line 61 "Parser.y" /* yacc.c:1646  */
+#line 55 "Parser.y" /* yacc.c:1646  */
     {
 				plogout << "At line no: " << lineCount << " : " << "program : program unit" << endl << endl ; 
 		  }
-#line 1437 "y.tab.c" /* yacc.c:1646  */
+#line 1430 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 4:
-#line 65 "Parser.y" /* yacc.c:1646  */
+#line 59 "Parser.y" /* yacc.c:1646  */
     {
 	      	plogout << "At line no: " << lineCount << " : " << "program : unit" << endl << endl ;
 	      }
-#line 1445 "y.tab.c" /* yacc.c:1646  */
+#line 1438 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 5:
-#line 71 "Parser.y" /* yacc.c:1646  */
+#line 65 "Parser.y" /* yacc.c:1646  */
     {
 		plogout << "At line no: " << lineCount << " : " << "unit : var_declaration" << endl << endl ;
 		}
-#line 1453 "y.tab.c" /* yacc.c:1646  */
+#line 1446 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 6:
-#line 74 "Parser.y" /* yacc.c:1646  */
+#line 68 "Parser.y" /* yacc.c:1646  */
     {
 		plogout << "At line no: " << lineCount << " : " << "unit : func_declaration" << endl << endl ;
 		}
-#line 1461 "y.tab.c" /* yacc.c:1646  */
+#line 1454 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 7:
-#line 77 "Parser.y" /* yacc.c:1646  */
+#line 71 "Parser.y" /* yacc.c:1646  */
     {
 		plogout << "At line no: " << lineCount << " : " << "unit : func_definition" << endl << endl ;
 		}
-#line 1469 "y.tab.c" /* yacc.c:1646  */
+#line 1462 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 8:
-#line 82 "Parser.y" /* yacc.c:1646  */
+#line 76 "Parser.y" /* yacc.c:1646  */
     {
-		plogout << "At line no: " << lineCount << " : " << "func_declaration : type_specifier ID LPAREN parameter_list RPAREN SEMICOLON" << endl << endl ;
+			plogout << "At line no: " << lineCount << " : " << "func_declaration : type_specifier ID LPAREN parameter_list RPAREN SEMICOLON" << endl << endl ;
 
-		plogout << (yyvsp[-5].s) -> getSymbolName() << endl<< (yyvsp[-4].s) -> getSymbolName() << endl << endl ; 
+			plogout << (yyvsp[-5].s) -> getSymbolType() << endl<< (yyvsp[-4].s) -> getSymbolName() << endl << endl ; 
 
-		SymbolInfo* tem = myTable -> lookUpInCurr((yyvsp[-4].s) -> getSymbolName(), "ID");
+			SymbolInfo* tem = myTable -> lookUpInCurr((yyvsp[-4].s) -> getSymbolName(), "ID");
 
-		if(tem == 0)
-		{
-			SymbolInfo* func = new SymbolInfo((yyvsp[-4].s) -> getSymbolName(), "ID");
-			func -> setIdType("FUNC");
-			func -> setFuncReturnType(varType);
+			if(tem == 0)
+			{
+				SymbolInfo* func = new SymbolInfo((yyvsp[-4].s) -> getSymbolName(), "ID");
+				func = myTable -> insert(func); 
 
-
-
-
-
-			myTable -> insert(func); 
+				func -> setIdType("FUNC");
+				func -> setFuncReturnType(varType);
+				func -> setParamNo(totalArgsNo);
+				func -> setParamList(Params);
+				func -> funcDeclared = true ;
+				initializeParam();
+			}
+			else 
+			{
+				errorNo++;
+				perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : ID \"" << (yyvsp[-4].s) -> getSymbolName() << "\" has already been declared before in this scope." << endl << endl ; 
+				myTable -> printAllScopeTable(perrout);
+			}
 		}
-		else 
-		{
-			errorNo++;
-			perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : ID \"" << (yyvsp[-4].s) -> getSymbolName() << "\" has already been declared before in this scope." << endl << endl ; 
-		}
-
-
-		}
-#line 1501 "y.tab.c" /* yacc.c:1646  */
+#line 1493 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 9:
-#line 109 "Parser.y" /* yacc.c:1646  */
+#line 102 "Parser.y" /* yacc.c:1646  */
     {
-		plogout << "At line no: " << lineCount << " : " << "func_declaration : type_specifier ID LPAREN RPAREN SEMICOLON" << endl << endl ;
+			plogout << "At line no: " << lineCount << " : " << "func_declaration : type_specifier ID LPAREN RPAREN SEMICOLON" << endl << endl ;
+
+			plogout << (yyvsp[-4].s) -> getSymbolName() << endl<< (yyvsp[-3].s) -> getSymbolName() << endl << endl ; 
+
+			SymbolInfo* tem = myTable -> lookUpInCurr((yyvsp[-3].s) -> getSymbolName(), "ID");
+
+			if(tem == 0)
+			{
+				SymbolInfo* func = new SymbolInfo((yyvsp[-3].s) -> getSymbolName(), "ID");
+				func = myTable -> insert(func); 
+				func -> setIdType("FUNC");
+				func -> setFuncReturnType(varType);
+				func -> setParamNo(0);
+				func -> funcDeclared = true ;
+				initializeParam();
+			}
+			else 
+			{
+				errorNo++;
+				perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : ID \"" << (yyvsp[-3].s) -> getSymbolName() << "\" has already been declared before in this scope." << endl << endl ;
+				myTable -> printAllScopeTable(perrout); 
+			}
 		}
-#line 1509 "y.tab.c" /* yacc.c:1646  */
+#line 1522 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 10:
-#line 114 "Parser.y" /* yacc.c:1646  */
+#line 128 "Parser.y" /* yacc.c:1646  */
     {
 		plogout << "At line no: " << lineCount << " : " << "func_definition : type_specifier ID LPAREN parameter_list RPAREN compound_statement" << endl << endl ;
+
+		plogout << (yyvsp[-4].s) -> getSymbolName() << endl << endl ; 
+
+		SymbolInfo* tem = myTable -> lookUpInCurr((yyvsp[-4].s) -> getSymbolName(), "ID");
+
+		//cout << typeAndIDArgsNo << " " << totalArgsNo << endl ; 
+
+		if(tem != 0)
+		{
+			cout << tem -> getSymbolName() << " " << tem -> getParamNo() << " " << typeAndIDArgsNo << endl ; 
 		}
-#line 1517 "y.tab.c" /* yacc.c:1646  */
+
+
+		if(totalArgsNo != typeAndIDArgsNo)
+		{
+			errorNo++;
+			perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : " << " Parameter mismatch for Function "<< (yyvsp[-4].s)->getSymbolName() << endl << endl;
+
+			initializeParam(); 
+		}
+		else if(tem == 0)
+		{
+			SymbolInfo* func = new SymbolInfo((yyvsp[-4].s) -> getSymbolName(), "ID");
+			func = myTable -> insert(func);
+			func -> setIdType("FUNC");
+			//cout << $1 -> getSymbolName() << endl ;
+			func -> setFuncReturnType((yyvsp[-5].s) -> getSymbolName());
+			func -> setParamNo(totalArgsNo);
+			func -> setParamList(Params);
+			func -> setIsFuncDefined();
+
+			initializeParam(); 
+		}
+		else if(tem -> funcDeclared == true && tem -> getParamNo() != typeAndIDArgsNo)
+		{
+			errorNo++;
+			perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : " << " Argument number mismatch between Function definition and declaration of function "<< (yyvsp[-4].s)->getSymbolName() << "." << endl << endl;
+			initializeParam(); 
+		}
+		else 
+		{
+			if(tem -> checkIfFuncDefined() == true)
+			{
+				errorNo++;
+				perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : Function" << (yyvsp[-4].s)->getSymbolName() <<  " has been already defined." << endl << endl;
+
+				initializeParam();
+			}
+			else  
+			{
+				// check if it's really function. not var/array
+				if(tem -> getIdType() != "FUNC")
+				{
+					errorNo++;
+					perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : " << (yyvsp[-4].s)->getSymbolName() <<  " has been declared as."<< (yyvsp[-4].s) -> getIdType() << " so, can not be defined as function now." << endl << endl; 
+
+					initializeParam();
+				}
+				else if(tem -> getFuncReturnType() != (yyvsp[-5].s) -> getSymbolName())
+				{
+					errorNo++;
+					perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : Return Type of Function " << (yyvsp[-4].s)->getSymbolName() <<  " doesn't match."  << endl << endl; 
+					initializeParam();
+				}
+				else if(tem -> getParamNo() != totalArgsNo)
+				{
+					errorNo++;
+					perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : " << " Parameter mismatch for Function "<< (yyvsp[-4].s)->getSymbolName() << endl << endl;
+
+					initializeParam();
+				}
+				else if(tem -> paramList.size() == Params.size())
+				{
+					bool err = false ; 
+
+					for(int i = 0 ; i < tem -> paramList.size(); i++)
+					{
+						if(Params[i] -> getVarType() != tem -> paramList[i] -> getVarType());
+						{
+							errorNo++;
+							perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : " << " Parameter mismatch for Function "<< (yyvsp[-4].s)->getSymbolName() << " because " <<  tem -> paramList[i] -> getVarType() << "doesn't match with " << Params[i] -> getVarType() << endl << endl;
+							err = true ; 
+
+							initializeParam();
+						}
+					}
+					if(err == false)
+					{
+						tem -> setIdType("FUNC");
+						tem -> setFuncReturnType((yyvsp[-5].s) -> getSymbolName());
+						tem -> setParamNo(totalArgsNo);
+						tem -> setParamList(Params);
+						tem -> setIsFuncDefined();
+						initializeParam(); 
+					}
+				}
+			}
+		}
+
+
+		}
+#line 1630 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 11:
-#line 117 "Parser.y" /* yacc.c:1646  */
+#line 231 "Parser.y" /* yacc.c:1646  */
     {
 		plogout << "At line no: " << lineCount << " : " << "func_definition : type_specifier ID LPAREN RPAREN compound_statement" << endl << endl ;
+		
+		plogout << (yyvsp[-3].s) -> getSymbolName() << endl << endl ; 
+
+		SymbolInfo* tem = myTable -> lookUpInCurr((yyvsp[-3].s) -> getSymbolName(), "ID");
+
+		//cout << tem -> getParamNo() << " " << totalArgsNo << endl ; 
+
+		if(tem == 0)
+		{
+			SymbolInfo* func = new SymbolInfo((yyvsp[-3].s) -> getSymbolName(), "ID");
+			func = myTable -> insert(func);
+			func -> setIdType("FUNC");
+			func -> setFuncReturnType((yyvsp[-4].s) -> getSymbolName());
+			func -> setParamNo(0);
+			func -> setIsFuncDefined();
+
+			initializeParam(); 
 		}
-#line 1525 "y.tab.c" /* yacc.c:1646  */
+		else 
+		{
+			if(tem -> checkIfFuncDefined() == true)
+			{
+				errorNo++;
+				perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : Function" << (yyvsp[-3].s)->getSymbolName() <<  " has been already defined."  << endl << endl;
+
+				initializeParam();
+			}
+			else  
+			{
+				// check if it's really function. not var/array
+				if(tem -> getIdType() != "FUNC")
+				{
+					errorNo++;
+					perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : " << (yyvsp[-3].s)->getSymbolName() <<  " has been already declared as Variable or Array."  << endl << endl; 
+
+					initializeParam();
+				}
+				else if(tem -> getFuncReturnType() != (yyvsp[-4].s) -> getSymbolName())
+				{
+					errorNo++;
+					perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : Return Type of Function " << (yyvsp[-3].s)->getSymbolName() <<  " doesn't match."  << endl << endl; 
+					initializeParam();
+				}
+				else if(tem -> getParamNo() != totalArgsNo)
+				{
+					errorNo++;
+					perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : " << " Parameter mismatch for Function "<< (yyvsp[-3].s)->getSymbolName() << endl << endl;
+
+					initializeParam();
+				}
+			}
+		}
+
+		}
+#line 1691 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 12:
-#line 123 "Parser.y" /* yacc.c:1646  */
+#line 290 "Parser.y" /* yacc.c:1646  */
     {
 
-		plogout << "At line no: " << lineCount << " : " << "parameter_list  : parameter_list COMMA type_specifier ID" << endl << endl ;
+			plogout << "At line no: " << lineCount << " : " << "parameter_list  : parameter_list COMMA type_specifier ID" << endl << endl ;
 
-		plogout << (yyvsp[0].s) -> getSymbolName() << endl << endl ; 
+			plogout << (yyvsp[-1].s) -> getSymbolName() << endl << endl ; 
 
-		argsNo++;
-		Params.push_back(param((yyvsp[0].s) -> getSymbolName(), varType));
+			totalArgsNo++;
+			typeAndIDArgsNo++;
+
+
+			SymbolInfo* tem = new SymbolInfo((yyvsp[0].s) -> getSymbolName(), "ID");
+			tem -> setIdType("VAR");
+
+			tem -> setVarType((yyvsp[-1].s) -> getSymbolName());
+	 		Params.push_back(tem);
 
 		}
-#line 1540 "y.tab.c" /* yacc.c:1646  */
+#line 1713 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 133 "Parser.y" /* yacc.c:1646  */
+#line 307 "Parser.y" /* yacc.c:1646  */
     {
 
-		plogout << "At line no: " << lineCount << " : " << "parameter_list  : parameter_list COMMA type_specifier" << endl << endl ;
+			totalArgsNo++;
 
+			plogout << "At line no: " << lineCount << " : " << "parameter_list  : parameter_list COMMA type_specifier" << endl << endl ;
 
+			SymbolInfo* tem = new SymbolInfo("#", "ID");
+			tem -> setIdType("VAR");
+			tem -> setVarType((yyvsp[0].s) -> getSymbolName());
 
+			Params.push_back(tem);
 
 		}
-#line 1553 "y.tab.c" /* yacc.c:1646  */
+#line 1731 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 14:
-#line 141 "Parser.y" /* yacc.c:1646  */
+#line 320 "Parser.y" /* yacc.c:1646  */
     {
-		plogout << "At line no: " << lineCount << " : " << "parameter_list  : type_specifier ID" << endl << endl ;
+			plogout << "At line no: " << lineCount << " : " << "parameter_list  : type_specifier ID" << endl << endl ;
+
+			totalArgsNo++;
+			typeAndIDArgsNo++;
+
+
+			SymbolInfo* tem = new SymbolInfo((yyvsp[0].s) -> getSymbolName(), "ID");
+			tem -> setVarType((yyvsp[-1].s) -> getSymbolName());
+			tem -> setIdType("VAR");
+			Params.push_back(tem);
+
 		}
-#line 1561 "y.tab.c" /* yacc.c:1646  */
+#line 1749 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 15:
-#line 144 "Parser.y" /* yacc.c:1646  */
+#line 333 "Parser.y" /* yacc.c:1646  */
     {
-		plogout << "At line no: " << lineCount << " : " << "parameter_list  : type_specifier" << endl << endl ;
+			plogout << "At line no: " << lineCount << " : " << "parameter_list  : type_specifier" << endl << endl ;
+
+			totalArgsNo++;
+
+			SymbolInfo* tem = new SymbolInfo("#", "ID");
+			tem -> setIdType("VAR");
+			tem -> setVarType((yyvsp[0].s) -> getSymbolName());
+
+			Params.push_back(tem);
 		}
-#line 1569 "y.tab.c" /* yacc.c:1646  */
+#line 1765 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 16:
-#line 150 "Parser.y" /* yacc.c:1646  */
+#line 347 "Parser.y" /* yacc.c:1646  */
     {
-		plogout << "At line no: " << lineCount << " : " << "compound_statement : LCURL statements RCURL" << endl << endl ;
+
+		myTable -> enterScope(); 
+		for(int i = 0 ; i < Params.size(); i++)
+		{
+			if(Params[i] -> getSymbolName() != "#")
+			{
+				SymbolInfo* t = myTable -> insert(Params[i]); 
+				t -> setIdType(Params[i] -> getIdType());
+				t -> setVarType(Params[i] -> getVarType());
+			}
 		}
-#line 1577 "y.tab.c" /* yacc.c:1646  */
+		//initializeParam();
+
+		}
+#line 1785 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 17:
-#line 153 "Parser.y" /* yacc.c:1646  */
+#line 361 "Parser.y" /* yacc.c:1646  */
     {
-		plogout << "At line no: " << lineCount << " : " << "compound_statement : LCURL RCURL" << endl << endl ;
+
+				myTable -> printAllScopeTable(plogout);
+
 		}
-#line 1585 "y.tab.c" /* yacc.c:1646  */
+#line 1795 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 18:
-#line 158 "Parser.y" /* yacc.c:1646  */
+#line 365 "Parser.y" /* yacc.c:1646  */
     {
-		plogout << "At line no: " << lineCount << " : " << "var_declaration : type_specifier declaration_list SEMICOLON" << endl << endl ;
+
+			plogout << "At line no: " << lineCount << " : " << "compound_statement : LCURL statements RCURL" << endl << endl ;
+
+			myTable -> exitScope();
+			plogout << "Scope exited" << endl ; 
+			//initializeParam();
+
 		}
-#line 1593 "y.tab.c" /* yacc.c:1646  */
+#line 1809 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 19:
-#line 163 "Parser.y" /* yacc.c:1646  */
+#line 374 "Parser.y" /* yacc.c:1646  */
+    {
+		plogout << "At line no: " << lineCount << " : " << "compound_statement : LCURL RCURL" << endl << endl ;
+		}
+#line 1817 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 20:
+#line 379 "Parser.y" /* yacc.c:1646  */
+    {
+		plogout << "At line no: " << lineCount << " : " << "var_declaration : type_specifier declaration_list SEMICOLON" << endl << endl ;
+		}
+#line 1825 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 21:
+#line 383 "Parser.y" /* yacc.c:1646  */
+    {
+			errorNo++;
+			perrout << "Error No: " << errorNo << " at line no: " << lineCount << " ; missing." << endl << endl ; 
+		}
+#line 1834 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 22:
+#line 389 "Parser.y" /* yacc.c:1646  */
     {
 		plogout << "At line no: " << lineCount << " : " << "type_specifier	: INT" << endl << endl ;
 
@@ -1602,11 +1843,11 @@ yyreduce:
 
 		varType = "INT";
 		}
-#line 1606 "y.tab.c" /* yacc.c:1646  */
+#line 1847 "y.tab.c" /* yacc.c:1646  */
     break;
 
-  case 20:
-#line 171 "Parser.y" /* yacc.c:1646  */
+  case 23:
+#line 397 "Parser.y" /* yacc.c:1646  */
     {
 		plogout << "At line no: " << lineCount << " : " << "type_specifier	: FLOAT" << endl << endl ;
 
@@ -1615,11 +1856,11 @@ yyreduce:
 
 		varType = "FLOAT";
 		}
-#line 1619 "y.tab.c" /* yacc.c:1646  */
+#line 1860 "y.tab.c" /* yacc.c:1646  */
     break;
 
-  case 21:
-#line 179 "Parser.y" /* yacc.c:1646  */
+  case 24:
+#line 405 "Parser.y" /* yacc.c:1646  */
     {
 		plogout << "At line no: " << lineCount << " : " << "type_specifier	: VOID" << endl << endl ;
 
@@ -1628,11 +1869,11 @@ yyreduce:
 
 		varType = "VOID";
 		}
-#line 1632 "y.tab.c" /* yacc.c:1646  */
+#line 1873 "y.tab.c" /* yacc.c:1646  */
     break;
 
-  case 22:
-#line 189 "Parser.y" /* yacc.c:1646  */
+  case 25:
+#line 415 "Parser.y" /* yacc.c:1646  */
     {
 
 		plogout << "At line no: " << lineCount << " : " << "declaration_list : declaration_list COMMA ID" << endl << endl ;
@@ -1651,9 +1892,10 @@ yyreduce:
 		    if(tem == 0)
 		    {
 		    	SymbolInfo* t = new SymbolInfo((yyvsp[0].s) -> getSymbolName(), "ID");
+		    	
+		    	t = myTable -> insert(t);
 		    	t -> setVarType(varType);
 		    	t -> setIdType("VAR");
-		    	myTable -> insert(t);
 		    }
 		    else 
 		    {
@@ -1663,12 +1905,14 @@ yyreduce:
 
 		}
 
+		myTable -> printAllScopeTable(plogout);
+
 		}
-#line 1668 "y.tab.c" /* yacc.c:1646  */
+#line 1912 "y.tab.c" /* yacc.c:1646  */
     break;
 
-  case 23:
-#line 220 "Parser.y" /* yacc.c:1646  */
+  case 26:
+#line 449 "Parser.y" /* yacc.c:1646  */
     {
 		plogout << "At line no: " << lineCount << " : " << "declaration_list : declaration_list COMMA ID LTHIRD CONST_INT RTHIRD" << endl << endl ;
 
@@ -1685,16 +1929,15 @@ yyreduce:
 
 		    if(tem == 0)
 		    {
-		    	SymbolInfo* t = new SymbolInfo((yyvsp[-3].s) -> getSymbolName(), (yyvsp[-3].s) -> getSymbolType());
-		    	t -> setVarType(varType);
-		    	t -> setIdType("ARR");
-
 		    	int arraySize = stoi((yyvsp[-1].s) -> getSymbolName());
 
+				SymbolInfo* t = new SymbolInfo((yyvsp[-3].s) -> getSymbolName(), "ID");
+
+		    	t = myTable -> insert(t);
 		    	t -> setArraySize(arraySize); 
 		    	t-> fillArray();
-
-		    	myTable -> insert(t);
+		    	t -> setVarType(varType);
+		    	t -> setIdType("ARR");
 		    }
 		    else 
 		    {
@@ -1706,11 +1949,11 @@ yyreduce:
 
 
 		}
-#line 1710 "y.tab.c" /* yacc.c:1646  */
+#line 1953 "y.tab.c" /* yacc.c:1646  */
     break;
 
-  case 24:
-#line 257 "Parser.y" /* yacc.c:1646  */
+  case 27:
+#line 485 "Parser.y" /* yacc.c:1646  */
     {
 		plogout << "At line no: " << lineCount << " : " << "declaration_list : ID" << endl << endl ;
 
@@ -1728,9 +1971,9 @@ yyreduce:
 		    if(tem == 0)
 		    {
 		    	SymbolInfo* t = new SymbolInfo((yyvsp[0].s) -> getSymbolName(), "ID");
+		    	t = myTable -> insert(t);
 		    	t -> setVarType(varType);
 		    	t -> setIdType("VAR");
-		    	myTable -> insert(t);
 		    }
 		    else 
 		    {
@@ -1741,11 +1984,11 @@ yyreduce:
 		}
 
 		}
-#line 1745 "y.tab.c" /* yacc.c:1646  */
+#line 1988 "y.tab.c" /* yacc.c:1646  */
     break;
 
-  case 25:
-#line 287 "Parser.y" /* yacc.c:1646  */
+  case 28:
+#line 515 "Parser.y" /* yacc.c:1646  */
     {
 		plogout << "At line no: " << lineCount << " : " << "declaration_list : ID LTHIRD CONST_INT RTHIRD" << endl << endl ;
 
@@ -1762,16 +2005,15 @@ yyreduce:
 
 		    if(tem == 0)
 		    {
-		    	SymbolInfo* t = new SymbolInfo((yyvsp[-3].s) -> getSymbolName(), "ID");
-		    	t -> setVarType(varType);
-		    	t -> setIdType("ARR");
-
 		    	int arraySize = stoi ((yyvsp[-1].s) -> getSymbolName());
 
+		    	SymbolInfo* t = new SymbolInfo((yyvsp[-3].s) -> getSymbolName(), "ID");
+
+		    	t = myTable -> insert(t);
+		    	t -> setVarType(varType);
+		    	t -> setIdType("ARR");
 		    	t -> setArraySize(arraySize); 
 		    	t-> fillArray();
-
-		    	myTable -> insert(t);
 		    }
 		    else 
 		    {
@@ -1782,320 +2024,1325 @@ yyreduce:
 		}
 
 		}
-#line 1786 "y.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 26:
-#line 325 "Parser.y" /* yacc.c:1646  */
-    {
-		plogout << "At line no: " << lineCount << " : " << "statements : statement" << endl << endl ;
-		}
-#line 1794 "y.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 27:
-#line 328 "Parser.y" /* yacc.c:1646  */
-    {
-		plogout << "At line no: " << lineCount << " : " << "statements : statements statement" << endl << endl ;
-		}
-#line 1802 "y.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 28:
-#line 333 "Parser.y" /* yacc.c:1646  */
-    {
-		plogout << "At line no: " << lineCount << " : " << "statement : var_declaration" << endl << endl ;
-		}
-#line 1810 "y.tab.c" /* yacc.c:1646  */
+#line 2028 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 29:
-#line 336 "Parser.y" /* yacc.c:1646  */
+#line 552 "Parser.y" /* yacc.c:1646  */
     {
-		plogout << "At line no: " << lineCount << " : " << "statement : expression_statement" << endl << endl ;
+		plogout << "At line no: " << lineCount << " : " << "statements : statement" << endl << endl ;
 		}
-#line 1818 "y.tab.c" /* yacc.c:1646  */
+#line 2036 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 30:
-#line 339 "Parser.y" /* yacc.c:1646  */
+#line 555 "Parser.y" /* yacc.c:1646  */
     {
-		plogout << "At line no: " << lineCount << " : " << "statement : compound_statement" << endl << endl ;
+		plogout << "At line no: " << lineCount << " : " << "statements : statements statement" << endl << endl ;
 		}
-#line 1826 "y.tab.c" /* yacc.c:1646  */
+#line 2044 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 31:
-#line 342 "Parser.y" /* yacc.c:1646  */
+#line 560 "Parser.y" /* yacc.c:1646  */
     {
-		plogout << "At line no: " << lineCount << " : " << "statement : FOR LPAREN expression_statement expression_statement expression RPAREN statement" << endl << endl ;
+		plogout << "At line no: " << lineCount << " : " << "statement : var_declaration" << endl << endl ;
 		}
-#line 1834 "y.tab.c" /* yacc.c:1646  */
+#line 2052 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 32:
-#line 345 "Parser.y" /* yacc.c:1646  */
+#line 563 "Parser.y" /* yacc.c:1646  */
     {
-		plogout << "At line no: " << lineCount << " : " << "statement : IF LPAREN expression RPAREN statement %prec LOWER_THAN_ELSE" << endl << endl ;
+		plogout << "At line no: " << lineCount << " : " << "statement : expression_statement" << endl << endl ;
 		}
-#line 1842 "y.tab.c" /* yacc.c:1646  */
+#line 2060 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 33:
-#line 348 "Parser.y" /* yacc.c:1646  */
+#line 566 "Parser.y" /* yacc.c:1646  */
     {
-		plogout << "At line no: " << lineCount << " : " << "statement : IF LPAREN expression RPAREN statement ELSE statement" << endl << endl ;
+		plogout << "At line no: " << lineCount << " : " << "statement : compound_statement" << endl << endl ;
 		}
-#line 1850 "y.tab.c" /* yacc.c:1646  */
+#line 2068 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 34:
-#line 351 "Parser.y" /* yacc.c:1646  */
+#line 569 "Parser.y" /* yacc.c:1646  */
     {
-		plogout << "At line no: " << lineCount << " : " << "statement : WHILE LPAREN expression RPAREN statement" << endl << endl ;
+		plogout << "At line no: " << lineCount << " : " << "statement : FOR LPAREN expression_statement expression_statement expression RPAREN statement" << endl << endl ;
 		}
-#line 1858 "y.tab.c" /* yacc.c:1646  */
+#line 2076 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 35:
-#line 354 "Parser.y" /* yacc.c:1646  */
+#line 572 "Parser.y" /* yacc.c:1646  */
     {
-		plogout << "At line no: " << lineCount << " : " << "statement : PRINTLN LPAREN ID RPAREN SEMICOLON" << endl << endl ;
+		plogout << "At line no: " << lineCount << " : " << "statement : IF LPAREN expression RPAREN statement %prec LOWER_THAN_ELSE" << endl << endl ;
 		}
-#line 1866 "y.tab.c" /* yacc.c:1646  */
+#line 2084 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 36:
-#line 357 "Parser.y" /* yacc.c:1646  */
+#line 575 "Parser.y" /* yacc.c:1646  */
     {
-		plogout << "At line no: " << lineCount << " : " << "statement : RETURN expression SEMICOLON" << endl << endl ;
+		plogout << "At line no: " << lineCount << " : " << "statement : IF LPAREN expression RPAREN statement ELSE statement" << endl << endl ;
 		}
-#line 1874 "y.tab.c" /* yacc.c:1646  */
+#line 2092 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 37:
-#line 362 "Parser.y" /* yacc.c:1646  */
+#line 578 "Parser.y" /* yacc.c:1646  */
     {
-		plogout << "At line no: " << lineCount << " : " << "expression_statement 	: SEMICOLON" << endl << endl ;
+		plogout << "At line no: " << lineCount << " : " << "statement : WHILE LPAREN expression RPAREN statement" << endl << endl ;
 		}
-#line 1882 "y.tab.c" /* yacc.c:1646  */
+#line 2100 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 38:
-#line 365 "Parser.y" /* yacc.c:1646  */
+#line 581 "Parser.y" /* yacc.c:1646  */
     {
-		plogout << "At line no: " << lineCount << " : " << "expression_statement 	: Sexpression SEMICOLON" << endl << endl ;
+		plogout << "At line no: " << lineCount << " : " << "statement : PRINTLN LPAREN ID RPAREN SEMICOLON" << endl << endl ;
 		}
-#line 1890 "y.tab.c" /* yacc.c:1646  */
+#line 2108 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 39:
-#line 370 "Parser.y" /* yacc.c:1646  */
+#line 585 "Parser.y" /* yacc.c:1646  */
     {
-		plogout << "At line no: " << lineCount << " : " << "variable : ID" << endl << endl ;
-
-		plogout << (yyvsp[0].s) -> getSymbolName() << endl << endl ; 
-		SymbolInfo* tem ; 
-
-
+			errorNo++;
+			perrout << "Error No: " << errorNo << " at line no: " << lineCount << " ; missing." << endl << endl ;
 		}
-#line 1903 "y.tab.c" /* yacc.c:1646  */
+#line 2117 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 40:
-#line 378 "Parser.y" /* yacc.c:1646  */
+#line 589 "Parser.y" /* yacc.c:1646  */
     {
-		plogout << "At line no: " << lineCount << " : " << "variable : ID LTHIRD expression RTHIRD" << endl << endl ;
+			plogout << "At line no: " << lineCount << " : " << "statement : RETURN expression SEMICOLON" << endl << endl ;
 		}
-#line 1911 "y.tab.c" /* yacc.c:1646  */
+#line 2125 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 41:
-#line 383 "Parser.y" /* yacc.c:1646  */
+#line 593 "Parser.y" /* yacc.c:1646  */
     {
-		plogout << "At line no: " << lineCount << " : " << "expression : logic_expression" << endl << endl ;
+			errorNo++;
+			perrout << "Error No: " << errorNo << " at line no: " << lineCount << " ; missing." << endl << endl ;
 		}
-#line 1919 "y.tab.c" /* yacc.c:1646  */
+#line 2134 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 42:
-#line 386 "Parser.y" /* yacc.c:1646  */
+#line 599 "Parser.y" /* yacc.c:1646  */
     {
-		plogout << "At line no: " << lineCount << " : " << "expression : variable ASSIGNOP logic_expression" << endl << endl ;
+		plogout << "At line no: " << lineCount << " : " << "expression_statement 	: SEMICOLON" << endl << endl ;
 		}
-#line 1927 "y.tab.c" /* yacc.c:1646  */
+#line 2142 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 43:
-#line 391 "Parser.y" /* yacc.c:1646  */
+#line 602 "Parser.y" /* yacc.c:1646  */
     {
-		plogout << "At line no: " << lineCount << " : " << "logic_expression : rel_expression" << endl << endl ;
+		plogout << "At line no: " << lineCount << " : " << "expression_statement 	: expression SEMICOLON" << endl << endl ;
 		}
-#line 1935 "y.tab.c" /* yacc.c:1646  */
+#line 2150 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 44:
-#line 394 "Parser.y" /* yacc.c:1646  */
+#line 606 "Parser.y" /* yacc.c:1646  */
     {
-		plogout << "At line no: " << lineCount << " : " << "logic_expression : rel_expression LOGICOP rel_expression" << endl << endl ;
+			errorNo++;
+			perrout << "Error No: " << errorNo << " at line no: " << lineCount << " ; missing." << endl << endl ;
 		}
-#line 1943 "y.tab.c" /* yacc.c:1646  */
+#line 2159 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 45:
-#line 399 "Parser.y" /* yacc.c:1646  */
+#line 612 "Parser.y" /* yacc.c:1646  */
     {
-		plogout << "At line no: " << lineCount << " : " << "rel_expression	: simple_expression" << endl << endl ;
+			plogout << "At line no: " << lineCount << " : " << "variable : ID" << endl << endl ;
+
+			plogout << (yyvsp[0].s) -> getSymbolName() << endl << endl ; 
+
+			SymbolInfo* tem = myTable -> lookUp((yyvsp[0].s) -> getSymbolName(), "ID"); 
+			
+
+			if(tem == 0)
+			{
+				errorNo++;
+				perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : Variable \"" << (yyvsp[0].s) -> getSymbolName() << "\" was not declared before." << endl << endl ;
+			}
+			else
+			{
+				if(tem -> getIdType() != "VAR")
+				{
+					
+					//myTable -> printAllScopeTable(perrout) ; 
+					errorNo++;
+					perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : " << (yyvsp[0].s) -> getSymbolName() << " was declared before as " <<  tem -> getIdType() << ". So, it can not be used as a variable now." << endl << endl ;
+				}
+				else
+				{
+					(yyval.s) = tem ; 
+				}
+			}
+
 		}
-#line 1951 "y.tab.c" /* yacc.c:1646  */
+#line 2193 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 46:
-#line 402 "Parser.y" /* yacc.c:1646  */
+#line 641 "Parser.y" /* yacc.c:1646  */
     {
-		plogout << "At line no: " << lineCount << " : " << "rel_expression	: simple_expression RELOP simple_expression" << endl << endl ;
+		plogout << "At line no: " << lineCount << " : " << "variable : ID LTHIRD expression RTHIRD" << endl << endl ;
+
+		plogout << (yyvsp[-3].s) -> getSymbolName() << endl << endl ; 
+
+		SymbolInfo* tem = myTable -> lookUp((yyvsp[-3].s) -> getSymbolName() , "ID");
+
+		if((yyvsp[-1].s) -> getVarType() == "FLOAT")
+		{
+			errorNo++;
+			perrout << "Error No: " << errorNo << " at line no: " << lineCount << " Array index must be an integer." << endl << endl ;
 		}
-#line 1959 "y.tab.c" /* yacc.c:1646  */
+		else if(tem == 0)
+		{
+			errorNo++;
+			perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : Variable \"" << (yyvsp[-3].s) -> getSymbolName() << "\" was not declared before." << endl << endl ;
+		}
+		else 
+		{
+			if(tem -> getIdType() != "ARR")
+			{
+				errorNo++; 
+				perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : " << (yyvsp[-3].s) -> getSymbolName() << " was declared before as " << tem -> getIdType() << ". So, it can not be used as an array now." << endl << endl ;
+			}
+			else
+			{
+				if(tem -> arraySize <= (yyvsp[-1].s) -> intVarValue)
+				{
+					errorNo++;
+					perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : Size of Array " << (yyvsp[-3].s) -> getSymbolName() << " is " << tem -> arraySize << ", so index " << (yyvsp[-1].s) -> intVarValue << " can not be accessed." << endl << endl ;
+				}
+				else 
+				{
+					tem -> currentArrayIndex = (yyvsp[-1].s) -> intVarValue ; 
+				}
+			}
+		}
+		(yyval.s) = tem ; 
+
+	}
+#line 2238 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 47:
-#line 407 "Parser.y" /* yacc.c:1646  */
+#line 683 "Parser.y" /* yacc.c:1646  */
     {
-		plogout << "At line no: " << lineCount << " : " << "simple_expression : term" << endl << endl ;
+		plogout << "At line no: " << lineCount << " : " << "expression : logic_expression" << endl << endl ;
+
+		(yyval.s) = (yyvsp[0].s) ; 
+
 		}
-#line 1967 "y.tab.c" /* yacc.c:1646  */
+#line 2249 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 48:
-#line 410 "Parser.y" /* yacc.c:1646  */
+#line 689 "Parser.y" /* yacc.c:1646  */
     {
-		plogout << "At line no: " << lineCount << " : " << "simple_expression : simple_expression ADDOP term" << endl << endl ;
+		plogout << "At line no: " << lineCount << " : " << "expression : variable ASSIGNOP logic_expression" << endl << endl ;
+
+			
+
+			if((yyvsp[-2].s) -> getIdType() == "VAR")
+			{
+				if((yyvsp[0].s) -> getIdType() == "VAR")
+				{
+					if((yyvsp[-2].s) -> getVarType() == "INT" && (yyvsp[0].s) -> getVarType() == "INT")
+					{
+						(yyvsp[-2].s) -> intVarValue = (yyvsp[0].s) -> intVarValue ; 
+						(yyval.s) = (yyvsp[-2].s) ; 
+					}
+					else if((yyvsp[-2].s) -> getVarType() == "INT" && (yyvsp[0].s) -> getVarType() == "FLOAT")
+					{
+						warningNo++;
+						perrout << "Warning No: " << warningNo << " at line no: " << lineCount << " : " << " Float value is assigned to Int value (Type casting)." << endl << endl ; 
+						(yyvsp[-2].s) -> intVarValue = (yyvsp[0].s) -> floatVarValue ; 
+						(yyval.s) = (yyvsp[-2].s) ; 
+					}
+					else if((yyvsp[-2].s) -> getVarType() == "FLOAT" && (yyvsp[0].s) -> getVarType() == "INT")
+					{
+						warningNo++;
+						perrout << "Warning No: " << warningNo << " at line no: " << lineCount << " : " << " Int value is assigned to Float value (Type casting)." << endl << endl ; 
+						(yyvsp[-2].s) -> floatVarValue = (yyvsp[0].s) -> intVarValue ; 
+						(yyval.s) = (yyvsp[-2].s) ; 
+					}
+					else if((yyvsp[-2].s) -> getVarType() == "FLOAT" && (yyvsp[0].s) -> getVarType() == "FLOAT")
+					{
+						(yyvsp[-2].s) -> floatVarValue = (yyvsp[0].s) -> floatVarValue ; 
+						(yyval.s) = (yyvsp[-2].s) ; 
+					}
+				}
+				else if((yyvsp[0].s) -> getIdType() == "ARR")
+				{
+					if((yyvsp[-2].s) -> getVarType() == "INT" && (yyvsp[0].s) -> getVarType() == "INT")
+					{
+						(yyvsp[-2].s) -> intVarValue = (yyvsp[0].s) -> intArray[(yyvsp[0].s) -> currentArrayIndex] ;
+						(yyval.s) = (yyvsp[-2].s) ; 
+					}
+					else if((yyvsp[-2].s) -> getVarType() == "INT" && (yyvsp[0].s) -> getVarType() == "FLOAT")
+					{
+						warningNo++;
+						perrout << "Warning No: " << warningNo << " at line no: " << lineCount << " : " << " Float value is assigned to Int value (Type casting)." << endl << endl ; 
+						
+						(yyvsp[-2].s) -> intVarValue = (int) (yyvsp[0].s) -> floatArray[(yyvsp[0].s) -> currentArrayIndex];
+
+						(yyval.s) = (yyvsp[-2].s) ; 
+					}
+					else if((yyvsp[-2].s) -> getVarType() == "FLOAT" && (yyvsp[0].s) -> getVarType() == "INT")
+					{
+						warningNo++;
+						perrout << "Warning No: " << warningNo << " at line no: " << lineCount << " : " << " Int value is assigned to Float value (Type casting)." << endl << endl ; 
+						
+						(yyvsp[-2].s) -> floatVarValue = (float) (yyvsp[0].s) -> intArray[(yyvsp[0].s) -> currentArrayIndex];
+
+						(yyval.s) = (yyvsp[-2].s) ; 
+					}
+					else if((yyvsp[-2].s) -> getVarType() == "FLOAT" && (yyvsp[0].s) -> getVarType() == "FLOAT")
+					{
+						(yyvsp[-2].s) -> floatVarValue = (yyvsp[0].s) -> floatArray[(yyvsp[0].s) -> currentArrayIndex] ; 
+
+						(yyval.s) = (yyvsp[-2].s) ; 
+					}
+				}
+			}
+			else if((yyvsp[-2].s) -> getIdType() == "ARR")
+			{
+				if((yyvsp[0].s) -> getIdType() == "VAR")
+				{
+					if((yyvsp[-2].s) -> getVarType() == "INT" && (yyvsp[0].s) -> getVarType() == "INT")
+					{
+						(yyvsp[-2].s) -> intArray[(yyvsp[-2].s) -> currentArrayIndex] = (yyvsp[0].s) -> intVarValue ; 
+						(yyval.s) = (yyvsp[-2].s) ; 
+					}
+					else if((yyvsp[-2].s) -> getVarType() == "INT" && (yyvsp[0].s) -> getVarType() == "FLOAT")
+					{
+						warningNo++;
+						perrout << "Warning No: " << warningNo << " at line no: " << lineCount << " : " << " Float value is assigned to Int value (Type casting)." << endl << endl ; 
+						
+						(yyvsp[-2].s) -> intArray[(yyvsp[-2].s) -> currentArrayIndex] = (yyvsp[0].s) -> floatVarValue ; 
+
+						(yyval.s) = (yyvsp[-2].s) ; 
+					}
+					else if((yyvsp[-2].s) -> getVarType() == "FLOAT" && (yyvsp[0].s) -> getVarType() == "INT")
+					{
+						warningNo++;
+						perrout << "Warning No: " << warningNo << " at line no: " << lineCount << " : " << " Int value is assigned to Float value (Type casting)." << endl << endl ; 
+
+						(yyvsp[-2].s) -> floatArray[(yyvsp[-2].s) -> currentArrayIndex] = (yyvsp[0].s) -> intVarValue ; 
+
+						(yyval.s) = (yyvsp[-2].s) ; 
+					}
+					else if((yyvsp[-2].s) -> getVarType() == "FLOAT" && (yyvsp[0].s) -> getVarType() == "FLOAT")
+					{
+						(yyvsp[-2].s) -> floatArray[(yyvsp[-2].s) -> currentArrayIndex] = (yyvsp[0].s) -> floatVarValue ; 
+						(yyval.s) = (yyvsp[-2].s) ; 
+					}
+				}
+				else if((yyvsp[0].s) -> getIdType() == "ARR")
+				{
+					if((yyvsp[-2].s) -> getVarType() == "INT" && (yyvsp[0].s) -> getVarType() == "INT")
+					{
+						(yyvsp[-2].s) -> intArray[(yyvsp[-2].s) -> currentArrayIndex] = (yyvsp[0].s) -> intArray[(yyvsp[0].s) -> currentArrayIndex] ;
+						(yyval.s) = (yyvsp[-2].s) ; 
+					}
+					else if((yyvsp[-2].s) -> getVarType() == "INT" && (yyvsp[0].s) -> getVarType() == "FLOAT")
+					{
+						warningNo++;
+						perrout << "Warning No: " << warningNo << " at line no: " << lineCount << " : " << " Float value is assigned to Int value (Type casting)." << endl << endl ; 
+						
+						(yyvsp[-2].s) -> intArray[(yyvsp[-2].s) -> currentArrayIndex] = (int) (yyvsp[0].s) -> floatArray[(yyvsp[0].s) -> currentArrayIndex];
+
+						(yyval.s) = (yyvsp[-2].s) ; 
+					}
+					else if((yyvsp[-2].s) -> getVarType() == "FLOAT" && (yyvsp[0].s) -> getVarType() == "INT")
+					{
+						warningNo++;
+						perrout << "Warning No: " << warningNo << " at line no: " << lineCount << " : " << " Int value is assigned to Float value (Type casting)." << endl << endl ; 
+						
+						(yyvsp[-2].s) -> floatArray[(yyvsp[-2].s) -> currentArrayIndex] = (float) (yyvsp[0].s) -> intArray[(yyvsp[0].s) -> currentArrayIndex];
+
+						(yyval.s) = (yyvsp[-2].s) ; 
+					}
+					else if((yyvsp[-2].s) -> getVarType() == "FLOAT" && (yyvsp[0].s) -> getVarType() == "FLOAT")
+					{
+						(yyvsp[-2].s) -> floatArray[(yyvsp[-2].s) -> currentArrayIndex] = (yyvsp[0].s) -> floatArray[(yyvsp[0].s) -> currentArrayIndex] ; 
+
+						(yyval.s) = (yyvsp[-2].s) ; 
+					}
+				}
+			}
 		}
-#line 1975 "y.tab.c" /* yacc.c:1646  */
+#line 2388 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 49:
-#line 415 "Parser.y" /* yacc.c:1646  */
+#line 825 "Parser.y" /* yacc.c:1646  */
     {
-		plogout << "At line no: " << lineCount << " : " << "term :	unary_expression" << endl << endl ;
+		plogout << "At line no: " << lineCount << " : " << "logic_expression : rel_expression" << endl << endl ;
+
+		(yyval.s) = (yyvsp[0].s) ; 
+
 		}
-#line 1983 "y.tab.c" /* yacc.c:1646  */
+#line 2399 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 50:
-#line 418 "Parser.y" /* yacc.c:1646  */
+#line 831 "Parser.y" /* yacc.c:1646  */
     {
-		plogout << "At line no: " << lineCount << " : " << "term :	term MULOP unary_expression" << endl << endl ;
+		plogout << "At line no: " << lineCount << " : " << "logic_expression : rel_expression LOGICOP rel_expression" << endl << endl ;
+
+			SymbolInfo* tem = new SymbolInfo("","ID");
+			tem -> setVarType("INT");
+			tem -> setIdType("VAR");
+
+
+			if((yyvsp[-2].s) -> getVarType() == "CHAR" || (yyvsp[-2].s) -> getVarType() == "CHAR")
+			{
+				errorNo++;
+				perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : Char Variable \"" << "can't be operand of " << (yyvsp[-1].s) -> getSymbolName() << " operator."  << endl << endl ;
+			}
+
+			else if((yyvsp[-1].s) -> getSymbolName() == "&&")
+			{
+				if((yyvsp[-2].s) -> getVarType() == "INT")
+				{
+					if((yyvsp[0].s) -> getVarType() == "INT")
+					{
+						tem -> intVarValue = ((yyvsp[-2].s) -> intVarValue && (yyvsp[0].s) -> intVarValue);
+					}
+					else if((yyvsp[0].s) -> getVarType() == "FLOAT")
+					{
+						tem -> intVarValue = ((yyvsp[-2].s) -> intVarValue && (yyvsp[0].s) -> floatVarValue);
+					}
+				}
+				else if((yyvsp[-2].s) -> getVarType() == "FLOAT")
+				{
+					if((yyvsp[0].s) -> getVarType() == "INT")
+					{
+						tem -> intVarValue = ((yyvsp[-2].s) -> floatVarValue && (yyvsp[0].s) -> intVarValue);
+					}
+					else if((yyvsp[0].s) -> getVarType() == "FLOAT")
+					{
+						tem -> intVarValue = ((yyvsp[-2].s) -> floatVarValue && (yyvsp[0].s) -> floatVarValue);
+					}
+				}
+			}
+			else if((yyvsp[-1].s) -> getSymbolName() == "||")
+			{
+				if((yyvsp[-2].s) -> getVarType() == "INT")
+				{
+					if((yyvsp[0].s) -> getVarType() == "INT")
+					{
+						tem -> intVarValue = ((yyvsp[-2].s) -> intVarValue || (yyvsp[0].s) -> intVarValue);
+					}
+					else if((yyvsp[0].s) -> getVarType() == "FLOAT")
+					{
+						tem -> intVarValue = ((yyvsp[-2].s) -> intVarValue || (yyvsp[0].s) -> floatVarValue);
+					}
+				}
+				else if((yyvsp[-2].s) -> getVarType() == "FLOAT")
+				{
+					if((yyvsp[0].s) -> getVarType() == "INT")
+					{
+						tem -> intVarValue = ((yyvsp[-2].s) -> floatVarValue || (yyvsp[0].s) -> intVarValue);
+					}
+					else if((yyvsp[0].s) -> getVarType() == "FLOAT")
+					{
+						tem -> intVarValue = ((yyvsp[-2].s) -> floatVarValue || (yyvsp[0].s) -> floatVarValue);
+					}
+				}
+			}
+
+			(yyval.s) = tem ;
 		}
-#line 1991 "y.tab.c" /* yacc.c:1646  */
+#line 2471 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 51:
-#line 423 "Parser.y" /* yacc.c:1646  */
+#line 900 "Parser.y" /* yacc.c:1646  */
     {
-		plogout << "At line no: " << lineCount << " : " << "unary_expression : ADDOP unary_expression " << endl << endl ;
+		plogout << "At line no: " << lineCount << " : " << "rel_expression	: simple_expression" << endl << endl ;
+
+		(yyval.s) = (yyvsp[0].s) ; 
+
 		}
-#line 1999 "y.tab.c" /* yacc.c:1646  */
+#line 2482 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 52:
-#line 426 "Parser.y" /* yacc.c:1646  */
+#line 906 "Parser.y" /* yacc.c:1646  */
     {
-		plogout << "At line no: " << lineCount << " : " << "unary_expression : NOT unary_expression" << endl << endl ;
-		}
-#line 2007 "y.tab.c" /* yacc.c:1646  */
+		plogout << "At line no: " << lineCount << " : " << "rel_expression	: simple_expression RELOP simple_expression" << endl << endl ;
+
+			if((yyvsp[-1].s) -> getSymbolName() == "==")
+			{
+				if((yyvsp[-2].s) -> getVarType() != (yyvsp[0].s) -> getVarType())
+				{
+					errorNo++;
+					perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : " << "Type mismatch on both side of == operator." << endl << endl ;
+				}
+				else 
+				{
+					if((yyvsp[-2].s) -> getVarType() == "INT" && (yyvsp[0].s) -> getVarType() == "INT")
+					{
+						SymbolInfo* tem = new SymbolInfo("IIEQUAL","ID");
+						tem -> setVarType("INT");
+						tem -> setIdType("VAR");
+						tem -> intVarValue = (int) ((yyvsp[-2].s) -> intVarValue == (yyvsp[0].s) -> intVarValue);
+						(yyval.s) = tem ; 
+					}
+					if((yyvsp[-2].s) -> getVarType() == "FLOAT" && (yyvsp[0].s) -> getVarType() == "FLOAT")
+					{
+						SymbolInfo* tem = new SymbolInfo("FFEQUAL","ID");
+						tem -> setVarType("INT");
+						tem -> setIdType("VAR");
+						tem -> intVarValue = (int) ((yyvsp[-2].s) -> floatVarValue == (yyvsp[0].s) -> floatVarValue);
+						(yyval.s) = tem ; 
+					}
+				}
+			}
+			else if((yyvsp[-1].s) -> getSymbolName() == "!=")
+			{
+				if((yyvsp[-2].s) -> getVarType() != (yyvsp[0].s) -> getVarType())
+				{
+					errorNo++;
+					perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : " << "Type mismatch on both side of != operator." << endl << endl ;
+				}
+				else 
+				{
+					if((yyvsp[-2].s) -> getVarType() == "INT" && (yyvsp[0].s) -> getVarType() == "INT")
+					{
+						SymbolInfo* tem = new SymbolInfo("IINotEQUAL","ID");
+						tem -> setVarType("INT");
+						tem -> setIdType("VAR");
+						tem -> intVarValue = (int) ((yyvsp[-2].s) -> intVarValue != (yyvsp[0].s) -> intVarValue);
+						(yyval.s) = tem ; 
+					}
+					if((yyvsp[-2].s) -> getVarType() == "FLOAT" && (yyvsp[0].s) -> getVarType() == "FLOAT")
+					{
+						SymbolInfo* tem = new SymbolInfo("FFNotEQUAL","ID");
+						tem -> setVarType("INT");
+						tem -> setIdType("VAR");
+						tem -> intVarValue = (int) ((yyvsp[-2].s) -> floatVarValue != (yyvsp[0].s) -> floatVarValue);
+						(yyval.s) = tem ; 
+					}
+				}
+			}
+			else if((yyvsp[-1].s) -> getSymbolName() == ">=")
+			{
+				(yyval.s) = relationOperator((yyvsp[-2].s) , (yyvsp[-1].s), 1) ; 
+			}
+			else if((yyvsp[-1].s) -> getSymbolName() == ">")
+			{
+				(yyval.s) = relationOperator((yyvsp[-2].s) , (yyvsp[-1].s), 2) ; 
+			}
+			else if((yyvsp[-1].s) -> getSymbolName() == "<=")
+			{
+				(yyval.s) = relationOperator((yyvsp[-2].s) , (yyvsp[-1].s), 3) ; 
+			}
+			else if((yyvsp[-1].s) -> getSymbolName() == "<")
+			{
+				(yyval.s) = relationOperator((yyvsp[-2].s) , (yyvsp[-1].s), 4) ; 
+			}
+	}
+#line 2561 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 53:
-#line 429 "Parser.y" /* yacc.c:1646  */
+#line 982 "Parser.y" /* yacc.c:1646  */
     {
-		plogout << "At line no: " << lineCount << " : " << "punary_expression : NOT unary_expression" << endl << endl ;
+		plogout << "At line no: " << lineCount << " : " << "simple_expression : term" << endl << endl ;
+
+
+		(yyval.s) = (yyvsp[0].s) ; 
+
 		}
-#line 2015 "y.tab.c" /* yacc.c:1646  */
+#line 2573 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 54:
-#line 434 "Parser.y" /* yacc.c:1646  */
+#line 989 "Parser.y" /* yacc.c:1646  */
     {
-		plogout << "At line no: " << lineCount << " : " << "factor	: variable " << endl << endl ;
+		plogout << "At line no: " << lineCount << " : " << "simple_expression : simple_expression ADDOP term" << endl << endl ;
+
+
+			if((yyvsp[-1].s) -> getSymbolName() == "+")
+			{
+			    if((yyvsp[-2].s) -> getIdType() == "VAR" && (yyvsp[0].s) -> getIdType() == "VAR")
+			    {
+			        if((yyvsp[-2].s) -> getVarType() == "INT" && (yyvsp[0].s) -> getVarType() == "INT")
+			        {
+			            (yyval.s) = VVIIA((yyvsp[-2].s), (yyvsp[0].s));
+			        }
+			        else if((yyvsp[-2].s) -> getVarType() == "INT" && (yyvsp[0].s) -> getVarType() == "FLOAT")
+			        {
+			            (yyval.s) = VVIFA((yyvsp[-2].s), (yyvsp[0].s));
+			        }
+			        else if((yyvsp[-2].s) -> getVarType() == "FLOAT" && (yyvsp[0].s) -> getVarType() == "INT")
+			        {
+			            (yyval.s) = VVFIA((yyvsp[-2].s), (yyvsp[0].s));
+			        }
+			        else if((yyvsp[-2].s) -> getVarType() == "FLOAT" && (yyvsp[0].s) -> getVarType() == "FLOAT")
+			        {
+			            (yyval.s) = VVFFA((yyvsp[-2].s), (yyvsp[0].s));
+			        }
+
+			    }
+			    else if((yyvsp[-2].s) -> getIdType() == "VAR" && (yyvsp[0].s) -> getIdType() == "ARR")
+			    {
+			        if((yyvsp[-2].s) -> getVarType() == "INT" && (yyvsp[0].s) -> getVarType() == "INT")
+			        {
+			            (yyval.s) = VAIIA((yyvsp[-2].s), (yyvsp[0].s));
+			        }
+			        else if((yyvsp[-2].s) -> getVarType() == "INT" && (yyvsp[0].s) -> getVarType() == "FLOAT")
+			        {
+			            (yyval.s) = VAIFA((yyvsp[-2].s), (yyvsp[0].s));
+			        }
+			        else if((yyvsp[-2].s) -> getVarType() == "FLOAT" && (yyvsp[0].s) -> getVarType() == "INT")
+			        {
+			            (yyval.s) = VAFIA((yyvsp[-2].s), (yyvsp[0].s));
+			        }
+			        else if((yyvsp[-2].s) -> getVarType() == "FLOAT" && (yyvsp[0].s) -> getVarType() == "FLOAT")
+			        {
+			            (yyval.s) = VAFFA((yyvsp[-2].s), (yyvsp[0].s));
+			        }
+			    }
+			    else if((yyvsp[-2].s) -> getIdType() == "ARR" && (yyvsp[0].s) -> getIdType() == "VAR")
+			    {
+			        if((yyvsp[-2].s) -> getVarType() == "INT" && (yyvsp[0].s) -> getVarType() == "INT")
+			        {
+			            (yyval.s) = AVIIA((yyvsp[-2].s), (yyvsp[0].s));
+			        }
+			        else if((yyvsp[-2].s) -> getVarType() == "INT" && (yyvsp[0].s) -> getVarType() == "FLOAT")
+			        {
+			            (yyval.s) = AVIFA((yyvsp[-2].s), (yyvsp[0].s));
+			        }
+			        else if((yyvsp[-2].s) -> getVarType() == "FLOAT" && (yyvsp[0].s) -> getVarType() == "INT")
+			        {
+			            (yyval.s) = AVFIA((yyvsp[-2].s), (yyvsp[0].s));
+			        }
+			        else if((yyvsp[-2].s) -> getVarType() == "FLOAT" && (yyvsp[0].s) -> getVarType() == "FLOAT")
+			        {
+			            (yyval.s) = AVFFA((yyvsp[-2].s), (yyvsp[0].s));
+			        }
+			    }
+			    else if((yyvsp[-2].s) -> getIdType() == "ARR" && (yyvsp[0].s) -> getIdType() == "ARR")
+			    {
+			        if((yyvsp[-2].s) -> getVarType() == "INT" && (yyvsp[0].s) -> getVarType() == "INT")
+			        {
+			            (yyval.s) = AAIIA((yyvsp[-2].s), (yyvsp[0].s));
+			        }
+			        else if((yyvsp[-2].s) -> getVarType() == "INT" && (yyvsp[0].s) -> getVarType() == "FLOAT")
+			        {
+			            (yyval.s) = AAIFA((yyvsp[-2].s), (yyvsp[0].s));
+			        }
+			        else if((yyvsp[-2].s) -> getVarType() == "FLOAT" && (yyvsp[0].s) -> getVarType() == "INT")
+			        {
+			            (yyval.s) = AAFIA((yyvsp[-2].s), (yyvsp[0].s));
+			        }
+			        else if((yyvsp[-2].s) -> getVarType() == "FLOAT" && (yyvsp[0].s) -> getVarType() == "FLOAT")
+			        {
+			            (yyval.s) = AAFFA((yyvsp[-2].s), (yyvsp[0].s));
+			        }
+			    }
+			}
+			else if((yyvsp[-1].s) -> getSymbolName() == "-")
+			{
+			    if((yyvsp[-2].s) -> getIdType() == "VAR" && (yyvsp[0].s) -> getIdType() == "VAR")
+			    {
+			        if((yyvsp[-2].s) -> getVarType() == "INT" && (yyvsp[0].s) -> getVarType() == "INT")
+			        {
+			            (yyval.s) = VVIIMIN((yyvsp[-2].s), (yyvsp[0].s));
+			        }
+			        else if((yyvsp[-2].s) -> getVarType() == "INT" && (yyvsp[0].s) -> getVarType() == "FLOAT")
+			        {
+			            (yyval.s) = VVIFMIN((yyvsp[-2].s), (yyvsp[0].s));
+			        }
+			        else if((yyvsp[-2].s) -> getVarType() == "FLOAT" && (yyvsp[0].s) -> getVarType() == "INT")
+			        {
+			            (yyval.s) = VVFIMIN((yyvsp[-2].s), (yyvsp[0].s));
+			        }
+			        else if((yyvsp[-2].s) -> getVarType() == "FLOAT" && (yyvsp[0].s) -> getVarType() == "FLOAT")
+			        {
+			            (yyval.s) = VVFFMIN((yyvsp[-2].s), (yyvsp[0].s));
+			        }
+
+			    }
+			    else if((yyvsp[-2].s) -> getIdType() == "VAR" && (yyvsp[0].s) -> getIdType() == "ARR")
+			    {
+			        if((yyvsp[-2].s) -> getVarType() == "INT" && (yyvsp[0].s) -> getVarType() == "INT")
+			        {
+			            (yyval.s) = VAIIMIN((yyvsp[-2].s), (yyvsp[0].s));
+			        }
+			        else if((yyvsp[-2].s) -> getVarType() == "INT" && (yyvsp[0].s) -> getVarType() == "FLOAT")
+			        {
+			            (yyval.s) = VAIFMIN((yyvsp[-2].s), (yyvsp[0].s));
+			        }
+			        else if((yyvsp[-2].s) -> getVarType() == "FLOAT" && (yyvsp[0].s) -> getVarType() == "INT")
+			        {
+			            (yyval.s) = VAFIMIN((yyvsp[-2].s), (yyvsp[0].s));
+			        }
+			        else if((yyvsp[-2].s) -> getVarType() == "FLOAT" && (yyvsp[0].s) -> getVarType() == "FLOAT")
+			        {
+			            (yyval.s) = VAFFMIN((yyvsp[-2].s), (yyvsp[0].s));
+			        }
+			    }
+			    else if((yyvsp[-2].s) -> getIdType() == "ARR" && (yyvsp[0].s) -> getIdType() == "VAR")
+			    {
+			        if((yyvsp[-2].s) -> getVarType() == "INT" && (yyvsp[0].s) -> getVarType() == "INT")
+			        {
+			            (yyval.s) = AVIIMIN((yyvsp[-2].s), (yyvsp[0].s));
+			        }
+			        else if((yyvsp[-2].s) -> getVarType() == "INT" && (yyvsp[0].s) -> getVarType() == "FLOAT")
+			        {
+			            (yyval.s) = AVIFMIN((yyvsp[-2].s), (yyvsp[0].s));
+			        }
+			        else if((yyvsp[-2].s) -> getVarType() == "FLOAT" && (yyvsp[0].s) -> getVarType() == "INT")
+			        {
+			            (yyval.s) = AVFIMIN((yyvsp[-2].s), (yyvsp[0].s));
+			        }
+			        else if((yyvsp[-2].s) -> getVarType() == "FLOAT" && (yyvsp[0].s) -> getVarType() == "FLOAT")
+			        {
+			            (yyval.s) = AVFFMIN((yyvsp[-2].s), (yyvsp[0].s));
+			        }
+			    }
+			    else if((yyvsp[-2].s) -> getIdType() == "ARR" && (yyvsp[0].s) -> getIdType() == "ARR")
+			    {
+			        if((yyvsp[-2].s) -> getVarType() == "INT" && (yyvsp[0].s) -> getVarType() == "INT")
+			        {
+			            (yyval.s) = AAIIMIN((yyvsp[-2].s), (yyvsp[0].s));
+			        }
+			        else if((yyvsp[-2].s) -> getVarType() == "INT" && (yyvsp[0].s) -> getVarType() == "FLOAT")
+			        {
+			            (yyval.s) = AAIFMIN((yyvsp[-2].s), (yyvsp[0].s));
+			        }
+			        else if((yyvsp[-2].s) -> getVarType() == "FLOAT" && (yyvsp[0].s) -> getVarType() == "INT")
+			        {
+			            (yyval.s) = AAFIMIN((yyvsp[-2].s), (yyvsp[0].s));
+			        }
+			        else if((yyvsp[-2].s) -> getVarType() == "FLOAT" && (yyvsp[0].s) -> getVarType() == "FLOAT")
+			        {
+			            (yyval.s) = AAFFMIN((yyvsp[-2].s), (yyvsp[0].s));
+			        }
+			    }
+			}
 		}
-#line 2023 "y.tab.c" /* yacc.c:1646  */
+#line 2743 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 55:
-#line 437 "Parser.y" /* yacc.c:1646  */
+#line 1156 "Parser.y" /* yacc.c:1646  */
     {
-		plogout << "At line no: " << lineCount << " : " << "factor	: ID LPAREN argument_list RPAREN  " << endl << endl ;
+		plogout << "At line no: " << lineCount << " : " << "term :	unary_expression" << endl << endl ;
+		(yyval.s) = (yyvsp[0].s) ; 
+
 		}
-#line 2031 "y.tab.c" /* yacc.c:1646  */
+#line 2753 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 56:
-#line 440 "Parser.y" /* yacc.c:1646  */
+#line 1161 "Parser.y" /* yacc.c:1646  */
     {
-		plogout << "At line no: " << lineCount << " : " << "factor	: LPAREN expression RPAREN " << endl << endl ;
+		plogout << "At line no: " << lineCount << " : " << "term :	term MULOP unary_expression" << endl << endl ;
+
+
+		if((yyvsp[-1].s) -> getSymbolName() == "*")
+		{
+			if((yyvsp[-2].s) -> getIdType() == "VAR" && (yyvsp[0].s) -> getIdType() == "VAR")
+			{
+				if((yyvsp[-2].s) -> getVarType() == "INT" && (yyvsp[0].s) -> getVarType() == "INT")
+				{
+					(yyval.s) = VVIIM((yyvsp[-2].s) , (yyvsp[0].s));
+				}
+				else if((yyvsp[-2].s) -> getVarType() == "INT" && (yyvsp[0].s) -> getVarType() == "FLOAT")
+				{
+					(yyval.s) = VVIFM((yyvsp[-2].s) , (yyvsp[0].s));
+				}
+				else if((yyvsp[-2].s) -> getVarType() == "FLOAT" && (yyvsp[0].s) -> getVarType() == "INT")
+				{
+					(yyval.s) = VVFIM((yyvsp[-2].s) , (yyvsp[0].s));
+				}
+				else if((yyvsp[-2].s) -> getVarType() == "FLOAT" && (yyvsp[0].s) -> getVarType() == "FLOAT")
+				{
+					(yyval.s) = VVFFM((yyvsp[-2].s) , (yyvsp[0].s)); 
+				}
+
+			}
+			else if((yyvsp[-2].s) -> getIdType() == "VAR" && (yyvsp[0].s) -> getIdType() == "ARR")
+			{
+				if((yyvsp[-2].s) -> getVarType() == "INT" && (yyvsp[0].s) -> getVarType() == "INT")
+				{
+					(yyval.s) = VAIIM((yyvsp[-2].s) , (yyvsp[0].s));
+				}
+				else if((yyvsp[-2].s) -> getVarType() == "INT" && (yyvsp[0].s) -> getVarType() == "FLOAT")
+				{
+					(yyval.s) = VAIFM((yyvsp[-2].s) , (yyvsp[0].s));
+				}
+				else if((yyvsp[-2].s) -> getVarType() == "FLOAT" && (yyvsp[0].s) -> getVarType() == "INT")
+				{
+					(yyval.s) = VAFIM((yyvsp[-2].s) , (yyvsp[0].s));
+				}
+				else if((yyvsp[-2].s) -> getVarType() == "FLOAT" && (yyvsp[0].s) -> getVarType() == "FLOAT")
+				{
+					(yyval.s) = VAFFM((yyvsp[-2].s) , (yyvsp[0].s));
+				}
+			}
+			else if((yyvsp[-2].s) -> getIdType() == "ARR" && (yyvsp[0].s) -> getIdType() == "VAR")
+			{
+				if((yyvsp[-2].s) -> getVarType() == "INT" && (yyvsp[0].s) -> getVarType() == "INT")
+				{
+					(yyval.s) = AVIIM((yyvsp[-2].s) , (yyvsp[0].s));
+				}
+				else if((yyvsp[-2].s) -> getVarType() == "INT" && (yyvsp[0].s) -> getVarType() == "FLOAT")
+				{
+					(yyval.s) = AVIFM((yyvsp[-2].s) , (yyvsp[0].s));
+				}
+				else if((yyvsp[-2].s) -> getVarType() == "FLOAT" && (yyvsp[0].s) -> getVarType() == "INT")
+				{
+					(yyval.s) = AVFIM((yyvsp[-2].s) , (yyvsp[0].s));
+				}
+				else if((yyvsp[-2].s) -> getVarType() == "FLOAT" && (yyvsp[0].s) -> getVarType() == "FLOAT")
+				{
+					(yyval.s) = AVFFM((yyvsp[-2].s) , (yyvsp[0].s));
+				}
+			}
+			else if((yyvsp[-2].s) -> getIdType() == "ARR" && (yyvsp[0].s) -> getIdType() == "ARR")
+			{
+				if((yyvsp[-2].s) -> getVarType() == "INT" && (yyvsp[0].s) -> getVarType() == "INT")
+				{
+					(yyval.s) = AAIIM((yyvsp[-2].s) , (yyvsp[0].s)); 
+				}
+				else if((yyvsp[-2].s) -> getVarType() == "INT" && (yyvsp[0].s) -> getVarType() == "FLOAT")
+				{
+					(yyval.s) = AAIFM((yyvsp[-2].s) , (yyvsp[0].s));
+				}
+				else if((yyvsp[-2].s) -> getVarType() == "FLOAT" && (yyvsp[0].s) -> getVarType() == "INT")
+				{
+					(yyval.s) = AAFIM((yyvsp[-2].s) , (yyvsp[0].s)); 
+				}
+				else if((yyvsp[-2].s) -> getVarType() == "FLOAT" && (yyvsp[0].s) -> getVarType() == "FLOAT")
+				{
+					(yyval.s) = AAFFM((yyvsp[-2].s) , (yyvsp[0].s));
+				}
+			}
 		}
-#line 2039 "y.tab.c" /* yacc.c:1646  */
+		else if((yyvsp[-1].s) -> getSymbolName() == "/")
+		{
+		    if((yyvsp[-2].s) -> getIdType() == "VAR" && (yyvsp[0].s) -> getIdType() == "VAR")
+		    {
+		        if((yyvsp[-2].s) -> getVarType() == "INT" && (yyvsp[0].s) -> getVarType() == "INT")
+		        {
+		            (yyval.s) = VVIID((yyvsp[-2].s) , (yyvsp[0].s));
+		        }
+		        else if((yyvsp[-2].s) -> getVarType() == "INT" && (yyvsp[0].s) -> getVarType() == "FLOAT")
+		        {
+		            (yyval.s) = VVIFD((yyvsp[-2].s) , (yyvsp[0].s));
+		        }
+		        else if((yyvsp[-2].s) -> getVarType() == "FLOAT" && (yyvsp[0].s) -> getVarType() == "INT")
+		        {
+		            (yyval.s) = VVFID((yyvsp[-2].s) , (yyvsp[0].s));
+		        }
+		        else if((yyvsp[-2].s) -> getVarType() == "FLOAT" && (yyvsp[0].s) -> getVarType() == "FLOAT")
+		        {
+		            (yyval.s) = VVFFD((yyvsp[-2].s) , (yyvsp[0].s));
+		        }
+
+		    }
+		    else if((yyvsp[-2].s) -> getIdType() == "VAR" && (yyvsp[0].s) -> getIdType() == "ARR")
+		    {
+		        if((yyvsp[-2].s) -> getVarType() == "INT" && (yyvsp[0].s) -> getVarType() == "INT")
+		        {
+		           (yyval.s) = VAIID((yyvsp[-2].s) , (yyvsp[0].s));
+		        }
+		        else if((yyvsp[-2].s) -> getVarType() == "INT" && (yyvsp[0].s) -> getVarType() == "FLOAT")
+		        {
+		            (yyval.s) = VAIFD((yyvsp[-2].s) , (yyvsp[0].s));
+		        }
+		        else if((yyvsp[-2].s) -> getVarType() == "FLOAT" && (yyvsp[0].s) -> getVarType() == "INT")
+		        {
+		            (yyval.s) = VAFID((yyvsp[-2].s) , (yyvsp[0].s));
+		        }
+		        else if((yyvsp[-2].s) -> getVarType() == "FLOAT" && (yyvsp[0].s) -> getVarType() == "FLOAT")
+		        {
+		            (yyval.s) = VAFFD((yyvsp[-2].s) , (yyvsp[0].s));
+		        }
+		    }
+		    else if((yyvsp[-2].s) -> getIdType() == "ARR" && (yyvsp[0].s) -> getIdType() == "VAR")
+		    {
+		        if((yyvsp[-2].s) -> getVarType() == "INT" && (yyvsp[0].s) -> getVarType() == "INT")
+		        {
+		            (yyval.s) = AVIID((yyvsp[-2].s) , (yyvsp[0].s));
+		        }
+		        else if((yyvsp[-2].s) -> getVarType() == "INT" && (yyvsp[0].s) -> getVarType() == "FLOAT")
+		        {
+		        	(yyval.s) = AVIFD((yyvsp[-2].s) , (yyvsp[0].s));
+		        }
+		        else if((yyvsp[-2].s) -> getVarType() == "FLOAT" && (yyvsp[0].s) -> getVarType() == "INT")
+		        {
+		        	(yyval.s) = AVFID((yyvsp[-2].s) , (yyvsp[0].s));
+		        }
+		        else if((yyvsp[-2].s) -> getVarType() == "FLOAT" && (yyvsp[0].s) -> getVarType() == "FLOAT")
+		        {
+		        	(yyval.s) = AVFFD((yyvsp[-2].s) , (yyvsp[0].s));
+		        }
+		    }
+		    else if((yyvsp[-2].s) -> getIdType() == "ARR" && (yyvsp[0].s) -> getIdType() == "ARR")
+		    {
+		        if((yyvsp[-2].s) -> getVarType() == "INT" && (yyvsp[0].s) -> getVarType() == "INT")
+		        {
+		        	(yyval.s) = AAIID((yyvsp[-2].s) , (yyvsp[0].s));
+		        }
+		        else if((yyvsp[-2].s) -> getVarType() == "INT" && (yyvsp[0].s) -> getVarType() == "FLOAT")
+		        {
+		        	(yyval.s) = AAIFD((yyvsp[-2].s) , (yyvsp[0].s));
+		        }
+		        else if((yyvsp[-2].s) -> getVarType() == "FLOAT" && (yyvsp[0].s) -> getVarType() == "INT")
+		        {
+		        	(yyval.s) = AAFID((yyvsp[-2].s) , (yyvsp[0].s));
+		        }
+		        else if((yyvsp[-2].s) -> getVarType() == "FLOAT" && (yyvsp[0].s) -> getVarType() == "FLOAT")
+		        {
+		        	(yyval.s) = AAFFD((yyvsp[-2].s) , (yyvsp[0].s));
+		        }
+		    }
+		}
+
+		else if((yyvsp[-1].s) -> getSymbolName() == "%")
+		{
+			if((yyvsp[-2].s) -> getIdType() == "VAR" && (yyvsp[0].s) -> getIdType() == "VAR")
+		    {
+		        if((yyvsp[-2].s) -> getVarType() == "INT" && (yyvsp[0].s) -> getVarType() == "INT")
+		        {
+		        	(yyval.s) = VVIIMOD((yyvsp[-2].s) , (yyvsp[0].s));
+		        }
+		        else 
+		        {
+		        	modNotBothIntError();
+		        }
+		    }
+		    else if((yyvsp[-2].s) -> getIdType() == "VAR" && (yyvsp[0].s) -> getIdType() == "ARR")
+		    {
+		        if((yyvsp[-2].s) -> getVarType() == "INT" && (yyvsp[0].s) -> getVarType() == "INT")
+		        {
+		        	(yyval.s) = VAIIMOD((yyvsp[-2].s) , (yyvsp[0].s));
+		        }
+		        else 
+		        {
+		        	modNotBothIntError();
+		        }
+		    }
+		    else if((yyvsp[-2].s) -> getIdType() == "ARR" && (yyvsp[0].s) -> getIdType() == "VAR")
+		    {
+		        if((yyvsp[-2].s) -> getVarType() == "INT" && (yyvsp[0].s) -> getVarType() == "INT")
+		        {
+		        	(yyval.s) = AVIIMOD((yyvsp[-2].s) , (yyvsp[0].s));
+		        }
+		        else 
+		        {
+		        	modNotBothIntError();
+		        } 
+		    }
+		    else if((yyvsp[-2].s) -> getIdType() == "ARR" && (yyvsp[0].s) -> getIdType() == "ARR")
+		    {
+		        if((yyvsp[-2].s) -> getVarType() == "INT" && (yyvsp[0].s) -> getVarType() == "INT")
+		        {
+		        	(yyval.s) = AAIIMOD((yyvsp[-2].s) , (yyvsp[0].s));
+		        }
+		        else 
+		        {
+		        	modNotBothIntError();
+		        } 
+		    }
+		}
+	}
+#line 2971 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 57:
-#line 443 "Parser.y" /* yacc.c:1646  */
+#line 1376 "Parser.y" /* yacc.c:1646  */
     {
-		plogout << "At line no: " << lineCount << " : " << "factor	: CONST_INT " << endl << endl ;
+		plogout << "At line no: " << lineCount << " : " << "unary_expression : ADDOP unary_expression " << endl << endl ;
+
+		SymbolInfo* tem = (yyvsp[0].s) ; 
+
+		if((yyvsp[-1].s) -> getSymbolName() == "-")
+		{
+			if(tem -> getIdType() == "VAR")
+			{
+				if(tem -> getVarType() == "INT")
+				{
+					tem -> intVarValue = (-1) * tem -> intVarValue ; 
+				}
+				else if(tem -> getVarType() == "FLOAT")
+				{
+					tem -> floatVarValue = tem -> floatVarValue * (-1.0) ; 
+				}
+				else if(tem -> getVarType() == "CHAR")
+				{
+					errorNo++;
+					perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : Can not put " << (yyvsp[-1].s) -> getSymbolName() <<  "operator before Char variable \"" << (yyvsp[0].s) -> getSymbolName() << endl << endl ;
+				}
+			}
+			else if(tem -> getIdType() == "ARR")
+			{
+				if(tem -> getVarType() == "INT")
+				{
+					tem -> intArray[tem -> currentArrayIndex] = tem -> intArray[tem -> currentArrayIndex] * (-1) ;  
+				}
+				else if(tem -> getVarType() == "FLOAT")
+				{
+					tem -> floatArray[tem -> currentArrayIndex] = tem -> floatArray[tem -> currentArrayIndex] * (-1.0) ; 
+				}
+				else if(tem -> getVarType() == "CHAR")
+				{
+					errorNo++;
+					perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : Can not put " << (yyvsp[-1].s) -> getSymbolName() <<  "operator before Char Array element. \"" << (yyvsp[0].s) -> getSymbolName() << endl << endl ;
+				}
+			}
 		}
-#line 2047 "y.tab.c" /* yacc.c:1646  */
+		else if((yyvsp[-1].s) -> getSymbolName() == "+")
+		{
+			if(tem -> getIdType() == "VAR")
+			{
+				if(tem -> getVarType() == "INT")
+				{
+					tem -> intVarValue = (1) * tem -> intVarValue ; 
+				}
+				else if(tem -> getVarType() == "FLOAT")
+				{
+					tem -> floatVarValue = tem -> floatVarValue * (1.0) ; 
+				}
+				else if(tem -> getVarType() == "CHAR")
+				{
+					errorNo++;
+					perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : Can not put " << (yyvsp[-1].s) -> getSymbolName() <<  "operator before Char variable \"" << (yyvsp[0].s) -> getSymbolName() << endl << endl ;
+				}
+			}
+			else if(tem -> getIdType() == "ARR")
+			{
+				if(tem -> getVarType() == "INT")
+				{
+					tem -> intArray[tem -> currentArrayIndex] = tem -> intArray[tem -> currentArrayIndex] * (1) ;  
+				}
+				else if(tem -> getVarType() == "FLOAT")
+				{
+					tem -> floatArray[tem -> currentArrayIndex] = tem -> floatArray[tem -> currentArrayIndex] * (1.0) ; 
+				}
+				else if(tem -> getVarType() == "CHAR")
+				{
+					errorNo++;
+					perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : Can not put " << (yyvsp[-1].s) -> getSymbolName() <<  "operator before Char Array element. \"" << (yyvsp[0].s) -> getSymbolName() << endl << endl ;
+				}
+			}
+		}
+
+		(yyval.s) = tem ;
+
+	}
+#line 3055 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 58:
-#line 446 "Parser.y" /* yacc.c:1646  */
+#line 1455 "Parser.y" /* yacc.c:1646  */
     {
-		plogout << "At line no: " << lineCount << " : " << "factor	: CONST_FLOAT " << endl << endl ;
+		plogout << "At line no: " << lineCount << " : " << "unary_expression : NOT unary_expression" << endl << endl ;
+
+			SymbolInfo* tem = (yyvsp[0].s) ; 
+
+			if(tem -> getIdType() == "VAR")
+			{
+				if(tem -> getVarType() == "INT")
+				{
+					tem -> intVarValue = !tem -> intVarValue ; 
+				}
+				else if(tem -> getVarType() == "FLOAT")
+				{
+					tem -> floatVarValue = !tem -> floatVarValue ; 
+				}
+				else if(tem -> getVarType() == "CHAR")
+				{
+					tem -> charVarValue = !tem -> charVarValue ; 
+				}
+			}
+			else if(tem -> getIdType() == "ARR")
+			{
+				if(tem -> getVarType() == "INT")
+				{
+					tem -> intArray[tem -> currentArrayIndex] = !tem -> intArray[tem -> currentArrayIndex]  ;  
+				}
+				else if(tem -> getVarType() == "FLOAT")
+				{
+					tem -> floatArray[tem -> currentArrayIndex] = !tem -> floatArray[tem -> currentArrayIndex] ; 
+				}
+				else if(tem -> getVarType() == "CHAR")
+				{
+					tem -> charArray[tem -> currentArrayIndex] = !tem -> charArray[tem -> currentArrayIndex] ; 
+				}
+			}
+		
+			(yyval.s) = tem ;
+
 		}
-#line 2055 "y.tab.c" /* yacc.c:1646  */
+#line 3099 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 59:
-#line 449 "Parser.y" /* yacc.c:1646  */
+#line 1494 "Parser.y" /* yacc.c:1646  */
     {
-		plogout << "At line no: " << lineCount << " : " << "factor	: variable INCOP " << endl << endl ;
+		plogout << "At line no: " << lineCount << " : " << "unary_expression : NOT unary_expression" << endl << endl ;
+
+		(yyval.s) = (yyvsp[0].s) ; 
 		}
-#line 2063 "y.tab.c" /* yacc.c:1646  */
+#line 3109 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 60:
-#line 452 "Parser.y" /* yacc.c:1646  */
+#line 1501 "Parser.y" /* yacc.c:1646  */
     {
-		plogout << "At line no: " << lineCount << " : " << "factor	: variable DECOP " << endl << endl ;
+		plogout << "At line no: " << lineCount << " : " << "factor	: variable " << endl << endl ;
+		(yyval.s) = (yyvsp[0].s) ; 
 		}
-#line 2071 "y.tab.c" /* yacc.c:1646  */
+#line 3118 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 61:
-#line 457 "Parser.y" /* yacc.c:1646  */
+#line 1505 "Parser.y" /* yacc.c:1646  */
     {
-		plogout << "At line no: " << lineCount << " : " << "argument_list : arguments" << endl << endl ;
+		plogout << "At line no: " << lineCount << " : " << "factor	: ID LPAREN argument_list RPAREN  " << endl << endl ;
+
+		plogout << (yyvsp[-3].s) -> getSymbolName() << endl << endl ; 
+		//myTable -> printAllScopeTable(perrout) ; 
+
+		SymbolInfo* tem = myTable -> lookUp((yyvsp[-3].s) -> getSymbolName(), "ID");
+		//cout << tem -> getSymbolName() << " " <<  tem -> getFuncReturnType() << endl ; 
+
+		if(tem == 0)
+		{
+			errorNo++;
+			perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : Function \"" << (yyvsp[-3].s) -> getSymbolName() << "\" wasn't declared before." << endl << endl ; 
 		}
-#line 2079 "y.tab.c" /* yacc.c:1646  */
+		else 
+		{
+			if(tem -> getIdType() != "FUNC")
+			{
+				errorNo++;
+				perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : Function \"" << (yyvsp[-3].s) -> getSymbolName() << "\" wasn't declared before." << endl << endl ;
+			}
+			else 
+			{
+				if(tem -> getFuncReturnType() == "VOID")
+				{
+					//cout << "RUMMAN" << endl ; 
+					errorNo++;
+					perrout << "Error No: " << errorNo << " at line no: " << lineCount << " : Return type of function \"" << (yyvsp[-3].s) -> getSymbolName() << "\" is void. So, it can not be called to return a value." << endl << endl ;
+				}
+				else 
+				{
+					SymbolInfo* t = new SymbolInfo("Factor" , "ID");
+
+					if(tem -> getFuncReturnType() == "INT")
+					{
+						t -> intVarValue = 0; 
+					}
+					else if(tem -> getFuncReturnType() == "FLOAT")
+					{
+						t -> floatVarValue = 0 ; 
+					}
+					else if(tem -> getFuncReturnType() == "CHAR")
+					{
+						t -> charVarValue = '\0' ; 
+					}
+					(yyval.s) = t ; 
+				}
+			}
+		}
+
+		}
+#line 3174 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 62:
+#line 1556 "Parser.y" /* yacc.c:1646  */
+    {
+		plogout << "At line no: " << lineCount << " : " << "factor	: LPAREN expression RPAREN " << endl << endl ;
+
+		(yyval.s) = (yyvsp[-1].s) ; 
+
+		}
+#line 3185 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 63:
-#line 463 "Parser.y" /* yacc.c:1646  */
+#line 1562 "Parser.y" /* yacc.c:1646  */
     {
-		plogout << "At line no: " << lineCount << " : " << "arguments : arguments COMMA logic_expression " << endl << endl ;
+		plogout << "At line no: " << lineCount << " : " << "factor	: CONST_INT " << endl << endl ;
+
+		plogout << (yyvsp[0].s) -> getSymbolName() << endl << endl ; 
+
+		SymbolInfo* tem = (yyvsp[0].s) ; 
+		tem -> setVarType("INT");
+		tem -> setIdType("VAR");
+		tem -> intVarValue = stoi(tem -> getSymbolName());
+
+		(yyval.s) = tem ; 
+
 		}
-#line 2087 "y.tab.c" /* yacc.c:1646  */
+#line 3203 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 64:
-#line 466 "Parser.y" /* yacc.c:1646  */
+#line 1575 "Parser.y" /* yacc.c:1646  */
+    {
+		plogout << "At line no: " << lineCount << " : " << "factor	: CONST_FLOAT " << endl << endl ;
+
+		plogout << (yyvsp[0].s) -> getSymbolName() << endl << endl ; 
+
+		SymbolInfo* tem = (yyvsp[0].s) ; 
+		tem -> setVarType("FLOAT");
+		tem -> setIdType("VAR");
+		tem -> floatVarValue = stof(tem -> getSymbolName());
+
+		(yyval.s) = tem ; 
+
+		}
+#line 3221 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 65:
+#line 1588 "Parser.y" /* yacc.c:1646  */
+    {
+		plogout << "At line no: " << lineCount << " : " << "factor	: variable INCOP " << endl << endl ;
+
+
+		plogout << (yyvsp[-1].s) -> getSymbolName() << "++" << endl << endl ; 
+
+		SymbolInfo* tem = (yyvsp[-1].s) ; 
+
+		if(tem -> getIdType() == "VAR")
+		{
+			if(tem -> getVarType() == "INT")
+			{
+				tem -> intVarValue++; 
+			}
+			else if(tem -> getVarType() == "FLOAT")
+			{
+				tem -> floatVarValue = tem -> floatVarValue + 1.0 ; 
+			}
+			else if(tem -> getVarType() == "CHAR")
+			{
+				tem -> charVarValue = tem -> charVarValue + 1 ;
+			}
+		}
+		else if(tem -> getIdType() == "ARR")
+		{
+			if(tem -> getVarType() == "INT")
+			{
+				tem -> intArray[tem -> currentArrayIndex] = tem -> intArray[tem -> currentArrayIndex] + 1 ;  
+			}
+			else if(tem -> getVarType() == "FLOAT")
+			{
+				tem -> floatArray[tem -> currentArrayIndex] = tem -> floatArray[tem -> currentArrayIndex] + 1.0 ; 
+			}
+			else if(tem -> getVarType() == "CHAR")
+			{
+				tem -> charArray[tem -> currentArrayIndex] = tem -> charArray[tem -> currentArrayIndex] + 1 ; 
+			}
+		}
+
+		(yyval.s) = tem ; 
+	}
+#line 3267 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 66:
+#line 1629 "Parser.y" /* yacc.c:1646  */
+    {
+		plogout << "At line no: " << lineCount << " : " << "factor	: variable DECOP " << endl << endl ;
+
+		plogout << (yyvsp[-1].s) -> getSymbolName() << "--" << endl << endl ; 
+
+		SymbolInfo* tem = (yyvsp[-1].s) ; 
+
+		if(tem -> getIdType() == "VAR")
+		{
+			if(tem -> getVarType() == "INT")
+			{
+				tem -> intVarValue--; 
+			}
+			else if(tem -> getVarType() == "FLOAT")
+			{
+				tem -> floatVarValue = tem -> floatVarValue - 1.0 ; 
+			}
+			else if(tem -> getVarType() == "CHAR")
+			{
+				tem -> charVarValue = tem -> charVarValue - 1 ;
+			}
+		}
+		else if(tem -> getIdType() == "ARR")
+		{
+			if(tem -> getVarType() == "INT")
+			{
+				tem -> intArray[tem -> currentArrayIndex] = tem -> intArray[tem -> currentArrayIndex] - 1 ;  
+			}
+			else if(tem -> getVarType() == "FLOAT")
+			{
+				tem -> floatArray[tem -> currentArrayIndex] = tem -> floatArray[tem -> currentArrayIndex] - 1.0 ; 
+			}
+			else if(tem -> getVarType() == "CHAR")
+			{
+				tem -> charArray[tem -> currentArrayIndex] = tem -> charArray[tem -> currentArrayIndex] - 1 ; 
+			}
+		}
+
+		(yyval.s) = tem ;
+	}
+#line 3312 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 67:
+#line 1671 "Parser.y" /* yacc.c:1646  */
+    {
+		plogout << "At line no: " << lineCount << " : " << "argument_list : arguments" << endl << endl ;
+		}
+#line 3320 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 68:
+#line 1674 "Parser.y" /* yacc.c:1646  */
+    {initializeParam();}
+#line 3326 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 69:
+#line 1677 "Parser.y" /* yacc.c:1646  */
+    {
+		plogout << "At line no: " << lineCount << " : " << "arguments : arguments COMMA logic_expression " << endl << endl ;
+		}
+#line 3334 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 70:
+#line 1680 "Parser.y" /* yacc.c:1646  */
     {
 		plogout << "At line no: " << lineCount << " : " << "arguments : logic_expression" << endl << endl ;
 		}
-#line 2095 "y.tab.c" /* yacc.c:1646  */
+#line 3342 "y.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 2099 "y.tab.c" /* yacc.c:1646  */
+#line 3346 "y.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2323,7 +3570,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 472 "Parser.y" /* yacc.c:1906  */
+#line 1686 "Parser.y" /* yacc.c:1906  */
 
 int main(int argc,char *argv[])
 {
@@ -2337,21 +3584,6 @@ int main(int argc,char *argv[])
 
 	plogout.open("plog1.txt");
 	perrout.open("perror1.txt");
-
-	yyin=fp;
-	yyparse();
-
-	plogout.close();
-	perrout.close();
-
-	if((fp=fopen(argv[2],"r"))==NULL)
-	{
-		printf("Cannot Open Input File No. 2.\n");
-		exit(1);
-	}
-
-	plogout.open("plog2.txt");
-	perrout.open("perror2.txt");
 
 	yyin=fp;
 	yyparse();

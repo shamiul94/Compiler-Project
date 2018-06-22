@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-#include "SymbolTable.h"
+//#include "SymbolTable.h"
 
 using namespace std;
 
@@ -8,6 +8,7 @@ extern int errorNo, totalArgsNo, typeAndIDArgsNo ;
 extern ofstream plogout, perrout ;
 
 extern SymbolTable *myTable ;
+extern vector<SymbolInfo*> Params ; 
 
 int stoi(std::string s) //The conversion function
 {
@@ -460,7 +461,7 @@ SymbolInfo* AAIFD(SymbolInfo* tem1, SymbolInfo* tem3)
         tem -> setVarType("FLOAT");
 
         tem -> floatVarValue = tem1 -> intArray[tem1 -> currentArrayIndex] / tem3 -> floatArray[tem3 -> currentArrayIndex] ;
-        $return tem ;
+        return tem ;
     }
 }
 

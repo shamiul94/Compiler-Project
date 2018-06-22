@@ -13,10 +13,6 @@ class SymbolInfo
     string varType ; // INT , FLOAT , CHAR
     bool isFuncDefined ; 
 
-    int arraySize, paramNo ; 
-
-    
-
 public:
     vector<SymbolInfo*> paramList ; 
     vector<int> intArray; 
@@ -27,6 +23,8 @@ public:
     float floatVarValue ; 
     char charVarValue ; 
     int currentArrayIndex ; 
+    int arraySize, paramNo ; 
+    bool funcDeclared ; 
 
     ll i, j, tableId;
     SymbolInfo *next;
