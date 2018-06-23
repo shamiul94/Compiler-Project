@@ -4,39 +4,39 @@ Error No: 2 at line no: 13 : ID "h" has already been declared before in this sco
 
 ScopeTable # 1
 0 --> < y,ID,INT,VAR, >
-1 --> < x,ID,INT,VAR, >
+1 --> 
 2 --> < loo,ID,,FUNC,INT >
 3 --> 
 4 --> 
 5 --> 
 6 --> < h,ID,INT,VAR, >
 7 --> 
-8 --> < a,ID,FLOAT,VAR, >
+8 --> < n,ID,INT,VAR, > , < a,ID,FLOAT,VAR, >
 9 --> 
 10 --> < z,ID,INT,VAR, >
-Warning No: 1 at line no: 38 :  Int value is assigned to Float value (Type casting).
+Warning No: 1 at line no: 39 :  Int value is assigned to Float value (Type casting).
 
-Error No: 3 at line no: 42 : i was declared before as VAR. So, it can not be used as an array now.
+Error No: 3 at line no: 43 : i was declared before as VAR. So, it can not be used as an array now.
 
-Error No: 4 at line no: 43 : Size of Array a is 2, so index 5 can not be accessed.
+Error No: 4 at line no: 44 : Size of Array a is 2, so index 5 can not be accessed.
 
-Warning No: 2 at line no: 44 :  Float value is assigned to Int value (Type casting).
+Warning No: 2 at line no: 45 :  Float value is assigned to Int value (Type casting).
 
-Error No: 5 at line no: 46 Array index must be an integer.
+Error No: 5 at line no: 47 Array index must be an integer.
 
-Error No: 6 at line no: 46 Array index must be an integer.
+Error No: 6 at line no: 47 Array index must be an integer.
 
-Warning No: 3 at line no: 47 :  Float value is assigned to Int value (Type casting).
+Warning No: 3 at line no: 48 :  Float value is assigned to Int value (Type casting).
 
-Error No: 7 at line no: 48 Both operand of % operation must be Integers.
+Error No: 7 at line no: 49 Both operand of % operation must be Integers.
 
-Error No: 8 at line no: 49 : Too many arguments for function pool.
+Error No: 8 at line no: 50 : Too many arguments for function pool.
 
-Error No: 9 at line no: 50 : Too few arguments for function foo.
+Error No: 9 at line no: 51 : Too few arguments for function foo.
 
-Error No: 10 at line no: 50 : Return type of function "foo" is void. So, it can not be called to return a value.
+Error No: 10 at line no: 51 : Return type of function "foo" is void. So, it can not be called to return a value.
 
-Error No: 11 at line no: 51 : Undefined call to Function a.
+Error No: 11 at line no: 52 : Undefined call to Function a.
 
-Error No: 12 at line no: 51 : Too many arguments for function a.
+Error No: 12 at line no: 52 : Too many arguments for function a.
 

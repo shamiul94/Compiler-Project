@@ -549,13 +549,13 @@ static const yytype_uint8 yytranslate[] =
 static const yytype_uint16 yyrline[] =
 {
        0,    51,    51,    60,    70,    79,    88,    95,   103,   137,
-     168,   276,   344,   365,   384,   401,   422,   436,   422,   452,
+     168,   276,   344,   365,   384,   401,   422,   436,   422,   453,
      464,   475,   482,   494,   506,   520,   563,   605,   641,   682,
-     688,   699,   708,   715,   722,   731,   740,   752,   764,   775,
-     780,   791,   798,   808,   817,   824,   854,   899,   907,  1048,
-    1057,  1129,  1137,  1220,  1228,  1401,  1406,  1626,  1709,  1752,
-    1761,  1768,  1839,  1849,  1864,  1879,  1922,  1967,  1975,  1978,
-    1989
+     690,   703,   712,   719,   726,   735,   744,   756,   768,   779,
+     784,   795,   802,   812,   821,   828,   859,   904,   912,  1053,
+    1062,  1134,  1142,  1225,  1233,  1406,  1411,  1631,  1714,  1757,
+    1766,  1773,  1844,  1854,  1869,  1884,  1927,  1972,  1980,  1989,
+    2002
 };
 #endif
 
@@ -1863,31 +1863,32 @@ yyreduce:
 #line 436 "Parser.y" /* yacc.c:1646  */
     {
 
-				
-				myTable -> printAllScopeTable(plogout);
 
 		}
-#line 1871 "y.tab.c" /* yacc.c:1646  */
+#line 1869 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 18:
-#line 441 "Parser.y" /* yacc.c:1646  */
+#line 439 "Parser.y" /* yacc.c:1646  */
     {
 			
-			SymbolInfo *tem = new SymbolInfo();
-			(yyval.s) = tem ;
-			(yyval.s) -> codeSegment =  "{" + (yyvsp[-2].s) -> codeSegment + "}" ; 
+					SymbolInfo *tem = new SymbolInfo();
+					(yyval.s) = tem ;
+					(yyval.s) -> codeSegment =  "{\n" + (yyvsp[-2].s) -> codeSegment + "\n}\n" ; 
 
-			plogout << (yyval.s) -> codeSegment << endl << endl ; 
+					plogout << (yyval.s) -> codeSegment << endl << endl ; 
 
-			myTable -> exitScope();
-			plogout << "Scope exited" << endl ; 
-		}
-#line 1887 "y.tab.c" /* yacc.c:1646  */
+					myTable -> printAllScopeTable(plogout);
+					plogout << endl << endl ; 
+
+					myTable -> exitScope();
+					plogout << "Scope exited" << endl << endl  ; 
+			}
+#line 1888 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 19:
-#line 452 "Parser.y" /* yacc.c:1646  */
+#line 453 "Parser.y" /* yacc.c:1646  */
     {
 				plogout << "At line no: " << lineCount << " : " << "compound_statement : LCURL RCURL" << endl << endl ;
 
@@ -1896,7 +1897,6 @@ yyreduce:
 				SymbolInfo *tem = new SymbolInfo();
 				(yyval.s) = tem ;
 				(yyval.s) -> codeSegment = "{ }" ; 
-
 		}
 #line 1902 "y.tab.c" /* yacc.c:1646  */
     break;
@@ -2162,28 +2162,32 @@ yyreduce:
     {
 		plogout << "At line no: " << lineCount << " : " << "statements : statement" << endl << endl ;
 
+		plogout << (yyvsp[0].s) -> codeSegment << endl << endl ; 
+
 		(yyval.s) = (yyvsp[0].s) ; 
 
 		}
-#line 2169 "y.tab.c" /* yacc.c:1646  */
+#line 2171 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 30:
-#line 688 "Parser.y" /* yacc.c:1646  */
+#line 690 "Parser.y" /* yacc.c:1646  */
     {
 		plogout << "At line no: " << lineCount << " : " << "statements : statements statement" << endl << endl ;
+
+		plogout << (yyvsp[-1].s) -> codeSegment << endl << (yyvsp[0].s) -> codeSegment << endl ; 
 
 		SymbolInfo* tem = new SymbolInfo();
 
 		(yyval.s) = tem ; 
-		(yyval.s) -> codeSegment = (yyvsp[-1].s) -> codeSegment + (yyvsp[0].s) -> codeSegment ; 
+		(yyval.s) -> codeSegment = (yyvsp[-1].s) -> codeSegment + " " + (yyvsp[0].s) -> codeSegment ; 
 
 		}
-#line 2183 "y.tab.c" /* yacc.c:1646  */
+#line 2187 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 31:
-#line 699 "Parser.y" /* yacc.c:1646  */
+#line 703 "Parser.y" /* yacc.c:1646  */
     {
 		plogout << "At line no: " << lineCount << " : " << "statement : var_declaration" << endl << endl ;
 
@@ -2193,11 +2197,11 @@ yyreduce:
 		//$$ -> codeSegment = $1 -> codeSegment ; 
 
 		}
-#line 2197 "y.tab.c" /* yacc.c:1646  */
+#line 2201 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 32:
-#line 708 "Parser.y" /* yacc.c:1646  */
+#line 712 "Parser.y" /* yacc.c:1646  */
     {
 		plogout << "At line no: " << lineCount << " : " << "statement : expression_statement" << endl << endl ;
 
@@ -2205,11 +2209,11 @@ yyreduce:
 
 		(yyval.s) = (yyvsp[0].s) ; 
 		}
-#line 2209 "y.tab.c" /* yacc.c:1646  */
+#line 2213 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 33:
-#line 715 "Parser.y" /* yacc.c:1646  */
+#line 719 "Parser.y" /* yacc.c:1646  */
     {
 		plogout << "At line no: " << lineCount << " : " << "statement : compound_statement" << endl << endl ;
 
@@ -2217,11 +2221,11 @@ yyreduce:
 
 		(yyval.s) = (yyvsp[0].s) ; 
 		}
-#line 2221 "y.tab.c" /* yacc.c:1646  */
+#line 2225 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 34:
-#line 722 "Parser.y" /* yacc.c:1646  */
+#line 726 "Parser.y" /* yacc.c:1646  */
     {
 		plogout << "At line no: " << lineCount << " : " << "statement : FOR LPAREN expression_statement expression_statement expression RPAREN statement" << endl << endl ;
 
@@ -2231,11 +2235,11 @@ yyreduce:
 		(yyval.s) -> codeSegment = "for(" +  (yyvsp[-4].s) -> codeSegment + (yyvsp[-3].s) -> codeSegment + (yyvsp[-2].s) -> codeSegment + ")" + (yyvsp[0].s) -> codeSegment ; 
 
 		}
-#line 2235 "y.tab.c" /* yacc.c:1646  */
+#line 2239 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 35:
-#line 731 "Parser.y" /* yacc.c:1646  */
+#line 735 "Parser.y" /* yacc.c:1646  */
     {
 		plogout << "At line no: " << lineCount << " : " << "statement : IF LPAREN expression RPAREN statement %prec LOWER_THAN_ELSE" << endl << endl ;
 
@@ -2245,11 +2249,11 @@ yyreduce:
 		(yyval.s) -> codeSegment = "if(" + (yyvsp[-2].s) -> codeSegment + ")" + (yyvsp[0].s) -> codeSegment ; 
 
 		}
-#line 2249 "y.tab.c" /* yacc.c:1646  */
+#line 2253 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 36:
-#line 740 "Parser.y" /* yacc.c:1646  */
+#line 744 "Parser.y" /* yacc.c:1646  */
     {
 		plogout << "At line no: " << lineCount << " : " << "statement : IF LPAREN expression RPAREN statement ELSE statement" << endl << endl ;
 
@@ -2262,11 +2266,11 @@ yyreduce:
 
 
 		}
-#line 2266 "y.tab.c" /* yacc.c:1646  */
+#line 2270 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 37:
-#line 752 "Parser.y" /* yacc.c:1646  */
+#line 756 "Parser.y" /* yacc.c:1646  */
     {
 		plogout << "At line no: " << lineCount << " : " << "statement : WHILE LPAREN expression RPAREN statement" << endl << endl ;
 
@@ -2279,11 +2283,11 @@ yyreduce:
 
 
 		}
-#line 2283 "y.tab.c" /* yacc.c:1646  */
+#line 2287 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 38:
-#line 764 "Parser.y" /* yacc.c:1646  */
+#line 768 "Parser.y" /* yacc.c:1646  */
     {
 		plogout << "At line no: " << lineCount << " : " << "statement : PRINTLN LPAREN ID RPAREN SEMICOLON" << endl << endl ;
 
@@ -2295,20 +2299,20 @@ yyreduce:
 		(yyval.s) -> codeSegment =  "println(" + (yyvsp[-2].s) -> getSymbolName() + ");\n"; 
 
 		}
-#line 2299 "y.tab.c" /* yacc.c:1646  */
+#line 2303 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 39:
-#line 776 "Parser.y" /* yacc.c:1646  */
+#line 780 "Parser.y" /* yacc.c:1646  */
     {
 			errorNo++;
 			perrout << "Error No: " << errorNo << " at line no: " << lineCount << " ; missing." << endl << endl ;
 		}
-#line 2308 "y.tab.c" /* yacc.c:1646  */
+#line 2312 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 40:
-#line 780 "Parser.y" /* yacc.c:1646  */
+#line 784 "Parser.y" /* yacc.c:1646  */
     {
 			plogout << "At line no: " << lineCount << " : " << "statement : RETURN expression SEMICOLON" << endl << endl ;
 
@@ -2320,20 +2324,20 @@ yyreduce:
 		(yyval.s) -> codeSegment ="return " +  (yyvsp[-1].s) -> codeSegment + " ;" ;
 
 		}
-#line 2324 "y.tab.c" /* yacc.c:1646  */
+#line 2328 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 41:
-#line 792 "Parser.y" /* yacc.c:1646  */
+#line 796 "Parser.y" /* yacc.c:1646  */
     {
 			errorNo++;
 			perrout << "Error No: " << errorNo << " at line no: " << lineCount << " ; missing." << endl << endl ;
 		}
-#line 2333 "y.tab.c" /* yacc.c:1646  */
+#line 2337 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 42:
-#line 798 "Parser.y" /* yacc.c:1646  */
+#line 802 "Parser.y" /* yacc.c:1646  */
     {
 		plogout << "At line no: " << lineCount << " : " << "expression_statement 	: SEMICOLON" << endl << endl ;
 
@@ -2344,11 +2348,11 @@ yyreduce:
 		(yyval.s) = x ; 
 		(yyval.s) -> codeSegment = ";\n"  ; 
 		}
-#line 2348 "y.tab.c" /* yacc.c:1646  */
+#line 2352 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 43:
-#line 808 "Parser.y" /* yacc.c:1646  */
+#line 812 "Parser.y" /* yacc.c:1646  */
     {
 		plogout << "At line no: " << lineCount << " : " << "expression_statement 	: expression SEMICOLON" << endl << endl ;
 
@@ -2358,20 +2362,20 @@ yyreduce:
 			(yyval.s) -> codeSegment = (yyvsp[-1].s) -> codeSegment + ";\n" ; 
 
 		}
-#line 2362 "y.tab.c" /* yacc.c:1646  */
+#line 2366 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 44:
-#line 818 "Parser.y" /* yacc.c:1646  */
+#line 822 "Parser.y" /* yacc.c:1646  */
     {
 			errorNo++;
 			perrout << "Error No: " << errorNo << " at line no: " << lineCount << " ; missing." << endl << endl ;
 		}
-#line 2371 "y.tab.c" /* yacc.c:1646  */
+#line 2375 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 45:
-#line 824 "Parser.y" /* yacc.c:1646  */
+#line 828 "Parser.y" /* yacc.c:1646  */
     {
 			plogout << "At line no: " << lineCount << " : " << "variable : ID" << endl << endl ;
 
@@ -2396,17 +2400,18 @@ yyreduce:
 				else
 				{
 					(yyval.s) = tem ; 
+					(yyval.s) -> codeSegment = (yyvsp[0].s) -> getSymbolName() ; 
 				}
 			}
 
-			(yyval.s) -> codeSegment = (yyvsp[0].s) -> getSymbolName() ; 
+			
 
 		}
-#line 2406 "y.tab.c" /* yacc.c:1646  */
+#line 2411 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 46:
-#line 854 "Parser.y" /* yacc.c:1646  */
+#line 859 "Parser.y" /* yacc.c:1646  */
     {
 		plogout << "At line no: " << lineCount << " : " << "variable : ID LTHIRD expression RTHIRD" << endl << endl ;
 
@@ -2450,11 +2455,11 @@ yyreduce:
 		(yyval.s) -> codeSegment =  (yyvsp[-3].s) -> getSymbolName() + "[" + (yyvsp[-1].s) -> codeSegment + "]" ; 
 
 	}
-#line 2454 "y.tab.c" /* yacc.c:1646  */
+#line 2459 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 47:
-#line 899 "Parser.y" /* yacc.c:1646  */
+#line 904 "Parser.y" /* yacc.c:1646  */
     {
 		plogout << "At line no: " << lineCount << " : " << "expression : logic_expression" << endl << endl ;
 
@@ -2463,11 +2468,11 @@ yyreduce:
 		(yyval.s) = (yyvsp[0].s) ; 
 
 		}
-#line 2467 "y.tab.c" /* yacc.c:1646  */
+#line 2472 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 48:
-#line 907 "Parser.y" /* yacc.c:1646  */
+#line 912 "Parser.y" /* yacc.c:1646  */
     {
 		plogout << "At line no: " << lineCount << " : " << "expression : variable ASSIGNOP logic_expression" << endl << endl ;
 
@@ -2605,13 +2610,13 @@ yyreduce:
 
 			//plogout << $1 -> codeSegment << $2 -> getSymbolName() << $3 -> codeSegment << endl << endl ; 
 
-			(yyval.s) -> codeSegment = (yyvsp[-2].s) -> codeSegment  + " = " + (yyvsp[0].s) -> codeSegment ; 
+			(yyval.s) -> codeSegment = (yyvsp[-2].s) -> getSymbolName() + " = " + (yyvsp[0].s) -> codeSegment ; 
 		}
-#line 2611 "y.tab.c" /* yacc.c:1646  */
+#line 2616 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 49:
-#line 1048 "Parser.y" /* yacc.c:1646  */
+#line 1053 "Parser.y" /* yacc.c:1646  */
     {
 		plogout << "At line no: " << lineCount << " : " << "logic_expression : rel_expression" << endl << endl ;
 
@@ -2621,11 +2626,11 @@ yyreduce:
 		(yyval.s) = (yyvsp[0].s) ; 
 
 		}
-#line 2625 "y.tab.c" /* yacc.c:1646  */
+#line 2630 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 50:
-#line 1057 "Parser.y" /* yacc.c:1646  */
+#line 1062 "Parser.y" /* yacc.c:1646  */
     {
 		plogout << "At line no: " << lineCount << " : " << "logic_expression : rel_expression LOGICOP rel_expression" << endl << endl ;
 
@@ -2696,11 +2701,11 @@ yyreduce:
 			tem -> codeSegment = (yyvsp[-2].s) -> codeSegment + (yyvsp[-1].s) -> getSymbolName() + (yyvsp[0].s) -> codeSegment ; 
 			(yyval.s) = tem ;
 		}
-#line 2700 "y.tab.c" /* yacc.c:1646  */
+#line 2705 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 51:
-#line 1129 "Parser.y" /* yacc.c:1646  */
+#line 1134 "Parser.y" /* yacc.c:1646  */
     {
 		plogout << "At line no: " << lineCount << " : " << "rel_expression	: simple_expression" << endl << endl ;
 
@@ -2709,11 +2714,11 @@ yyreduce:
 		(yyval.s) = (yyvsp[0].s) ; 
 
 		}
-#line 2713 "y.tab.c" /* yacc.c:1646  */
+#line 2718 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 52:
-#line 1137 "Parser.y" /* yacc.c:1646  */
+#line 1142 "Parser.y" /* yacc.c:1646  */
     {
 		plogout << "At line no: " << lineCount << " : " << "rel_expression	: simple_expression RELOP simple_expression" << endl << endl ;
 
@@ -2795,11 +2800,11 @@ yyreduce:
 
 			(yyval.s) -> codeSegment = (yyvsp[-2].s) -> codeSegment + (yyvsp[-1].s) -> getSymbolName() + (yyvsp[0].s) -> codeSegment ; 
 	}
-#line 2799 "y.tab.c" /* yacc.c:1646  */
+#line 2804 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 53:
-#line 1220 "Parser.y" /* yacc.c:1646  */
+#line 1225 "Parser.y" /* yacc.c:1646  */
     {
 		plogout << "At line no: " << lineCount << " : " << "simple_expression : term" << endl << endl ;
 
@@ -2808,15 +2813,15 @@ yyreduce:
 		(yyval.s) = (yyvsp[0].s) ; 
 
 		}
-#line 2812 "y.tab.c" /* yacc.c:1646  */
+#line 2817 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 54:
-#line 1228 "Parser.y" /* yacc.c:1646  */
+#line 1233 "Parser.y" /* yacc.c:1646  */
     {
 		plogout << "At line no: " << lineCount << " : " << "simple_expression : simple_expression ADDOP term" << endl << endl ;
 
-		plogout << (yyvsp[-2].s) -> codeSegment << " " << (yyvsp[-1].s) -> getSymbolName() << (yyvsp[0].s) -> codeSegment << endl << endl ; 
+		plogout << (yyvsp[-2].s) -> codeSegment << (yyvsp[-1].s) -> getSymbolName() << (yyvsp[0].s) -> codeSegment << endl << endl ; 
 
 
 			if((yyvsp[-1].s) -> getSymbolName() == "+")
@@ -2984,21 +2989,21 @@ yyreduce:
 
 			(yyval.s) -> codeSegment = (yyvsp[-2].s) -> codeSegment +  (yyvsp[-1].s) -> getSymbolName() + (yyvsp[0].s) -> codeSegment ; 
 		}
-#line 2988 "y.tab.c" /* yacc.c:1646  */
+#line 2993 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 55:
-#line 1401 "Parser.y" /* yacc.c:1646  */
+#line 1406 "Parser.y" /* yacc.c:1646  */
     {
 		plogout << "At line no: " << lineCount << " : " << "term :	unary_expression" << endl << endl ;
 		(yyval.s) = (yyvsp[0].s) ; 
 
 		}
-#line 2998 "y.tab.c" /* yacc.c:1646  */
+#line 3003 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 56:
-#line 1406 "Parser.y" /* yacc.c:1646  */
+#line 1411 "Parser.y" /* yacc.c:1646  */
     {
 		plogout << "At line no: " << lineCount << " : " << "term :	term MULOP unary_expression" << endl << endl ;
 
@@ -3217,11 +3222,11 @@ yyreduce:
 
 		(yyval.s) -> codeSegment = (yyvsp[-2].s) -> codeSegment  + (yyvsp[-1].s) -> getSymbolName() + (yyvsp[0].s) -> codeSegment  ; 
 	}
-#line 3221 "y.tab.c" /* yacc.c:1646  */
+#line 3226 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 57:
-#line 1626 "Parser.y" /* yacc.c:1646  */
+#line 1631 "Parser.y" /* yacc.c:1646  */
     {
 		plogout << "At line no: " << lineCount << " : " << "unary_expression : ADDOP unary_expression " << endl << endl ;
 
@@ -3305,11 +3310,11 @@ yyreduce:
 		(yyval.s) = tem ;
 
 	}
-#line 3309 "y.tab.c" /* yacc.c:1646  */
+#line 3314 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 58:
-#line 1709 "Parser.y" /* yacc.c:1646  */
+#line 1714 "Parser.y" /* yacc.c:1646  */
     {
 		plogout << "At line no: " << lineCount << " : " << "unary_expression : NOT unary_expression" << endl << endl ;
 
@@ -3353,11 +3358,11 @@ yyreduce:
 			(yyval.s) = tem ;
 
 		}
-#line 3357 "y.tab.c" /* yacc.c:1646  */
+#line 3362 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 59:
-#line 1752 "Parser.y" /* yacc.c:1646  */
+#line 1757 "Parser.y" /* yacc.c:1646  */
     {
 		plogout << "At line no: " << lineCount << " : " << "unary_expression : NOT unary_expression" << endl << endl ;
 
@@ -3365,11 +3370,11 @@ yyreduce:
 
 		(yyval.s) = (yyvsp[0].s) ; 
 		}
-#line 3369 "y.tab.c" /* yacc.c:1646  */
+#line 3374 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 60:
-#line 1761 "Parser.y" /* yacc.c:1646  */
+#line 1766 "Parser.y" /* yacc.c:1646  */
     {
 		plogout << "At line no: " << lineCount << " : " << "factor	: variable " << endl << endl ;
 
@@ -3377,11 +3382,11 @@ yyreduce:
 
 		(yyval.s) = (yyvsp[0].s) ; 
 		}
-#line 3381 "y.tab.c" /* yacc.c:1646  */
+#line 3386 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 61:
-#line 1768 "Parser.y" /* yacc.c:1646  */
+#line 1773 "Parser.y" /* yacc.c:1646  */
     {
 		plogout << "At line no: " << lineCount << " : " << "factor	: ID LPAREN argument_list RPAREN  " << endl << endl ;
 
@@ -3453,11 +3458,11 @@ yyreduce:
 		}
 
 		}
-#line 3457 "y.tab.c" /* yacc.c:1646  */
+#line 3462 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 62:
-#line 1839 "Parser.y" /* yacc.c:1646  */
+#line 1844 "Parser.y" /* yacc.c:1646  */
     {
 		plogout << "At line no: " << lineCount << " : " << "factor	: LPAREN expression RPAREN " << endl << endl ;
 
@@ -3468,11 +3473,11 @@ yyreduce:
 		(yyval.s) = (yyvsp[-1].s) ; 
 
 		}
-#line 3472 "y.tab.c" /* yacc.c:1646  */
+#line 3477 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 63:
-#line 1849 "Parser.y" /* yacc.c:1646  */
+#line 1854 "Parser.y" /* yacc.c:1646  */
     {
 		plogout << "At line no: " << lineCount << " : " << "factor	: CONST_INT " << endl << endl ;
 
@@ -3488,11 +3493,11 @@ yyreduce:
 		(yyval.s) = tem ; 
 
 		}
-#line 3492 "y.tab.c" /* yacc.c:1646  */
+#line 3497 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 64:
-#line 1864 "Parser.y" /* yacc.c:1646  */
+#line 1869 "Parser.y" /* yacc.c:1646  */
     {
 		plogout << "At line no: " << lineCount << " : " << "factor	: CONST_FLOAT " << endl << endl ;
 
@@ -3508,11 +3513,11 @@ yyreduce:
 		(yyval.s) = tem ; 
 
 		}
-#line 3512 "y.tab.c" /* yacc.c:1646  */
+#line 3517 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 65:
-#line 1879 "Parser.y" /* yacc.c:1646  */
+#line 1884 "Parser.y" /* yacc.c:1646  */
     {
 		plogout << "At line no: " << lineCount << " : " << "factor	: variable INCOP " << endl << endl ;
 
@@ -3556,11 +3561,11 @@ yyreduce:
 
 		(yyval.s) = tem ; 
 	}
-#line 3560 "y.tab.c" /* yacc.c:1646  */
+#line 3565 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 66:
-#line 1922 "Parser.y" /* yacc.c:1646  */
+#line 1927 "Parser.y" /* yacc.c:1646  */
     {
 		plogout << "At line no: " << lineCount << " : " << "factor	: variable DECOP " << endl << endl ;
 
@@ -3604,11 +3609,11 @@ yyreduce:
 
 		(yyval.s) = tem ;
 	}
-#line 3608 "y.tab.c" /* yacc.c:1646  */
+#line 3613 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 67:
-#line 1967 "Parser.y" /* yacc.c:1646  */
+#line 1972 "Parser.y" /* yacc.c:1646  */
     {
 		plogout << "At line no: " << lineCount << " : " << "argument_list : arguments" << endl << endl ;
 
@@ -3617,33 +3622,41 @@ yyreduce:
 		(yyval.s) = (yyvsp[0].s) ; 
 
 		}
-#line 3621 "y.tab.c" /* yacc.c:1646  */
+#line 3626 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 68:
-#line 1975 "Parser.y" /* yacc.c:1646  */
-    {initializeParam();}
-#line 3627 "y.tab.c" /* yacc.c:1646  */
+#line 1980 "Parser.y" /* yacc.c:1646  */
+    {
+			initializeParam();
+			SymbolInfo* x = new SymbolInfo(); 
+
+			(yyval.s) = x ;
+			(yyval.s) -> codeSegment = " " ; 
+		}
+#line 3638 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 69:
-#line 1978 "Parser.y" /* yacc.c:1646  */
+#line 1989 "Parser.y" /* yacc.c:1646  */
     {
 				plogout << "At line no: " << lineCount << " : " << "arguments : arguments COMMA logic_expression " << endl << endl ;
 				passedParamNo++;
 
 				plogout << (yyvsp[-2].s) -> codeSegment << " , " << (yyvsp[0].s) -> codeSegment << endl << endl ; 
 
-				(yyvsp[-2].s) -> codeSegment = (yyvsp[-2].s) -> codeSegment + "," + (yyvsp[0].s) -> codeSegment; 
+				SymbolInfo* x = new SymbolInfo(); 
 
-				(yyval.s) = (yyvsp[-2].s) ; 
+			
+				(yyval.s) = x ;
+				(yyval.s) -> codeSegment = (yyvsp[-2].s) -> codeSegment + "," + (yyvsp[0].s) -> codeSegment; 
 				
 		}
-#line 3643 "y.tab.c" /* yacc.c:1646  */
+#line 3656 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 70:
-#line 1989 "Parser.y" /* yacc.c:1646  */
+#line 2002 "Parser.y" /* yacc.c:1646  */
     {
 				plogout << "At line no: " << lineCount << " : " << "arguments : logic_expression" << endl << endl ;
 
@@ -3655,11 +3668,11 @@ yyreduce:
 
 				//cout << $1 -> getSymbolName() << endl ;
 		}
-#line 3659 "y.tab.c" /* yacc.c:1646  */
+#line 3672 "y.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 3663 "y.tab.c" /* yacc.c:1646  */
+#line 3676 "y.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -3887,7 +3900,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 2003 "Parser.y" /* yacc.c:1906  */
+#line 2016 "Parser.y" /* yacc.c:1906  */
 
 int main(int argc,char *argv[])
 {

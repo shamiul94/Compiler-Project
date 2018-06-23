@@ -435,20 +435,21 @@ compound_statement : LCURL{
 
 		}statements{
 
-				
-				myTable -> printAllScopeTable(plogout);
 
 		}RCURL{
 			
-			SymbolInfo *tem = new SymbolInfo();
-			$$ = tem ;
-			$$ -> codeSegment =  "{" + $3 -> codeSegment + "}" ; 
+					SymbolInfo *tem = new SymbolInfo();
+					$$ = tem ;
+					$$ -> codeSegment =  "{\n" + $3 -> codeSegment + "\n}\n" ; 
 
-			plogout << $$ -> codeSegment << endl << endl ; 
+					plogout << $$ -> codeSegment << endl << endl ; 
 
-			myTable -> exitScope();
-			plogout << "Scope exited" << endl << endl  ; 
-		}
+					myTable -> printAllScopeTable(plogout);
+					plogout << endl << endl ; 
+
+					myTable -> exitScope();
+					plogout << "Scope exited" << endl << endl  ; 
+			}
  		    | LCURL RCURL{
 				plogout << "At line no: " << lineCount << " : " << "compound_statement : LCURL RCURL" << endl << endl ;
 
@@ -681,16 +682,20 @@ declaration_list : declaration_list COMMA ID{
 statements : statement{
 		plogout << "At line no: " << lineCount << " : " << "statements : statement" << endl << endl ;
 
+		plogout << $1 -> codeSegment << endl << endl ; 
+
 		$$ = $1 ; 
 
 		}
 	   | statements statement{
 		plogout << "At line no: " << lineCount << " : " << "statements : statements statement" << endl << endl ;
 
+		plogout << $1 -> codeSegment << endl << $2 -> codeSegment << endl ; 
+
 		SymbolInfo* tem = new SymbolInfo();
 
 		$$ = tem ; 
-		$$ -> codeSegment = $1 -> codeSegment + $2 -> codeSegment ; 
+		$$ -> codeSegment = $1 -> codeSegment + " " + $2 -> codeSegment ; 
 
 		}
 	   ;
@@ -844,10 +849,11 @@ variable: ID {
 				else
 				{
 					$$ = tem ; 
+					$$ -> codeSegment = $1 -> getSymbolName() ; 
 				}
 			}
 
-			$$ -> codeSegment = $1 -> getSymbolName() ; 
+			
 
 		}
 	 | ID LTHIRD expression RTHIRD {
@@ -1040,7 +1046,7 @@ expression : logic_expression{
 
 			//plogout << $1 -> codeSegment << $2 -> getSymbolName() << $3 -> codeSegment << endl << endl ; 
 
-			$$ -> codeSegment = $1 -> codeSegment  + " = " + $3 -> codeSegment ; 
+			$$ -> codeSegment = $1 -> getSymbolName() + " = " + $3 -> codeSegment ; 
 		}
 	   ;
 			
@@ -1227,7 +1233,7 @@ simple_expression : term{
 		  | simple_expression ADDOP term {
 		plogout << "At line no: " << lineCount << " : " << "simple_expression : simple_expression ADDOP term" << endl << endl ;
 
-		plogout << $1 -> codeSegment << " " << $2 -> getSymbolName() << $3 -> codeSegment << endl << endl ; 
+		plogout << $1 -> codeSegment << $2 -> getSymbolName() << $3 -> codeSegment << endl << endl ; 
 
 
 			if($2 -> getSymbolName() == "+")
@@ -1971,7 +1977,13 @@ argument_list : arguments{
 		$$ = $1 ; 
 
 		}
-		|{initializeParam();}
+		|{
+			initializeParam();
+			SymbolInfo* x = new SymbolInfo(); 
+
+			$$ = x ;
+			$$ -> codeSegment = " " ; 
+		}
 		;
 	
 arguments : arguments COMMA logic_expression{
@@ -1980,9 +1992,11 @@ arguments : arguments COMMA logic_expression{
 
 				plogout << $1 -> codeSegment << " , " << $3 -> codeSegment << endl << endl ; 
 
-				$1 -> codeSegment = $1 -> codeSegment + "," + $3 -> codeSegment; 
+				SymbolInfo* x = new SymbolInfo(); 
 
-				$$ = $1 ; 
+			
+				$$ = x ;
+				$$ -> codeSegment = $1 -> codeSegment + "," + $3 -> codeSegment; 
 				
 		}
 	      | logic_expression{

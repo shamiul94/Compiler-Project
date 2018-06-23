@@ -1,4 +1,4 @@
-int x,y,z; float a;
+int n,y,z; float a;
 
 int h ; 
 
@@ -24,9 +24,10 @@ int var(int a){
 }
 
 void foo(int b){
-	x=2;
-	y=x-5;
-	x++;
+
+	z = 8 ; 
+	y=n-5;
+	n++;
 }
 
 // int a  
