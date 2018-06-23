@@ -223,7 +223,7 @@ unfinishedString \"([^\\\"\n]|\\+([^\n\"]|\n))*
     return LOGICOP;
 }
 
-[&]|[\^]|(<<)|(>>)|[|] {
+"&"|[\^]|"<<"|">>"|"|" {
     SymbolInfo *s= new  SymbolInfo(yytext, "BITOP");
     yylval.s = s;
     return BITOP;
@@ -338,63 +338,63 @@ unfinishedString \"([^\\\"\n]|\\+([^\n\"]|\n))*
 
 
 {singleLineComment} {
-    fprintf(logout , "Line No %d:  <COMMENT> Lexeme %s Found.\n\n" , lineCount , yytext);
-    return COMMENT; 
+    //fprintf(logout , "Line No %d:  <COMMENT> Lexeme %s Found.\n\n" , lineCount , yytext);
+    //return COMMENT; 
 }
 
 {multiLineComment} {
-    fprintf(logout , "Line No %d:  <COMMENT> Lexeme %s Found.\n\n" , lineCount , yytext);
-    return COMMENT;
+    //fprintf(logout , "Line No %d:  <COMMENT> Lexeme %s Found.\n\n" , lineCount , yytext);
+    //return COMMENT;
 }
 
 {tooManyDecimalError} {
 
-    fprintf(logout , "Error at line %d: Too many decimal point %s\n\n", lineCount , yytext);
-    return ERROR; 
+    //fprintf(logout , "Error at line %d: Too many decimal point %s\n\n", lineCount , yytext);
+    //return ERROR; 
 }
 
 {illFormedError} {
-    fprintf(logout , "Error at line %d: Ill formed number %s\n\n", lineCount , yytext);
-    return ERROR; 
+    //fprintf(logout , "Error at line %d: Ill formed number %s\n\n", lineCount , yytext);
+    //return ERROR; 
 }
 
 
 {invalidSuffix} {
-    fprintf(logout , "Error at line %d: Invalid prefix on ID or invalid suffix on Number %s\n\n",lineCount ,  yytext);
+    //fprintf(logout , "Error at line %d: Invalid prefix on ID or invalid suffix on Number %s\n\n",lineCount ,  yytext);
 
-    return ERROR; 
+    //return ERROR; 
 }
 
 
 {multiCharError} {
-    fprintf(logout , "Error at line %d: Multi character constant error %s\n\n", lineCount  , yytext);
-    return ERROR; 
+    //fprintf(logout , "Error at line %d: Multi character constant error %s\n\n", lineCount  , yytext);
+    //return ERROR; 
 
 }
 
 {unfinishedChar1} {
-    fprintf(logout , "Error at line %d: Unterminated character %s\n\n", lineCount  , yytext);
-    return ERROR; 
+    //fprintf(logout , "Error at line %d: Unterminated character %s\n\n", lineCount  , yytext);
+    //return ERROR; 
 }
 
 
 {unfinishedChar2} {
-    fprintf(logout , "Error at line %d: Unterminated character %s\n\n", lineCount  , yytext);
-    return ERROR; 
+    //fprintf(logout , "Error at line %d: Unterminated character %s\n\n", lineCount  , yytext);
+    //return ERROR; 
 }
 
 
 {emptyChar} {
-    fprintf(logout , "Error at line %d: Empty character constant error %s\n\n", lineCount  , yytext);
+    //fprintf(logout , "Error at line %d: Empty character constant error %s\n\n", lineCount  , yytext);
 
-    return ERROR; 
+    //return ERROR; 
 
 }
 
 {unfinishedString} {
-    fprintf(logout , "Error at line %d: Unterminated String %s\n\n", lineCount  , yytext);
+    //fprintf(logout , "Error at line %d: Unterminated String %s\n\n", lineCount  , yytext);
 
-    return ERROR; 
+   // return ERROR; 
 
 }
 
@@ -417,15 +417,15 @@ unfinishedString \"([^\\\"\n]|\\+([^\n\"]|\n))*
 } 
 
 <COMMENT_MULTI_LINE><<EOF>> {      
-    fprintf(logout , "Error at line %d: Unterminated comment %s\n\n" , lineCount , yytext);
+    //fprintf(logout , "Error at line %d: Unterminated comment %s\n\n" , lineCount , yytext);
     yyterminate();
-    return ERROR; 
+    //return ERROR; 
 }
 
 
 . {
-     fprintf(logout , "Error at line %d: <Unrecognized Character Error> Lexeme %s Found.\n\n" , lineCount  , yytext);
-     return ERROR; 
+     //fprintf(logout , "Error at line %d: <Unrecognized Character Error> Lexeme %s Found.\n\n" , lineCount  , yytext);
+     //return ERROR; 
 }
 
 %%

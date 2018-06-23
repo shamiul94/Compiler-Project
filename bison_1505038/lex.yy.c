@@ -1354,8 +1354,8 @@ case 41:
 YY_RULE_SETUP
 #line 340 "Scanner.l"
 {
-    fprintf(logout , "Line No %d:  <COMMENT> Lexeme %s Found.\n\n" , lineCount , yytext);
-    return COMMENT; 
+    //fprintf(logout , "Line No %d:  <COMMENT> Lexeme %s Found.\n\n" , lineCount , yytext);
+    //return COMMENT; 
 }
 	YY_BREAK
 case 42:
@@ -1363,8 +1363,8 @@ case 42:
 YY_RULE_SETUP
 #line 345 "Scanner.l"
 {
-    fprintf(logout , "Line No %d:  <COMMENT> Lexeme %s Found.\n\n" , lineCount , yytext);
-    return COMMENT;
+    //fprintf(logout , "Line No %d:  <COMMENT> Lexeme %s Found.\n\n" , lineCount , yytext);
+    //return COMMENT;
 }
 	YY_BREAK
 case 43:
@@ -1372,25 +1372,25 @@ YY_RULE_SETUP
 #line 350 "Scanner.l"
 {
 
-    fprintf(logout , "Error at line %d: Too many decimal point %s\n\n", lineCount , yytext);
-    return ERROR; 
+    //fprintf(logout , "Error at line %d: Too many decimal point %s\n\n", lineCount , yytext);
+    //return ERROR; 
 }
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
 #line 356 "Scanner.l"
 {
-    fprintf(logout , "Error at line %d: Ill formed number %s\n\n", lineCount , yytext);
-    return ERROR; 
+    //fprintf(logout , "Error at line %d: Ill formed number %s\n\n", lineCount , yytext);
+    //return ERROR; 
 }
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
 #line 362 "Scanner.l"
 {
-    fprintf(logout , "Error at line %d: Invalid prefix on ID or invalid suffix on Number %s\n\n",lineCount ,  yytext);
+    //fprintf(logout , "Error at line %d: Invalid prefix on ID or invalid suffix on Number %s\n\n",lineCount ,  yytext);
 
-    return ERROR; 
+    //return ERROR; 
 }
 	YY_BREAK
 case 46:
@@ -1398,8 +1398,8 @@ case 46:
 YY_RULE_SETUP
 #line 369 "Scanner.l"
 {
-    fprintf(logout , "Error at line %d: Multi character constant error %s\n\n", lineCount  , yytext);
-    return ERROR; 
+    //fprintf(logout , "Error at line %d: Multi character constant error %s\n\n", lineCount  , yytext);
+    //return ERROR; 
 
 }
 	YY_BREAK
@@ -1407,8 +1407,8 @@ case 47:
 YY_RULE_SETUP
 #line 375 "Scanner.l"
 {
-    fprintf(logout , "Error at line %d: Unterminated character %s\n\n", lineCount  , yytext);
-    return ERROR; 
+    //fprintf(logout , "Error at line %d: Unterminated character %s\n\n", lineCount  , yytext);
+    //return ERROR; 
 }
 	YY_BREAK
 case 48:
@@ -1416,17 +1416,17 @@ case 48:
 YY_RULE_SETUP
 #line 381 "Scanner.l"
 {
-    fprintf(logout , "Error at line %d: Unterminated character %s\n\n", lineCount  , yytext);
-    return ERROR; 
+    //fprintf(logout , "Error at line %d: Unterminated character %s\n\n", lineCount  , yytext);
+    //return ERROR; 
 }
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
 #line 387 "Scanner.l"
 {
-    fprintf(logout , "Error at line %d: Empty character constant error %s\n\n", lineCount  , yytext);
+    //fprintf(logout , "Error at line %d: Empty character constant error %s\n\n", lineCount  , yytext);
 
-    return ERROR; 
+    //return ERROR; 
 
 }
 	YY_BREAK
@@ -1435,9 +1435,9 @@ case 50:
 YY_RULE_SETUP
 #line 394 "Scanner.l"
 {
-    fprintf(logout , "Error at line %d: Unterminated String %s\n\n", lineCount  , yytext);
+    //fprintf(logout , "Error at line %d: Unterminated String %s\n\n", lineCount  , yytext);
 
-    return ERROR; 
+   // return ERROR; 
 
 }
 	YY_BREAK
@@ -1473,17 +1473,17 @@ YY_RULE_SETUP
 case YY_STATE_EOF(COMMENT_MULTI_LINE):
 #line 419 "Scanner.l"
 {      
-    fprintf(logout , "Error at line %d: Unterminated comment %s\n\n" , lineCount , yytext);
+    //fprintf(logout , "Error at line %d: Unterminated comment %s\n\n" , lineCount , yytext);
     yyterminate();
-    return ERROR; 
+    //return ERROR; 
 }
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
 #line 426 "Scanner.l"
 {
-     fprintf(logout , "Error at line %d: <Unrecognized Character Error> Lexeme %s Found.\n\n" , lineCount  , yytext);
-     return ERROR; 
+     //fprintf(logout , "Error at line %d: <Unrecognized Character Error> Lexeme %s Found.\n\n" , lineCount  , yytext);
+     //return ERROR; 
 }
 	YY_BREAK
 case 56:

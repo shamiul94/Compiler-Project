@@ -7,6 +7,7 @@ SymbolInfo::SymbolInfo()
     next = 0;
     isFuncDefined = false ; 
     funcDeclared = false ; 
+    codeSegment = "";
 }
 
 void SymbolInfo:: setIsFuncDefined()
@@ -26,6 +27,7 @@ SymbolInfo::SymbolInfo(string type)
     SymbolName = type; 
     funcDeclared = false ; 
     isFuncDefined = false ;
+    codeSegment = "";
 }
 
 SymbolInfo::SymbolInfo(string name, string type)
@@ -35,6 +37,7 @@ SymbolInfo::SymbolInfo(string name, string type)
     next = 0;
     isFuncDefined = false ;
     funcDeclared = false ; 
+    codeSegment = "";
 }
 
 void SymbolInfo::setVarType(string s)

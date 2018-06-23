@@ -11,7 +11,7 @@ class SymbolInfo
     string funcReturnType;
     string idType ; // VAR , FUNC , ARR 
     string varType ; // INT , FLOAT , CHAR
-    bool isFuncDefined ; 
+    
 
 public:
     vector<SymbolInfo*> paramList ; 
@@ -24,7 +24,10 @@ public:
     char charVarValue ; 
     int currentArrayIndex ; 
     int arraySize, paramNo ; 
-    bool funcDeclared ; 
+    bool funcDeclared ;
+    bool isFuncDefined ; 
+
+    string codeSegment ;  
 
     ll i, j, tableId;
     SymbolInfo *next;
