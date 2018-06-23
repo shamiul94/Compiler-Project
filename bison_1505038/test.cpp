@@ -457,7 +457,6 @@ compound_statement : LCURL{
 				SymbolInfo *tem = new SymbolInfo();
 				$$ = tem ;
 				$$ -> codeSegment = "{ }" ; 
-
 		}
  		    ;
  		    
