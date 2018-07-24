@@ -1,0 +1,525 @@
+At line no: 1 : type_specifier	: INT
+
+int
+
+At line no: 3 : compound_statement : LCURL statements RCURL
+
+At line no: 3 : type_specifier	: INT
+
+int
+
+At line no: 3 : declaration_list : ID
+
+a
+
+At line no: 3 : declaration_list : declaration_list COMMA ID LTHIRD CONST_INT RTHIRD
+
+a , b[4]
+
+At line no: 3 : var_declaration : type_specifier declaration_list SEMICOLON
+
+int a , b[4] ;
+
+At line no: 3 : statement : var_declaration
+
+int a , b[4] ;
+
+
+At line no: 3 : statements : statement
+
+int a , b[4] ;
+
+
+At line no: 4 : variable : ID
+
+a
+
+At line no: 4 : factor	: variable INCOP 
+
+a++
+
+At line no: 4 : unary_expression : NOT unary_expression
+
+a++
+
+At line no: 4 : term :	unary_expression
+
+At line no: 4 : simple_expression : term
+
+a++
+
+At line no: 4 : rel_expression	: simple_expression
+
+a++
+
+At line no: 4 : logic_expression : rel_expression
+
+a++
+
+At line no: 4 : expression : logic_expression
+
+a++
+
+At line no: 4 : expression_statement 	: expression SEMICOLON
+
+a++;
+
+At line no: 4 : statement : expression_statement
+
+a++;
+
+
+At line no: 4 : statements : statements statement
+
+int a , b[4] ;
+
+a++;
+
+At line no: 5 : variable : ID
+
+a
+
+At line no: 5 : factor	: CONST_INT 
+
+3
+
+At line no: 5 : unary_expression : NOT unary_expression
+
+3
+
+At line no: 5 : term :	unary_expression
+
+At line no: 5 : simple_expression : term
+
+3
+
+At line no: 5 : rel_expression	: simple_expression
+
+3
+
+At line no: 5 : logic_expression : rel_expression
+
+3
+
+At line no: 5 : expression : variable ASSIGNOP logic_expression
+
+a = 3
+
+At line no: 5 : expression_statement 	: expression SEMICOLON
+
+a = 3;
+
+At line no: 5 : statement : expression_statement
+
+a = 3;
+
+
+At line no: 5 : statements : statements statement
+
+int a , b[4] ;
+ a++;
+
+a = 3;
+
+At line no: 6 : factor	: CONST_INT 
+
+2
+
+At line no: 6 : unary_expression : NOT unary_expression
+
+2
+
+At line no: 6 : term :	unary_expression
+
+At line no: 6 : simple_expression : term
+
+2
+
+At line no: 6 : rel_expression	: simple_expression
+
+2
+
+At line no: 6 : logic_expression : rel_expression
+
+2
+
+At line no: 6 : expression : logic_expression
+
+2
+
+At line no: 6 : variable : ID LTHIRD expression RTHIRD
+
+b[2]
+
+At line no: 6 : factor	: variable INCOP 
+
+b[2]++
+
+At line no: 6 : unary_expression : NOT unary_expression
+
+b[2]++
+
+At line no: 6 : term :	unary_expression
+
+At line no: 6 : simple_expression : term
+
+b[2]++
+
+At line no: 6 : rel_expression	: simple_expression
+
+b[2]++
+
+At line no: 6 : logic_expression : rel_expression
+
+b[2]++
+
+At line no: 6 : expression : logic_expression
+
+b[2]++
+
+At line no: 6 : expression_statement 	: expression SEMICOLON
+
+b[2]++;
+
+At line no: 6 : statement : expression_statement
+
+b[2]++;
+
+
+At line no: 6 : statements : statements statement
+
+int a , b[4] ;
+ a++;
+ a = 3;
+
+b[2]++;
+
+At line no: 7 : factor	: CONST_INT 
+
+1
+
+At line no: 7 : unary_expression : NOT unary_expression
+
+1
+
+At line no: 7 : term :	unary_expression
+
+At line no: 7 : simple_expression : term
+
+1
+
+At line no: 7 : rel_expression	: simple_expression
+
+1
+
+At line no: 7 : logic_expression : rel_expression
+
+1
+
+At line no: 7 : expression : logic_expression
+
+1
+
+At line no: 7 : variable : ID LTHIRD expression RTHIRD
+
+b[1]
+
+At line no: 7 : factor	: variable 
+
+b[1]
+
+At line no: 7 : unary_expression : NOT unary_expression
+
+b[1]
+
+At line no: 7 : term :	unary_expression
+
+At line no: 7 : simple_expression : term
+
+b[1]
+
+At line no: 7 : variable : ID
+
+a
+
+At line no: 7 : factor	: variable 
+
+a
+
+At line no: 7 : unary_expression : NOT unary_expression
+
+a
+
+At line no: 7 : term :	unary_expression
+
+At line no: 7 : simple_expression : term
+
+a
+
+At line no: 7 : rel_expression	: simple_expression RELOP simple_expression
+
+b[1]<=a
+
+b[1]<=a
+
+At line no: 7 : logic_expression : rel_expression
+
+b[1]<=a
+
+At line no: 7 : expression : logic_expression
+
+b[1]<=a
+
+At line no: 9 : compound_statement : LCURL statements RCURL
+
+At line no: 9 : variable : ID
+
+a
+
+At line no: 9 : factor	: CONST_INT 
+
+2
+
+At line no: 9 : unary_expression : NOT unary_expression
+
+2
+
+At line no: 9 : term :	unary_expression
+
+At line no: 9 : simple_expression : term
+
+2
+
+At line no: 9 : rel_expression	: simple_expression
+
+2
+
+At line no: 9 : logic_expression : rel_expression
+
+2
+
+At line no: 9 : expression : logic_expression
+
+2
+
+At line no: 9 : variable : ID LTHIRD expression RTHIRD
+
+b[2]
+
+At line no: 9 : factor	: variable 
+
+b[2]
+
+At line no: 9 : unary_expression : NOT unary_expression
+
+b[2]
+
+At line no: 9 : term :	unary_expression
+
+At line no: 9 : simple_expression : term
+
+b[2]
+
+At line no: 9 : rel_expression	: simple_expression
+
+b[2]
+
+At line no: 9 : logic_expression : rel_expression
+
+b[2]
+
+At line no: 9 : expression : variable ASSIGNOP logic_expression
+
+a = b[2]
+
+At line no: 9 : expression_statement 	: expression SEMICOLON
+
+a = b[2];
+
+At line no: 9 : statement : expression_statement
+
+a = b[2];
+
+
+At line no: 9 : statements : statement
+
+a = b[2];
+
+
+{
+a = b[2];
+
+}
+
+
+ScopeTable # 3
+0 --> 
+1 --> 
+2 --> 
+3 --> 
+4 --> 
+5 --> 
+6 --> 
+7 --> 
+8 --> 
+9 --> 
+10 --> 
+ScopeTable # 2
+0 --> 
+1 --> 
+2 --> 
+3 --> 
+4 --> 
+5 --> 
+6 --> 
+7 --> < b,ID,INT,ARR, >
+8 --> < a,ID,INT,VAR, >
+9 --> 
+10 --> 
+ScopeTable # 1
+0 --> 
+1 --> 
+2 --> 
+3 --> 
+4 --> 
+5 --> 
+6 --> 
+7 --> 
+8 --> 
+9 --> 
+10 --> 
+
+
+Scope exited
+
+At line no: 10 : statement : compound_statement
+
+{
+a = b[2];
+
+}
+
+
+At line no: 11 : statement : IF LPAREN expression RPAREN statement %prec LOWER_THAN_ELSE
+
+if(b[1]<=a){
+a = b[2];
+
+}
+
+At line no: 11 : statements : statements statement
+
+int a , b[4] ;
+ a++;
+ a = 3;
+ b[2]++;
+
+if(b[1]<=a){
+a = b[2];
+
+}
+
+{
+int a , b[4] ;
+ a++;
+ a = 3;
+ b[2]++;
+ if(b[1]<=a){
+a = b[2];
+
+}
+
+}
+
+
+ScopeTable # 2
+0 --> 
+1 --> 
+2 --> 
+3 --> 
+4 --> 
+5 --> 
+6 --> 
+7 --> < b,ID,INT,ARR, >
+8 --> < a,ID,INT,VAR, >
+9 --> 
+10 --> 
+ScopeTable # 1
+0 --> 
+1 --> 
+2 --> 
+3 --> 
+4 --> 
+5 --> 
+6 --> 
+7 --> 
+8 --> 
+9 --> 
+10 --> 
+
+
+Scope exited
+
+At line no: 11 : func_definition : type_specifier ID LPAREN RPAREN compound_statement
+
+int main( ) 
+{
+int a , b[4] ;
+ a++;
+ a = 3;
+ b[2]++;
+ if(b[1]<=a){
+a = b[2];
+
+}
+
+}
+
+
+At line no: 11 : unit : func_definition
+
+int main( ) 
+{
+int a , b[4] ;
+ a++;
+ a = 3;
+ b[2]++;
+ if(b[1]<=a){
+a = b[2];
+
+}
+
+}
+
+
+At line no: 11 : program : unit
+
+int main( ) 
+{
+int a , b[4] ;
+ a++;
+ a = 3;
+ b[2]++;
+ if(b[1]<=a){
+a = b[2];
+
+}
+
+}
+
+At line no: 11 : start : program
+
+int main( ) 
+{
+int a , b[4] ;
+ a++;
+ a = 3;
+ b[2]++;
+ if(b[1]<=a){
+a = b[2];
+
+}
+
+}
+
+
